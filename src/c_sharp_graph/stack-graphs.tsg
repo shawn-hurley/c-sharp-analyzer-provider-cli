@@ -1,0 +1,981 @@
+;; -*- coding: utf-8 -*-
+;; ------------------------------------------------------------------------------------------------
+;; Copyright © 2023, tsg_indexer authors.
+;; Licensed under either of Apache License, Version 2.0, or MIT license, at your option.
+;; ------------------------------------------------------------------------------------------------
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Stack graphs definition for C#
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Global Variables
+;; ^^^^^^^^^^^^^^^^
+
+global FILE_PATH           ; project relative path of this file
+global PROJECT_NAME = ""   ; project name, used to isolate different projects in the same stack graph
+global ROOT_PATH = ""      ; path to the project root directory
+
+;global JUMP_TO_SCOPE_NODE
+;global ROOT_NODE
+
+;; Attribute Shorthands
+;; ^^^^^^^^^^^^^^^^^^^^
+
+attribute node_definition = node        => type = "pop_symbol", node_symbol = node, is_definition
+attribute node_reference = node         => type = "push_symbol", node_symbol = node, is_reference
+attribute pop_node = node               => type = "pop_symbol", node_symbol = node
+attribute pop_scoped_node = node        => type = "pop_scoped_symbol", node_symbol = node
+attribute pop_scoped_symbol = symbol    => type = "pop_scoped_symbol", symbol = symbol
+attribute pop_symbol = symbol           => type = "pop_symbol", symbol = symbol
+attribute push_node = node              => type = "push_symbol", node_symbol = node
+attribute push_scoped_node = node       => type = "push_scoped_symbol", node_symbol = node
+attribute push_scoped_symbol = symbol   => type = "push_scoped_symbol", symbol = symbol
+attribute push_symbol = symbol          => type = "push_symbol", symbol = symbol
+attribute scoped_node_definition = node => type = "pop_scoped_symbol", node_symbol = node, is_definition
+attribute scoped_node_reference = node  => type = "push_scoped_symbol", node_symbol = node, is_reference
+attribute symbol_definition = symbol    => type = "pop_symbol", symbol = symbol, is_definition
+attribute symbol_reference = symbol     => type = "push_symbol", symbol = symbol, is_reference
+
+attribute node_symbol = node            => symbol = (source-text node), source_node = node
+
+;; Root Program
+;; ^^^^^^^^^^^
+
+; We nned to mark all the qualified names as nodes. then we need to have edges from those qualified nodes to the use of them.
+
+(using_directive
+  [
+    (identifier) @name
+    (qualified_name) @name
+  ]) @using {
+  node @using.def
+  
+  attr (@using.def) type = "pop_symbol", symbol = (source-text @name), source_node = @using, is_definition, syntax_type = "import"
+}
+
+(compilation_unit) @comp_unit {
+  node @comp_unit.def
+  attr (@comp_unit.def) type = "pop_symbol", symbol = FILE_PATH, source_node = @comp_unit, is_definition, syntax_type = "comp-unit"
+}
+
+(compilation_unit
+  (using_directive)? @using
+  (namespace_declaration)? @namespace
+) @comp_unit {
+  if some @using {
+    edge @comp_unit.def -> @using.def
+  }
+  if some @namespace {
+    edge @comp_unit.def -> @namespace.def
+  }
+}
+
+;;; Handle Declarations
+(namespace_declaration
+  name: [
+    (identifier) @namespace
+    (qualified_name) @namespace
+  ]
+) @decl {
+  node namespace_def
+  node @decl.def
+
+  attr (@decl.def) type = "pop_symbol", symbol = (source-text @namespace), source_node = @decl, is_definition, syntax_type = "namespace-declaration"
+  attr (namespace_def) pop_symbol = "."
+  edge @decl.def -> namespace_def
+}
+
+(class_declaration
+  name: (identifier) @classname
+) @class_declaration {
+  node @class_declaration.def
+  node class_def
+
+  attr (@class_declaration.def) type = "pop_symbol", symbol = (source-text @classname), source_node = @class_declaration, is_definition, syntax_type = "class-def"
+  attr (class_def) pop_symbol = "."
+  edge @class_declaration.def -> class_def
+}
+
+;; use this pattern to connect all the definitions in a namespace to the namespace.
+(namespace_declaration
+  body: (declaration_list 
+    (class_declaration) @class_declaration
+  )
+) @namespace {
+    edge @namespace.def -> @class_declaration.def
+}
+
+(class_declaration
+  body: (declaration_list
+    (method_declaration)? @method_declaration
+    (field_declaration)? @field_declaration
+    (class_declaration)? @nested_class_declaration
+    (constructor_declaration)? @constructor_declaration
+  )
+) @class_declaration {
+  if some @method_declaration {
+    edge @class_declaration.def -> @method_declaration.def
+  }
+  if some @field_declaration {
+    edge @class_declaration.def -> @field_declaration.def
+  }
+  if some @nested_class_declaration {
+    edge @class_declaration.def -> @nested_class_declaration.def
+  }
+  if some @constructor_declaration {
+    edge @class_declaration.def -> @constructor_declaration.def
+  }
+}
+
+;; To find where we are using things, we need to look at the statements. 
+(method_declaration
+  name: (identifier) @method_name
+) @decl {
+  node @decl.def
+  attr (@decl.def) type = "pop_symbol", symbol = (source-text @method_name), source_node = @decl, is_definition, syntax_type = "method_name"
+}
+
+(method_declaration
+  body: (_)? @body
+  parameters: (parameter_list)? @list
+  returns: (_)? @return_type
+  type_parameters: (type_argument_list)? @type_parameter_list
+) @decl {
+  if some @body {
+    edge @decl.def -> @body.def
+  }
+  if some @list {
+    edge @decl.def -> @list.def
+  }
+  if some @return_type{
+    edge @decl.def -> @return_type.def
+  }
+  if some @type_parameter_list{
+    edge @decl.def -> @type_parameter_list.def
+  }
+}
+
+(field_declaration) @decl {
+  node @decl.def
+  attr (@decl.def) node_definition = @decl
+}
+
+(field_declaration
+  (variable_declaration
+    (variable_declarator
+      name: (identifier) @_name
+      (_) @expr
+    )
+  )
+) @decl {
+  edge @decl.def -> @expr.def
+}
+
+(constructor_declaration
+  name: (identifier) @name
+) @decl {
+  node @decl.def
+  ;; treating constructor as just another method for now.
+  attr (@decl.def) type = "pop_symbol", symbol = (source-text @name), source_node = @decl, is_definition, syntax_type = "method_name"
+}
+
+(constructor_declaration
+  body: (_)? @body
+  parameters: (parameter_list)? @list
+  ;(_): @child
+) @decl {
+  if some @body {
+    edge @decl.def -> @body.def
+  }
+  if some @list {
+    edge @decl.def -> @list.def
+  }
+}
+
+[
+  (variable_declaration)
+  (variable_declarator)
+] @decl {
+  node @decl.def
+}
+
+(variable_declaration
+  type: (_)? @type
+  (variable_declarator
+    name: (identifier)? @name
+    (_)? @child
+  ) @declartor
+) @declaration {
+  edge @declaration.def -> @declartor.def 
+  
+  if some @type {
+    edge @declaration.def -> @type.def
+  }
+
+  if some @name {
+    attr (@declaration.def) type = "pop_symbol", symbol = (source-text @name), source_node = @declaration, syntax_type = "local_var"
+  }
+  
+  if some @child {
+    edge @declartor.def -> @child.def
+  }
+}
+
+;; Handle Statements and blocsk
+;; This should be shared code to handle all types of blocks to have the statments already have nodes.
+[
+  (block)
+  (checked_statement)
+  (do_statement)
+  (empty_statement)
+  (expression_statement)
+  (fixed_statement)
+  (for_statement)
+  (foreach_statement)
+  (goto_statement)
+  (if_statement)
+  (labeled_statement)
+  (local_declaration_statement)
+  (local_function_statement)
+  (lock_statement)
+  (preproc_if)
+  (return_statement)
+  (switch_statement)
+  (throw_statement)
+  (try_statement)
+  (unsafe_statement)
+  (using_statement)
+  (while_statement)
+  (yield_statement)
+  (catch_clause)
+  (catch_filter_clause)
+  (catch_declaration)
+  (from_clause)
+  (where_clause)
+  (select_clause)
+  (order_by_clause)
+  (let_clause)
+  (join_clause)
+  (group_clause)
+  (join_into_clause)
+] @stmt {
+  node @stmt.def
+  attr (@stmt.def) node_reference = @stmt
+}
+
+(checked_statement
+  (block) @block
+) @stmt {
+  edge @stmt.def -> @block.def
+}
+
+(do_statement
+  body: (_) @body
+  condition: (_) @condition
+) @stmt {
+  edge @stmt.def -> @body.def
+  edge @stmt.def -> @condition.def
+}
+
+(block
+  (statement) @stmt
+) @block {
+  edge @block.def -> @stmt.def
+}
+
+(return_statement
+  (_) @expr
+) @stmt {
+  if (not (eq "comment" (node-type @expr))) {
+    edge @stmt.def -> @expr.def
+  }
+}
+[
+  (expression_statement (_) @expr)
+  (return_statement (_) @expr)
+  (fixed_statement (_) @expr)
+  (goto_statement (_) @expr)
+  (labeled_statement (_) @expr)
+  (local_declaration_statement (_) @expr)
+  (lock_statement (_) @expr)
+  (throw_statement (_) @expr)
+  (unsafe_statement (_) @expr)
+  (using_statement (_) @expr)
+  (yield_statement (_) @expr)
+  (catch_clause (_) @expr)
+  (catch_filter_clause (_) @expr)
+  (catch_declaration (_) @expr)
+  (where_clause (_) @expr)
+  (select_clause (_) @expr)
+  (order_by_clause (_) @expr)
+  (let_clause (_) @expr)
+  (join_into_clause (_) @expr)
+  (join_clause (_) @expr)
+  (group_clause (_) @expr)
+] @stmt {
+  print @stmt, @expr
+  if (not (eq "comment" (node-type @expr))) {
+    edge @stmt.def -> @expr.def
+  }
+}
+
+(for_statement
+  body: (_)? @body
+  condition: (_)? @condition
+  initializer: (_)? @init
+) @stmt {
+  if some @body {
+    edge @stmt.def -> @body.def
+  }
+  if some @condition{
+    edge @stmt.def -> @condition.def
+  }
+  if some @init{
+    edge @stmt.def -> @init.def
+  }
+}
+
+(foreach_statement
+  left: (_)? @left
+  right: (_)? @right
+  type: (_)? @type
+  body: (_)? @body
+) @stmt {
+  if some @body {
+    edge @stmt.def -> @body.def
+  }
+  if some @left {
+    edge @stmt.def -> @left.def
+  }
+  if some @right{
+    edge @stmt.def -> @right.def
+  }
+  if some @type{
+    edge @stmt.def -> @type.def
+  }
+}
+
+(if_statement
+  alternative: (_)? @alt
+  condition: (_)? @condition
+  consequence: (_)? @con
+) @stmt {
+  if some @alt {
+    edge @stmt.def -> @alt.def
+  }
+
+  if some @condition {
+    edge @stmt.def -> @condition.def
+  }
+
+  if some @con {
+    edge @stmt.def -> @con.def
+  }
+}
+
+(local_function_statement
+  body: (_)? @body
+  name: (_)? @name
+  parameters: (_)? @params
+  type: (_)? @type
+  type_parameters: (_)? @type_parameters
+) @stmt {
+  if some @body {
+    edge @stmt.def -> @body.def
+  }
+
+  if some @name {
+    edge @stmt.def -> @name.def
+  }
+
+  if some @params {
+    edge @stmt.def -> @params.def
+  }
+
+  if some @type {
+    edge @stmt.def -> @type.def
+  }
+
+  if some @type_parameters {
+    edge @stmt.def -> @type_parameters.def
+  }
+}
+
+(switch_statement
+  body: (switch_body
+    (switch_section
+      ([
+        (lvalue_expression)
+        (non_lvalue_expression)
+      ])? @expr
+      (statement)? @sw_stmt
+      (when_clause)? @when
+    )
+  )
+  value: (_)? @value
+) @stmt {
+  if some @expr {
+    edge @stmt.def -> @expr.def
+  }
+
+  if some @sw_stmt {
+    edge @stmt.def -> @sw_stmt.def
+  }
+
+  if some @when {
+    edge @stmt.def -> @when.def
+  }
+
+  if some @value {
+    edge @stmt.def -> @value.def
+  }
+}
+
+(try_statement
+  body: (_)? @body
+) @stmt {
+  if some @body {
+    edge @stmt.def -> @body.def
+  }
+}
+
+(catch_clause
+  body: (_)? @body
+) @stmt {
+  if some @body {
+    edge @stmt.def -> @body.def
+  }
+}
+
+(while_statement
+  body: (_)? @body
+  condition: (_)? @con
+) @stmt {
+  if some @body {
+    edge @stmt.def -> @body.def
+  }
+  if some @con {
+    edge @stmt.def -> @con.def
+  }
+}
+
+(catch_declaration
+  type: (_)? @type
+) @decl {
+  if some @type {
+    edge @decl.def -> @type.def
+  }
+}
+
+; TODO
+;(preproc_if)
+
+
+;; Handle "Types"
+(argument
+  name: (identifier)? @name
+) @arg {
+  node @arg.def
+  if some @name {
+    attr (@arg.def) type = "pop_symbol", symbol = (source-text @name), source_node = @arg, is_definition, syntax_type = "argument"
+  }
+}
+
+(argument_list) @arg {
+  node @arg.def
+}
+
+[
+  (argument (_) @expr)
+  (argument_list (_) @expr)
+] @arg {
+  edge @arg.def -> @expr.def
+}
+
+(type_argument_list
+  (type) @type
+) @list {
+  node @list.def
+  edge @list.def -> @type.def
+}
+
+;; Define Generic Name nodes
+(generic_name
+  (identifier) @id
+  (type_argument_list) @types
+) @generic_name {
+  node @generic_name.def
+  attr (@generic_name.def) type = "pop_symbol", symbol = (source-text @id), source_node = @generic_name, is_definition, syntax_type = "name"
+  edge @generic_name.def -> @types.def
+}
+
+;; alias_qualified_name
+(alias_qualified_name
+  alias: (identifier) @id
+  name: ([
+    (identifier)? @alias_name
+    (generic_name)? @generic_name
+  ])
+) @alias_qualified_name {
+  node @alias_qualified_name.def
+  attr (@alias_qualified_name.def) type = "push_symbol", symbol = (source-text @id), source_node = @alias_qualified_name, is_reference
+
+  if some @alias_name {
+    node @alias_name.ref
+    attr (@alias_name.ref) node_reference = @alias_name
+    edge @alias_qualified_name.def -> @alias_name.ref
+  }
+
+  if some @generic_name {
+    edge @alias_qualified_name.def -> @generic_name.def
+  }
+}
+
+;; Array Type
+(array_type
+  rank: (array_rank_specifier) @specifier
+  type: (_)? @type
+) @array_type {
+  node @array_type.def
+  node @specifier.def
+  if some @type {
+    edge @array_type.def -> @type.def
+  }
+  edge @array_type.def -> @specifier.def
+}
+
+(array_rank_specifier
+  (_) @expr
+) @array_rank_specifier {
+  ; TODO: Handle all expressions
+  node @array_rank_specifier.def
+  node @expr.def
+  edge @array_rank_specifier.def -> @expr.def
+}
+
+;; function_pointer_type
+(function_pointer_type
+  returns: (_) @return_type
+) @function_pointer_type {
+  node @function_pointer_type.def
+  edge @function_pointer_type -> @return_type.def
+}
+
+(function_pointer_type
+  (calling_convention)? @calling_convention
+  (function_pointer_parameter)? @param 
+) @function_pointer_type {
+  if some @calling_convention {
+    edge @function_pointer_type -> @calling_convention
+  }
+  if some @param {
+    edge @function_pointer_type.def -> @param.def
+  }
+
+}
+
+(calling_convention
+  (identifier) @id
+) @calling_convention {
+  node @calling_convention.def
+  attr (@calling_convention.def) type = "push_symbol", symbol = (source-text @id), source_node = @calling_convention, is_reference
+}
+
+(function_pointer_parameter
+  type: (_) @type
+) @function_pointer_parameter {
+  node @function_pointer_parameter.def
+  edge @function_pointer_parameter -> @type.def
+}
+
+;; identifier
+;; predefined_type
+;; implicit_type
+[
+  (identifier)
+  (implicit_type)
+  (predefined_type)
+] @id {
+  node @id.def
+  attr (@id.def) node_reference = @id
+}
+
+;; nullable_type
+;; pointer_type
+(nullable_type
+  type: (_)? @type
+) @nullable_type {
+  node @nullable_type.def
+  if some @type {
+    edge @nullable_type.def -> @type.def
+  }
+}
+
+(pointer_type
+  type: (_)? @type
+) @nullable_type {
+  node @nullable_type.def
+  if some @type {
+    edge @nullable_type.def -> @type.def
+  }
+}
+
+(ref_type
+  type: (_)? @type
+) @nullable_type {
+  node @nullable_type.def
+  if some @type {
+    edge @nullable_type.def -> @type.def
+  }
+}
+
+(scoped_type
+  type: (_)? @type
+) @nullable_type {
+  node @nullable_type.def
+  if some @type {
+    edge @nullable_type.def -> @type.def
+  }
+}
+
+;; qualified_name
+(qualified_name) @qualified_name {
+  node @qualified_name.def
+}
+
+(qualified_name
+  name: ([
+    (generic_name)
+    (identifier)
+  ])? @name
+  qualifier: ([
+    (alias_qualified_name)
+    (generic_name)
+    (identifier)
+    (qualified_name)
+  ])? @qualifier
+) @qualified_name {
+  if some @name {
+    edge @qualified_name.def -> @name.def
+  }
+  if some @qualifier {
+    edge @qualified_name.def -> @qualifier.def
+  }
+}
+;; tuple_type
+
+(tuple_element
+  name: (identifier)? @name
+  type: (_)? @type
+) @tuple_element {
+  node @tuple_element.def
+  if some @name {
+    edge @tuple_element.def -> @name.def
+  }
+  if some @type {
+    edge @tuple_element.def -> @type.def
+  }
+}
+
+(tuple_type) @tuple_type {
+  node @tuple_type.def
+}
+
+(tuple_type
+  (tuple_element) @element
+) @tuple_type {
+  edge @tuple_type.def -> @element.def
+}
+
+; (from_clause
+;   name: (identifier) @name
+; ) @clause {
+;   attr (@clause.def) type = "pop_symbol", symbol = (source-text @name), source_node = @clause
+; }
+
+(from_clause
+  type: (_)? @type
+  (_)? @expr
+) @from_clause {
+  if some @type {
+    edge @from_clause.def -> @type.def
+  }
+
+  if some @expr {
+    edge @from_clause.def -> @expr.def
+  }
+}
+
+
+;; Literals
+
+(literal) @literal {
+  node @literal.def
+
+  attr (@literal.def) node_definition = @literal
+}
+
+
+;;; handle expressions
+
+(element_access_expression
+  expression: (_) @n_expr
+) @element_access_expression {
+  node @element_access_expression.def
+  edge @element_access_expression.def -> @n_expr.def
+}
+
+(declaration_expression
+  name: (identifier) @id
+) @decl {
+  node @decl.def
+  attr (@decl.def) type = "pop_symbol", symbol = (source-text @id), source_node = @decl
+  edge @decl.def -> @id.def
+}
+
+(declaration_expression
+  type: (type) @type
+) @decl {
+  edge @decl.def -> @type.def
+}
+
+[
+  (element_binding_expression) 
+  (tuple_expression)
+] @decl {
+  node @decl.def
+}
+
+[
+  (element_binding_expression (argument) @argument) 
+  (tuple_expression (argument) @argument)
+] @decl {
+  node @decl.def
+  edge @decl.def -> @argument.def
+}
+
+(member_access_expression
+  expression: (_)? @n_expr
+) @expr {
+  if some @n_expr {
+    edge @expr.def -> @n_expr.def
+  }
+}
+
+(member_access_expression
+  expression: ([
+    (identifier)
+    (predefined_type)
+  ]) @expr
+) @mem_expr {
+  attr (@mem_expr.def) type = "push_symbol", symbol = (source-text @expr), source_node = @mem_expr, is_reference
+}
+
+(unary_expression
+  argument: ([
+    (binary_expression)
+    (boolean_literal)
+    (character_literal)
+    (identifier)
+    (integer_literal)
+    (parenthesized_expression)
+    (unary_expression)
+  ]) @argument
+) @unary_expression {
+  node @unary_expression.def
+  edge @unary_expression.def -> @argument.def
+}
+
+[
+  (parenthesized_expression (_) @expr)
+  (prefix_unary_expression (_) @expr)
+] @decl {
+  edge @decl.def -> @expr.def
+}
+
+[
+  (parameter_list)
+  (array_creation_expression)
+  (await_expression)
+  (checked_expression)
+  (anonymous_object_creation_expression)
+  (conditional_expression)
+  (anonymous_method_expression)
+  (lambda_expression)
+  (invocation_expression)
+  (object_creation_expression)
+  (binary_expression)
+  (member_access_expression)
+  (parenthesized_expression)
+  (initializer_expression)
+  (prefix_unary_expression)
+  (query_expression)
+  (as_expression)
+  (assignment_expression)
+  (typeof_expression)
+] @expr {
+  node @expr.def
+}
+(parameter_list
+  type: (_) @type
+) @list {
+  edge @list.def -> @type.def
+}
+
+(array_creation_expression
+  type: (_) @type
+) @list {
+  edge @list.def -> @type.def
+}
+
+(anonymous_method_expression
+  parameters: (parameter_list) @list
+  (block) @block
+) @expr {
+  edge @expr.def -> @list.def
+  edge @expr.def -> @block.def
+}
+
+[
+  (anonymous_object_creation_expression (_) @nested)
+  (await_expression (_) @nested)
+  (checked_expression (_) @nested)
+  (conditional_access_expression (_) @nested)
+  (initializer_expression (_) @nested)
+] @expr {
+  edge @expr.def -> @nested.def
+}
+
+(binary_expression
+  left: (_) @l_expr
+  right: (_)? @type
+) @expr {
+  edge @expr.def -> @l_expr.def
+  edge @expr.def -> @type.def
+}
+
+(as_expression
+  left: (_) @l_expr
+  right: (_)? @type
+) @expr {
+  edge @expr.def -> @l_expr.def
+  edge @expr.def -> @type.def
+}
+
+(assignment_expression
+  left: (_) @l_expr
+  right: (_)? @type
+) @expr {
+  edge @expr.def -> @l_expr.def
+  edge @expr.def -> @type.def
+}
+
+; (cast_expression)
+(cast_expression
+  type: (_) @type
+  value: (_) @v_expr
+) @expr {
+  node @expr.def
+  edge @expr.def -> @type.def
+  edge @expr.def -> @v_expr.def
+}
+
+(conditional_access_expression
+  condition: (_) @type
+) @expr {
+  node @expr.def
+  edge @expr.def -> @type.def
+}
+
+(conditional_expression
+  alternative: (_) @a_expr
+) @expr {
+  edge @expr.def -> @a_expr.def
+}
+
+(conditional_expression
+  condition: (_) @c_expr
+) @expr {
+  edge @expr.def -> @c_expr.def
+}
+
+(conditional_expression
+  consequence: (_) @co_expr
+) @expr {
+  edge @expr.def -> @co_expr.def
+}
+
+(lambda_expression
+  body: (_) @body
+  parameters: (_) @param
+  type: (_) @type
+) @expr {
+  edge @expr.def -> @body.def
+  edge @expr.def -> @param.def
+  edge @expr.def -> @type.def
+}
+
+(invocation_expression
+  arguments: (argument_list)? @args
+  function: (_)? @func
+) @expr {
+  if some @args {
+    edge @expr.def -> @args.def
+  }
+  if some @func {
+    edge @expr.def -> @func.def
+  }
+}
+
+(object_creation_expression
+  type: (_) @type
+) @expr {
+  edge @expr.def -> @type.def
+}
+
+(object_creation_expression
+  arguments: (argument_list)? @list
+  initializer: (initializer_expression)? @init
+) @expr {
+  if some @list {
+    edge @expr.def -> @list.def
+  }
+
+  if some @init {
+    edge @expr.def -> @init.def
+  }
+}
+
+(query_expression
+  (_) @child
+) @query_expression {
+  edge @query_expression.def -> @child.def
+}
+
+(typeof_expression
+  type: (_) @type
+) @expr {
+  edge @expr.def -> @type.def
+}
+
+;; TODO
+; (default_expression)
+; (implicit_array_creation_expression)
+; (implicit_object_creation_expression)
+; (implicit_stackalloc_expression)
+; (interpolated_string_expression)
+; (is_expression)
+; (is_pattern_expression)
+; (literal)
+; (makeref_expression)
+; (postfix_unary_expression)
+; (preproc_if)
+; (range_expression)
+; (ref_expression)
+; (reftype_expression)
+; (refvalue_expression)
+; (sizeof_expression)
+; (stackalloc_expression)
+; (switch_expression)
+; (throw_expression)
+; (with_expression) 

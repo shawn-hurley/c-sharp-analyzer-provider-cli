@@ -1,0 +1,70 @@
+mod provider;
+mod analyzer_service;
+mod c_sharp_graph;
+
+use std::env::temp_dir;
+
+use crate::provider::CSharpProvider;
+use clap::{command, Parser};
+use tokio::net::UnixListener;
+use tokio::sync::Mutex;
+use tokio_stream::wrappers::UnixListenerStream;
+use tonic::transport::Server;
+use crate::analyzer_service::provider_service_server::ProviderServiceServer;
+use crate::analyzer_service::proto;
+
+
+#[derive(Parser)]
+#[command(version, about, long_about = None)]
+struct Args {
+    #[arg(long)]
+    port: Option<usize>,
+    #[arg(long)]
+    socket: Option<String>,
+    #[arg(long)]
+    name: Option<String>,
+}
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let args = Args::parse();
+
+    let provider = CSharpProvider{ 
+        db_path: temp_dir().join("c_sharp_provider.db"), 
+        config: Mutex::new(None) 
+    };
+    let service = tonic_reflection::server::Builder::configure()
+        .register_encoded_file_descriptor_set(proto::FILE_DESCRIPTOR_SET)
+        .build_v1()
+        .unwrap();
+
+    if args.port.is_some() {
+        // ... your gRPC client or server logic using the generated code
+        let s = format!("[::1]:{}", args.port.unwrap());
+        let addr = s.parse()?;
+
+        Server::builder()
+            .add_service(ProviderServiceServer::new(provider))
+            .add_service(service)
+            .serve(addr)
+            .await?;
+    } else {
+        //#[cfg(not(windows))]
+        let uds = UnixListener::bind(args.socket.unwrap())?;
+        //#[cfg(not(windows))]
+        let uds_stream = UnixListenerStream::new(uds);
+
+        //TODO: need to support windows  Named Pipes
+        //#[cfg(target_os = "windows")]
+        //let uds: window
+
+        Server::builder()
+            .add_service(ProviderServiceServer::new(provider))
+            .add_service(service)
+            .serve_with_incoming(uds_stream)
+            .await?;
+    }
+    
+
+    Ok(())
+}

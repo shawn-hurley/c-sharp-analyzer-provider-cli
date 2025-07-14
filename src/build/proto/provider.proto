@@ -1,0 +1,188 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/empty.proto";
+
+option go_package = "github.com/konveyor/analyzer-lsp/provider/lib/grpc";
+
+
+package provider;
+
+
+message Capability {
+  string name = 1;
+  google.protobuf.Struct templateContext = 2;
+}
+
+message Config {
+  string location = 1;
+  string dependencyPath = 2;
+  string analysisMode = 4;
+  google.protobuf.Struct providerSpecificConfig= 5;
+  Proxy proxy = 6;
+
+  // repeated string workspaceFolders = 7;
+  // repeated string dependencyFolders = 8;
+}
+
+message InitResponse {
+  string error = 1 ;
+  bool successful = 2;
+  int64 id = 3;
+  Config builtinConfig = 4;
+}
+
+message ExternalLink {
+  string url = 1;
+  string title = 2;
+}
+
+message Position {
+  double line = 1;
+  double character = 2;
+}
+
+message Location {
+  Position startPosition = 1;
+  Position endPosition = 2;
+}
+
+message IncidentContext {
+  string fileURI = 1;
+  optional int64 Effort = 2;
+  Location codeLocation = 3;
+  optional int64 LineNumber = 4;
+  google.protobuf.Struct variables = 5;
+  repeated ExternalLink links = 6;
+  bool IsDependencyIncident = 7;
+}
+
+message ProviderEvaluateResponse {
+  bool matched = 1;
+  repeated IncidentContext incidentContexts = 2;
+  google.protobuf.Struct templateContext = 3;
+}
+
+message BasicResponse {
+  string error = 1 ;
+  bool successful = 2;
+}
+
+message EvaluateRequest {
+  string cap = 1;
+  string conditionInfo = 2;
+  int64 id = 3;
+}
+
+message EvaluateResponse {
+  string error = 1;
+  bool successful = 2;
+  ProviderEvaluateResponse response = 3;
+}
+
+message CapabilitiesResponse {
+  repeated Capability capabilities = 1;
+}
+
+message ServiceRequest {
+  int64 id = 1;
+}
+
+message GetCodeSnipRequest{
+  string uri = 1;
+  Location codeLocation = 2;
+}
+
+message GetDependencyLocationRequest{
+  Dependency dep = 1;
+  string DepFile = 2;
+}
+
+message GetCodeSnipResponse{
+  string snip= 1;
+}
+
+message GetDependencyLocationResponse{
+  Location location= 1;
+}
+
+service ProviderCodeLocationService {
+  rpc GetCodeSnip(GetCodeSnipRequest) returns (GetCodeSnipResponse) {};
+}
+
+service ProviderDependencyLocationService {
+  rpc GetDependencyLocation(GetDependencyLocationRequest) returns (GetDependencyLocationResponse) {};
+}
+
+service ProviderService {
+  rpc Capabilities (google.protobuf.Empty) returns (CapabilitiesResponse) {};
+  rpc Init (Config) returns (InitResponse) {};
+  rpc Evaluate (EvaluateRequest) returns (EvaluateResponse) {};
+  rpc Stop (ServiceRequest) returns (google.protobuf.Empty) {};
+  rpc GetDependencies (ServiceRequest) returns (DependencyResponse) {};
+  rpc GetDependenciesDAG(ServiceRequest) returns (DependencyDAGResponse) {};
+  rpc NotifyFileChanges(NotifyFileChangesRequest) returns (NotifyFileChangesResponse) {};
+}
+
+message Dependency {
+  string name = 1;
+  string version = 2;
+  string classifier = 3;
+  string type = 4;
+  string resolvedIdentifier = 5;
+  string fileURIPrefix = 6;
+  bool indirect = 7;
+  google.protobuf.Struct extras = 8;
+  repeated string labels = 9;
+}
+
+message DependencyList {
+  repeated Dependency deps = 1;
+}
+
+message DependencyResponse{
+  bool successful  = 1;
+  string error  = 2;
+  repeated FileDep fileDep = 3;
+}
+
+message FileDep{
+  string fileURI = 3;
+  DependencyList list = 4;
+}
+
+message DependencyDAGItem {
+  Dependency key = 1;
+  repeated DependencyDAGItem addedDeps = 2;
+}
+
+message DependencyDAGResponse{
+  bool successful  = 1;
+  string error  = 2;
+  repeated FileDAGDep fileDagDep = 3;
+}
+
+message FileDAGDep {
+  string fileURI = 3;
+  repeated DependencyDAGItem list = 4;
+}
+
+message Proxy {
+  string HTTPProxy = 1;
+  string HTTPSProxy = 2;
+  string NoProxy = 3;
+}
+
+message FileChange {
+  string Uri = 1;
+  string Content = 2;
+  bool Saved = 3;
+}
+
+message NotifyFileChangesRequest {
+  repeated FileChange changes = 1;
+}
+
+message NotifyFileChangesResponse {
+  string error = 1;
+}
