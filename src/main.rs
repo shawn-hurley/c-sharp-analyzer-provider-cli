@@ -1,17 +1,17 @@
 mod provider;
 mod analyzer_service;
 mod c_sharp_graph;
+mod pipe_stream;
 
 use std::env::temp_dir;
 
 use crate::provider::CSharpProvider;
 use clap::{command, Parser};
-use tokio::net::UnixListener;
 use tokio::sync::Mutex;
-use tokio_stream::wrappers::UnixListenerStream;
 use tonic::transport::Server;
 use crate::analyzer_service::provider_service_server::ProviderServiceServer;
 use crate::analyzer_service::proto;
+use tracing::Level;
 
 
 #[derive(Parser)]
@@ -27,6 +27,9 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    //env_logger::Builder::from_env(Env::default().default_filter_or("trace")).init();
+    tracing_subscriber::fmt()
+    .init();
     let args = Args::parse();
 
     let provider = CSharpProvider{ 
@@ -49,20 +52,31 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .serve(addr)
             .await?;
     } else {
-        //#[cfg(not(windows))]
-        let uds = UnixListener::bind(args.socket.unwrap())?;
-        //#[cfg(not(windows))]
-        let uds_stream = UnixListenerStream::new(uds);
+        #[cfg(not(windows))] 
+        {
+            use tokio_stream::wrappers::UnixListenerStream;
+            use tokio::net::UnixListener;
+            
+            let uds = UnixListener::bind(args.socket.unwrap())?;
+            let uds_stream = UnixListenerStream::new(uds);
 
+
+            Server::builder()
+                .add_service(ProviderServiceServer::new(provider))
+                .add_service(service)
+                .serve_with_incoming(uds_stream)
+                .await?;
+        }
         //TODO: need to support windows  Named Pipes
-        //#[cfg(target_os = "windows")]
-        //let uds: window
-
-        Server::builder()
-            .add_service(ProviderServiceServer::new(provider))
-            .add_service(service)
-            .serve_with_incoming(uds_stream)
-            .await?;
+        #[cfg(target_os = "windows")] {
+            println!("HEERE!!!!____!!_!_!");
+            use crate::pipe_stream::get_named_pipe_connection_stream;
+            Server::builder()
+               .add_service(ProviderServiceServer::new(provider))
+                .add_service(service)
+               .serve_with_incoming(get_named_pipe_connection_stream(args.socket.unwrap()))
+               .await?;
+        }
     }
     
 
