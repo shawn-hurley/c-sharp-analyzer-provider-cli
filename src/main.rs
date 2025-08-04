@@ -12,7 +12,7 @@ use tonic::transport::Server;
 use crate::analyzer_service::provider_service_server::ProviderServiceServer;
 use crate::analyzer_service::proto;
 use tracing::Level;
-
+use env_logger::Env;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -27,9 +27,8 @@ struct Args {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    //env_logger::Builder::from_env(Env::default().default_filter_or("trace")).init();
-    tracing_subscriber::fmt()
-    .init();
+    env_logger::Builder::from_env(Env::default().default_filter_or("trace")).init();
+    //tracing_subscriber::fmt().init();
     let args = Args::parse();
 
     let provider = CSharpProvider{ 
@@ -52,6 +51,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .serve(addr)
             .await?;
     } else {
+        println!("Tesing");
         #[cfg(not(windows))] 
         {
             use tokio_stream::wrappers::UnixListenerStream;
@@ -67,7 +67,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .serve_with_incoming(uds_stream)
                 .await?;
         }
-        //TODO: need to support windows  Named Pipes
         #[cfg(target_os = "windows")] {
             println!("HEERE!!!!____!!_!_!");
             use crate::pipe_stream::get_named_pipe_connection_stream;
