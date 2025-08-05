@@ -1,34 +1,21 @@
 use anyhow::Error;
-use stack_graphs::paths::Extend;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::{Command, Output};
-use tonic::async_trait;
 
 #[derive(Debug)]
 pub struct Dependencies {
-    location: PathBuf,
-    name: String,
-    version: String,
+    pub location: PathBuf,
+    pub name: String,
+    pub version: String,
 }
 
-#[async_trait]
-pub trait ProjectDependencies {
-    async fn resolve(&self) -> Result<Vec<Dependencies>, Error>;
+#[derive(Debug)]
+pub struct Project {
+    pub location: String,
 }
 
-struct Project {
-    location: String,
-}
-
-pub fn get_project_dependencies(project_location: String) -> impl ProjectDependencies {
-    return Project {
-        location: project_location,
-    };
-}
-
-#[async_trait]
-impl ProjectDependencies for Project {
-    async fn resolve(&self) -> Result<Vec<Dependencies>, Error> {
+impl Project {
+    pub async fn resolve(&self) -> Result<Vec<Dependencies>, Error> {
         // First need to run packet.
         // Need to convert and download all DLL's
         //TODO: Add paket location as a provider specific config.
@@ -39,9 +26,7 @@ impl ProjectDependencies for Project {
 
         return self.read_packet_output(paket_output);
     }
-}
 
-impl Project {
     fn read_packet_output(&self, output: Output) -> Result<Vec<Dependencies>, Error> {
         if !output.status.success() {
             //TODO: Consider a specific error type

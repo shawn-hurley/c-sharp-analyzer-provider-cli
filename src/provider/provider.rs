@@ -9,7 +9,7 @@ use crate::{
         IncidentContext, InitResponse, Location, NotifyFileChangesRequest,
         NotifyFileChangesResponse, Position, ProviderEvaluateResponse, ServiceRequest,
     },
-    provider::dependency_resolution::get_project_dependencies,
+    provider::{Dependencies, Project},
 };
 use prost_types::Struct;
 use tokio::task::JoinHandle;
@@ -18,7 +18,6 @@ use tonic::{Request, Response, Status};
 use utoipa::{OpenApi, ToSchema};
 
 use crate::c_sharp_graph::{find_node::FindNode, loader::load_database};
-use crate::provider::{Dependencies, ProjectDependencies};
 use serde::Deserialize;
 
 #[derive(ToSchema, Deserialize, Debug)]
@@ -72,13 +71,14 @@ impl ProviderService for CSharpProvider {
         let mut m = self.config.lock().await;
         let saved_config = m.insert(config);
         let _ = m;
-        let x = saved_config.location.clone();
+        let project = Project {
+            location: saved_config.location.clone(),
+        };
 
-        let get_deps_handle: JoinHandle<Result<Vec<Dependencies>, Error>> = task::spawn(async {
-            let resolver = get_project_dependencies(x);
-
-            return resolver.resolve().await;
-        });
+        let get_deps_handle: JoinHandle<Result<Vec<Dependencies>, Error>> =
+            task::spawn(async move {
+                return project.resolve().await;
+            });
 
         println!("db_path {:?}", self.db_path);
         let path = PathBuf::from(saved_config.location.clone());
