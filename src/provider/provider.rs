@@ -52,7 +52,7 @@ impl ProviderService for CSharpProvider {
             return Err(Status::from_error(Box::new(json.err().unwrap())));
         }
 
-        println!("returning refernced capability: {:?}", json.ok());
+        println!("returning referenced capability: {:?}", json.ok());
 
         return Ok(Response::new(CapabilitiesResponse {
             capabilities: vec![Capability {
@@ -117,7 +117,7 @@ impl ProviderService for CSharpProvider {
         println!("evaluate request: {:?}", evaluate_request.condition_info);
 
         if evaluate_request.cap != "referenced" {
-            return Err(Status::invalid_argument("unknown capabilitys"));
+            return Err(Status::invalid_argument("unknown capabilities"));
         }
         let condition: CSharpCondition =
             match serde_yml::from_str(evaluate_request.condition_info.as_str()) {

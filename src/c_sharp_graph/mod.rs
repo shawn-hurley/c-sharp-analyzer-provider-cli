@@ -1,11 +1,11 @@
 pub mod find_node;
+pub mod loader;
 pub mod query;
 pub mod results;
-pub mod loader;
 
+use tree_sitter_stack_graphs::CancellationFlag;
 use tree_sitter_stack_graphs::loader::LanguageConfiguration;
 use tree_sitter_stack_graphs::loader::LoadError;
-use tree_sitter_stack_graphs::CancellationFlag;
 
 /// The stack graphs tsg source for this language.
 pub const STACK_GRAPHS_TSG_PATH: &str = "src/stack-graphs.tsg";

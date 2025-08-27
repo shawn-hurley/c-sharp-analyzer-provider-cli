@@ -1,11 +1,17 @@
-use std::{collections::{BTreeMap, HashMap, HashSet}, vec};
+use std::{
+    collections::{BTreeMap, HashMap, HashSet},
+    vec,
+};
 
+use crate::c_sharp_graph::results::{Location, Position, Result};
 use anyhow::{Error, Ok};
 use prost_types::Value;
-use url::Url;
 use regex::Regex;
-use stack_graphs::{arena::Handle, graph::{File, Node, StackGraph}};
-use crate::c_sharp_graph::results::{Location, Position, Result};
+use stack_graphs::{
+    arena::Handle,
+    graph::{File, Node, StackGraph},
+};
+use url::Url;
 
 pub struct Querier<'a> {
     db: &'a mut StackGraph,
@@ -16,7 +22,6 @@ pub trait Query {
 }
 
 impl Query for Querier<'_> {
-
     fn query(&mut self, query: String) -> anyhow::Result<Vec<Result>, Error> {
         let search: Search = self.get_search(query)?;
 
@@ -47,12 +52,12 @@ impl Query for Querier<'_> {
                     // and it only used to tie together other nodes.
                     continue;
                 }
-                
+
                 let symbol = &self.db[node.symbol().unwrap()];
                 let source_info = self.db.source_info(node_handle);
                 if source_info.is_none() {
                     println!("continue source_info: {}", node.display(self.db));
-                    continue
+                    continue;
                 }
                 match source_info.unwrap().syntax_type.into_option() {
                     None => continue,
@@ -65,7 +70,6 @@ impl Query for Querier<'_> {
                                     None => continue,
                                     Some(file_handle) => {
                                         file_to_compunit_handle.insert(file_handle, node_handle);
-
                                     }
                                 }
                             }
@@ -92,9 +96,7 @@ impl Query for Querier<'_> {
                                 }
                                 //TODO: Handle nested namespace declarations
                             }
-                            &_ => {
-                                continue
-                            }
+                            &_ => continue,
                         }
                     }
                 }
@@ -104,7 +106,7 @@ impl Query for Querier<'_> {
 
             println!("referenced_files: {:?}", referenced_files);
             for file in referenced_files.iter() {
-                let file_handle= file.to_owned();
+                let file_handle = file.to_owned();
                 let comp_unit_node = file_to_compunit_handle.get(&file_handle);
                 if comp_unit_node.is_none() {
                     println!("something went very wrong");
@@ -118,53 +120,74 @@ impl Query for Querier<'_> {
                 }
                 let file_uri = file_url.unwrap().as_str().to_string();
                 let _ = f;
-                self.traverse_node_search(*comp_unit_node.unwrap(), &namespace_symbols, &mut results, file_uri);
+                self.traverse_node_search(
+                    *comp_unit_node.unwrap(),
+                    &namespace_symbols,
+                    &mut results,
+                    file_uri,
+                );
             }
 
             println!("results - {:?}", results)
         }
         Ok(results)
-
     }
 }
 
 impl Querier<'_> {
     pub fn new(db: &mut StackGraph) -> impl Query + use<'_> {
-        return Querier{db};
+        return Querier { db };
     }
     fn get_search(&self, query: String) -> anyhow::Result<Search, Error> {
-       return Search::create_search(query);
+        return Search::create_search(query);
     }
-    fn traverse_node_search(&mut self, node: Handle<Node>, namespace_symbols: &NamespaceSymbols, results: &mut Vec<Result>, file_uri: String) {
+    fn traverse_node_search(
+        &mut self,
+        node: Handle<Node>,
+        namespace_symbols: &NamespaceSymbols,
+        results: &mut Vec<Result>,
+        file_uri: String,
+    ) {
         let mut traverse_nodes: Vec<Handle<Node>> = vec![];
         for edge in self.db.outgoing_edges(node) {
             traverse_nodes.push(edge.sink);
             let child_node = &self.db[edge.sink];
             match child_node.symbol() {
-                None => {
-                    continue
-                },
+                None => continue,
                 Some(symbol_handle) => {
                     let symbol = &self.db[symbol_handle];
                     if namespace_symbols.symbol_in_namespace(symbol.to_string()) {
                         let debug_ndoe = self.db.node_debug_info(edge.sink).map_or(vec![], |d| {
-                            return d.iter().map(|e| {
-                                let k = self.db[e.key].to_string();
-                                let v = self.db[e.value].to_string();
-                                return (k, v)
-                            }).collect();
+                            return d
+                                .iter()
+                                .map(|e| {
+                                    let k = self.db[e.key].to_string();
+                                    let v = self.db[e.value].to_string();
+                                    return (k, v);
+                                })
+                                .collect();
                         });
-                        let edge_debug = self.db.edge_debug_info(edge.source, edge.sink).map_or(vec![], |d| {
-                            return d.iter().map(|e| {
-                                let k = self.db[e.key].to_string();
-                                let v = self.db[e.value].to_string();
-                                return (k, v)
-                            }).collect();
-                        });
+                        let edge_debug =
+                            self.db
+                                .edge_debug_info(edge.source, edge.sink)
+                                .map_or(vec![], |d| {
+                                    return d
+                                        .iter()
+                                        .map(|e| {
+                                            let k = self.db[e.key].to_string();
+                                            let v = self.db[e.value].to_string();
+                                            return (k, v);
+                                        })
+                                        .collect();
+                                });
 
-                        
-
-                        println!("{:?} -- {} - {:?} -- {:?}", child_node.scope(), child_node.display(self.db), debug_ndoe, edge_debug);
+                        println!(
+                            "{:?} -- {} - {:?} -- {:?}",
+                            child_node.scope(),
+                            child_node.display(self.db),
+                            debug_ndoe,
+                            edge_debug
+                        );
                         let code_location: Location;
                         let line_number: usize;
                         let mut line: Option<String> = None;
@@ -172,15 +195,15 @@ impl Querier<'_> {
                             None => {
                                 println!("something is wrong this shouldn't happen");
                                 continue;
-                            },
+                            }
                             Some(source_info) => {
                                 line_number = source_info.span.start.line;
-                                code_location = Location{
-                                    start_position: Position{
+                                code_location = Location {
+                                    start_position: Position {
                                         line: source_info.span.start.line,
                                         character: source_info.span.start.column.utf8_offset,
                                     },
-                                    end_position: Position { 
+                                    end_position: Position {
                                         line: source_info.span.end.line,
                                         character: source_info.span.end.column.utf8_offset,
                                     },
@@ -193,14 +216,20 @@ impl Querier<'_> {
                                 }
                             }
                         }
-                        let mut var: BTreeMap<String, Value> = BTreeMap::from([("file".to_string(), Value::from(file_uri.clone()))]);
+                        let mut var: BTreeMap<String, Value> =
+                            BTreeMap::from([("file".to_string(), Value::from(file_uri.clone()))]);
                         println!("LINE -- {:?}", line);
                         if line.is_some() {
                             println!("here -- {:?}", line);
                             var.insert("line".to_string(), Value::from(line.unwrap().as_str()));
                         }
-                        
-                        results.push(Result{file_uri: file_uri.clone(), line_number, code_location, variables: var});
+
+                        results.push(Result {
+                            file_uri: file_uri.clone(),
+                            line_number,
+                            code_location,
+                            variables: var,
+                        });
                     }
                 }
             }
@@ -218,56 +247,65 @@ pub struct NamespaceSymbols {
 }
 
 impl NamespaceSymbols {
-    fn new(db: &mut StackGraph, nodes: Vec<Handle<Node>>) -> anyhow::Result<NamespaceSymbols, Error> {
+    fn new(
+        db: &mut StackGraph,
+        nodes: Vec<Handle<Node>>,
+    ) -> anyhow::Result<NamespaceSymbols, Error> {
         let mut classes: HashMap<String, Handle<Node>> = HashMap::new();
         let mut class_fields: HashMap<String, Handle<Node>> = HashMap::new();
         let mut class_methods: HashMap<String, Handle<Node>> = HashMap::new();
 
         for node_handle in nodes {
             //Get all the edges
-            Self::traverse_node(db, node_handle, &mut classes, &mut class_fields, &mut class_methods)
+            Self::traverse_node(
+                db,
+                node_handle,
+                &mut classes,
+                &mut class_fields,
+                &mut class_methods,
+            )
         }
 
         println!("classes- {:?}", classes);
         println!("class methods -{:?}", class_methods);
         println!("class fields - {:?}", class_fields);
-        Ok(NamespaceSymbols {classes: classes, class_fields: class_fields, class_methods: class_methods })
-
+        Ok(NamespaceSymbols {
+            classes: classes,
+            class_fields: class_fields,
+            class_methods: class_methods,
+        })
     }
 
-    fn traverse_node(db: &mut StackGraph, node: Handle<Node>, classes: &mut HashMap<String, Handle<Node>>, class_fields: &mut HashMap<String, Handle<Node>>, class_methods: &mut HashMap<String, Handle<Node>>) {
+    fn traverse_node(
+        db: &mut StackGraph,
+        node: Handle<Node>,
+        classes: &mut HashMap<String, Handle<Node>>,
+        class_fields: &mut HashMap<String, Handle<Node>>,
+        class_methods: &mut HashMap<String, Handle<Node>>,
+    ) {
         let mut child_edges: Vec<Handle<Node>> = vec![];
         for edge in db.outgoing_edges(node) {
             child_edges.push(edge.sink);
             let child_node = &db[edge.sink];
             let symbol = match child_node.symbol() {
                 None => continue,
-                Some(symbol) => &db[symbol]
+                Some(symbol) => &db[symbol],
             };
             match db.source_info(edge.sink) {
-                None => {
-                    continue
-                },
-                Some(source_info) => {
-                    match source_info.syntax_type.into_option() {
-                        None => {
-                            continue
-                        },
-                        Some(syntax_type) => {
-                            match &db[syntax_type] {
-                                "method_name" => {
-                                    class_methods.insert(symbol.to_string(), edge.sink);
-                                }
-                                "class-def" => {
-                                    classes.insert(symbol.to_string(), edge.sink);
-                                }
-                                &_ => {},
-                            }
+                None => continue,
+                Some(source_info) => match source_info.syntax_type.into_option() {
+                    None => continue,
+                    Some(syntax_type) => match &db[syntax_type] {
+                        "method_name" => {
+                            class_methods.insert(symbol.to_string(), edge.sink);
                         }
-                    }
-                }
+                        "class-def" => {
+                            classes.insert(symbol.to_string(), edge.sink);
+                        }
+                        &_ => {}
+                    },
+                },
             }
-
         }
         for child_edge in child_edges {
             Self::traverse_node(db, child_edge, classes, class_fields, class_methods);
@@ -280,18 +318,16 @@ impl NamespaceSymbols {
         let field_match = self.class_fields.get(&symbol);
 
         if class_match.is_some() || method_match.is_some() || field_match.is_some() {
-            return true
+            return true;
         }
-        return false
-
+        return false;
     }
 }
-
 
 #[derive(Debug)]
 struct SearchPart {
     part: String,
-    regex: Option<Regex>
+    regex: Option<Regex>,
 }
 
 #[derive(Debug)]
@@ -311,16 +347,19 @@ impl Search {
                     regex = Regex::new(part)?;
                 }
 
-                parts.push(SearchPart{
+                parts.push(SearchPart {
                     part: part.to_string(),
                     regex: Some(regex),
                 });
             } else {
-                parts.push(SearchPart { part: part.to_string(), regex: None })
+                parts.push(SearchPart {
+                    part: part.to_string(),
+                    regex: None,
+                })
             }
         }
 
-        return Ok(Search{parts: parts})
+        return Ok(Search { parts: parts });
     }
 
     fn all_references_search(&self) -> bool {
@@ -349,20 +388,20 @@ impl Search {
         }
         return true;
     }
-    
+
     fn match_namespace(&self, symbol: &str) -> bool {
-        let symbol_parts:Vec<&str> = symbol.split(".").collect();
-        if symbol_parts.len() != self.parts.len()-1 {
+        let symbol_parts: Vec<&str> = symbol.split(".").collect();
+        if symbol_parts.len() != self.parts.len() - 1 {
             return false;
         }
         for (i, symbol_part) in symbol_parts.iter().enumerate() {
             if !self.parts[i].matches(symbol_part.to_string()) {
-                return false
+                return false;
             }
         }
         return true;
     }
-    
+
     // fn import_match
     //Namespace Match
     //Part Match
