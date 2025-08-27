@@ -34,11 +34,14 @@ impl Query for Querier<'_> {
         // this means that we need to find the Nodes from the namespace, then find all the matches
         // for all the nodes in that namespace.
         if search.all_references_search() {
-            // get all the compilation units that use some portion of the search (using System or using System.Configuration)
-            // This will require us to then determine if there qualified names ConfigurationManager.AppSettings for examples;
+            // get all the compilation units that use some portion of the search (using System or
+            // using System.Configuration) This will require us to then determine if there qualified
+            // names ConfigurationManager.AppSettings for examples;
 
-            // We will also need to find the definition of this by looking at the namepsace declartion. then we need to capture all the nodes that are
-            // definitions attached to this (for instance namespace System.Configuration; Class ConfigurationManager; method AppSettings)
+            // We will also need to find the definition of this by looking at the namespace
+            // declaration. then we need to capture all the nodes that are definitions attached to
+            // this (for instance namespace System.Configuration; Class ConfigurationManager; method
+            // AppSettings)
             let mut definition_root_nodes: Vec<Handle<Node>> = vec![];
             let mut referenced_files: HashSet<Handle<File>> = HashSet::new();
             let mut file_to_compunit_handle: HashMap<Handle<File>, Handle<Node>> = HashMap::new();
@@ -48,8 +51,8 @@ impl Query for Querier<'_> {
                 let node: &Node = &self.db[node_handle];
                 let symbol_option = node.symbol();
                 if symbol_option.is_none() {
-                    // If the node doesn't have a symbol to look at, then we should continue
-                    // and it only used to tie together other nodes.
+                    // If the node doesn't have a symbol to look at, then we should continue and it
+                    // only used to tie together other nodes.
                     continue;
                 }
 
@@ -157,7 +160,7 @@ impl Querier<'_> {
                 Some(symbol_handle) => {
                     let symbol = &self.db[symbol_handle];
                     if namespace_symbols.symbol_in_namespace(symbol.to_string()) {
-                        let debug_ndoe = self.db.node_debug_info(edge.sink).map_or(vec![], |d| {
+                        let debug_node = self.db.node_debug_info(edge.sink).map_or(vec![], |d| {
                             return d
                                 .iter()
                                 .map(|e| {
@@ -185,7 +188,7 @@ impl Querier<'_> {
                             "{:?} -- {} - {:?} -- {:?}",
                             child_node.scope(),
                             child_node.display(self.db),
-                            debug_ndoe,
+                            debug_node,
                             edge_debug
                         );
                         let code_location: Location;
@@ -379,8 +382,8 @@ impl Search {
     }
 
     fn partial_namespace(&self, symbol: &str) -> bool {
-        // We will need to break apart the symbol based on "." then looping through, look at the same index, and if it matches continue
-        // if it doesnt then return false.
+        // We will need to break apart the symbol based on "." then looping through, look at the
+        // same index, and if it matches continue if it doesn't then return false.
         for (i, symbol_part) in symbol.split(".").enumerate() {
             if !self.parts[i].matches(symbol_part.to_string()) {
                 return false;

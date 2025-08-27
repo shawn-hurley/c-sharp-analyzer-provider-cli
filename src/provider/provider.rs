@@ -105,7 +105,7 @@ impl ProviderService for CSharpProvider {
             successful: true,
             id: 4,
             builtin_config: None,
-        }));
+        }))
     }
 
     async fn evaluate(
@@ -120,79 +120,63 @@ impl ProviderService for CSharpProvider {
             return Err(Status::invalid_argument("unknown capabilities"));
         }
         let condition: CSharpCondition =
-            match serde_yml::from_str(evaluate_request.condition_info.as_str()) {
-                Ok(condition) => condition,
-                Err(err) => {
-                    println!("{:?}", err);
-                    return Err(Status::new(tonic::Code::Internal, "failed"));
-                }
-            };
+            serde_yml::from_str(evaluate_request.condition_info.as_str()).map_err(|err| {
+                println!("{:?}", err);
+                Status::new(tonic::Code::Internal, "failed")
+            })?;
+
         println!("condition: {:?}", condition);
         let search = FindNode {
             node_type: condition.referenced.location,
             regex: condition.referenced.pattern,
         };
-        let results = match search.run(&self.db_path) {
-            Ok(res) => {
+
+        fn to_incident(r: &crate::c_sharp_graph::results::Result) -> IncidentContext {
+            IncidentContext {
+                file_uri: r.file_uri.clone(),
+                effort: None,
+                code_location: Some(Location {
+                    start_position: Some(Position {
+                        line: r.code_location.start_position.line as f64,
+                        character: r.code_location.start_position.character as f64,
+                    }),
+                    end_position: Some(Position {
+                        line: r.code_location.end_position.line as f64,
+                        character: r.code_location.end_position.character as f64,
+                    }),
+                }),
+                line_number: Some(r.line_number as i64),
+                variables: Some(Struct {
+                    fields: r.variables.clone(),
+                }),
+                links: vec![],
+                is_dependency_incident: false,
+            }
+        }
+
+        let results = search.run(&self.db_path).map_or_else(
+            |err| EvaluateResponse {
+                error: err.to_string(),
+                successful: false,
+                response: None,
+            },
+            |res| {
                 // TODO convert Vec<Result> to ProviderEvaluateResponse
-                if res.is_empty() {
-                    EvaluateResponse {
-                        error: "".to_string(),
-                        successful: true,
-                        response: Some(ProviderEvaluateResponse {
-                            matched: false,
-                            incident_contexts: vec![],
-                            template_context: None,
-                        }),
-                    }
-                } else {
-                    EvaluateResponse {
-                        error: "".to_string(),
-                        successful: true,
-                        response: Some(ProviderEvaluateResponse {
-                            matched: true,
-                            incident_contexts: res
-                                .iter()
-                                .map(|r| IncidentContext {
-                                    file_uri: r.file_uri.clone(),
-                                    effort: None,
-                                    code_location: Some(Location {
-                                        start_position: Some(Position {
-                                            line: r.code_location.start_position.line as f64,
-                                            character: r.code_location.start_position.character
-                                                as f64,
-                                        }),
-                                        end_position: Some(Position {
-                                            line: r.code_location.end_position.line as f64,
-                                            character: r.code_location.end_position.character
-                                                as f64,
-                                        }),
-                                    }),
-                                    line_number: Some(r.line_number as i64),
-                                    variables: Some(Struct {
-                                        fields: r.variables.clone(),
-                                    }),
-                                    links: vec![],
-                                    is_dependency_incident: false,
-                                })
-                                .collect(),
-                            template_context: None,
-                        }),
-                    }
-                }
-            }
-            Err(err) => {
-                // TODO convert to EvaluateResponse for error
                 EvaluateResponse {
-                    error: err.to_string(),
-                    successful: false,
-                    response: None,
+                    error: String::new(),
+                    successful: true,
+                    response: Some(ProviderEvaluateResponse {
+                        matched: !res.is_empty(),
+                        incident_contexts: res.iter().map(to_incident).collect(),
+                        template_context: None,
+                    }),
                 }
-            }
-        };
+            },
+        );
 
         return Ok(Response::new(results));
     }
+
     async fn stop(&self, _: Request<ServiceRequest>) -> Result<Response<()>, Status> {
         return Ok(Response::new(()));
     }
@@ -203,7 +187,7 @@ impl ProviderService for CSharpProvider {
     ) -> Result<Response<DependencyResponse>, Status> {
         return Ok(Response::new(DependencyResponse {
             successful: true,
-            error: "".to_string(),
+            error: String::new(),
             file_dep: vec![],
         }));
     }
@@ -214,7 +198,7 @@ impl ProviderService for CSharpProvider {
     ) -> Result<Response<DependencyDagResponse>, Status> {
         return Ok(Response::new(DependencyDagResponse {
             successful: true,
-            error: "".to_string(),
+            error: String::new(),
             file_dag_dep: vec![],
         }));
     }
@@ -224,7 +208,7 @@ impl ProviderService for CSharpProvider {
         _: Request<NotifyFileChangesRequest>,
     ) -> Result<Response<NotifyFileChangesResponse>, Status> {
         return Ok(Response::new(NotifyFileChangesResponse {
-            error: "".to_string(),
+            error: String::new(),
         }));
     }
 }

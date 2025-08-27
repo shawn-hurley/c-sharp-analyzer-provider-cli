@@ -1,0 +1,12 @@
+{
+    "cSpell.words": [
+        "codegen",
+        "compunit",
+        "prost",
+        "utoipa",
+        "walkdir"
+    ],
+    "[rust]": {
+        "editor.rulers": [100]
+    },
+}

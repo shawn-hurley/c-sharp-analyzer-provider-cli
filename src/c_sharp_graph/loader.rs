@@ -21,21 +21,13 @@ pub struct Stats {
 pub fn load_database(source_location: PathBuf, db_path: PathBuf) -> Result<Stats, Error> {
     let mut db: SQLiteWriter = SQLiteWriter::open(db_path.as_path())?;
 
-    let lc = match try_language_configuration(&NoCancellation) {
-        Ok(lc) => lc,
-        Err(err) => {
-            println!("{}", err.display_pretty());
-            return Err(Error::new(err));
-        }
-    };
+    let lc = try_language_configuration(&NoCancellation).map_err(|err| {
+        println!("{}", err.display_pretty());
+        Error::new(err)
+    })?;
 
     // If the db is already populated at the location specified, then we should return as already populated.
-    let mut loader = match Loader::from_language_configurations(vec![lc], None) {
-        Ok(loader) => loader,
-        Err(err) => {
-            return Err(Error::new(err));
-        }
-    };
+    let mut loader = Loader::from_language_configurations(vec![lc], None).map_err(Error::new)?;
 
     let mut stats = Stats { files_loaded: 0 };
     for path in WalkDir::new(source_location.as_path()).into_iter() {
@@ -48,6 +40,7 @@ pub fn load_database(source_location: PathBuf, db_path: PathBuf) -> Result<Stats
             }
             Err(err) => return Err(Error::new(err)),
         };
+        
         stats.files_loaded += 1;
         let mut file_reader = FileReader::new();
         let lcs = match loader.load_for_file(entry.path(), &mut file_reader, &NoCancellation) {
