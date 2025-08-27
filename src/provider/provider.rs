@@ -4,10 +4,10 @@ use std::{path::PathBuf, process::Command};
 
 use crate::{
     analyzer_service::{
-        provider_service_server::ProviderService, CapabilitiesResponse, Capability, Config,
-        DependencyDagResponse, DependencyResponse, EvaluateRequest, EvaluateResponse,
-        IncidentContext, InitResponse, Location, NotifyFileChangesRequest,
-        NotifyFileChangesResponse, Position, ProviderEvaluateResponse, ServiceRequest,
+        CapabilitiesResponse, Capability, Config, DependencyDagResponse, DependencyResponse,
+        EvaluateRequest, EvaluateResponse, IncidentContext, InitResponse, Location,
+        NotifyFileChangesRequest, NotifyFileChangesResponse, Position, ProviderEvaluateResponse,
+        ServiceRequest, provider_service_server::ProviderService,
     },
     provider::{Dependencies, Project},
 };
@@ -101,11 +101,11 @@ impl ProviderService for CSharpProvider {
         println!("got task result: {:?}", res);
 
         return Ok(Response::new(InitResponse {
-            error: "".to_string(),
+            error: String::new(),
             successful: true,
             id: 4,
             builtin_config: None,
-        }))
+        }));
     }
 
     async fn evaluate(

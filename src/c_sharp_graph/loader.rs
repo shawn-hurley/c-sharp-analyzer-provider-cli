@@ -40,7 +40,7 @@ pub fn load_database(source_location: PathBuf, db_path: PathBuf) -> Result<Stats
             }
             Err(err) => return Err(Error::new(err)),
         };
-        
+
         stats.files_loaded += 1;
         let mut file_reader = FileReader::new();
         let lcs = match loader.load_for_file(entry.path(), &mut file_reader, &NoCancellation) {

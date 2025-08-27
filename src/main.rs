@@ -8,7 +8,7 @@ use std::env::temp_dir;
 use crate::analyzer_service::proto;
 use crate::analyzer_service::provider_service_server::ProviderServiceServer;
 use crate::provider::CSharpProvider;
-use clap::{command, Parser};
+use clap::{Parser, command};
 use env_logger::Env;
 use tokio::sync::Mutex;
 use tonic::transport::Server;
