@@ -8,7 +8,7 @@ use std::env::temp_dir;
 use crate::analyzer_service::proto;
 use crate::analyzer_service::provider_service_server::ProviderServiceServer;
 use crate::provider::CSharpProvider;
-use clap::{command, Parser};
+use clap::{Parser, command};
 use env_logger::Env;
 use tokio::sync::Mutex;
 use tonic::transport::Server;
@@ -19,8 +19,10 @@ use tracing::Level;
 struct Args {
     #[arg(long)]
     port: Option<usize>,
+
     #[arg(long)]
     socket: Option<String>,
+
     #[arg(long)]
     name: Option<String>,
 }
@@ -35,14 +37,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         db_path: temp_dir().join("c_sharp_provider.db"),
         config: Mutex::new(None),
     };
+
     let service = tonic_reflection::server::Builder::configure()
         .register_encoded_file_descriptor_set(proto::FILE_DESCRIPTOR_SET)
         .build_v1()
         .unwrap();
 
     if args.port.is_some() {
-        // ... your gRPC client or server logic using the generated code
         let s = format!("[::1]:{}", args.port.unwrap());
+        println!("Using gRPC over HTTP/2 on port {}", s);
+
         let addr = s.parse()?;
 
         Server::builder()
@@ -53,6 +57,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     } else {
         #[cfg(not(windows))]
         {
+            println!("Running on Unix-like OS");
+
             use tokio::net::UnixListener;
             use tokio_stream::wrappers::UnixListenerStream;
 
@@ -67,6 +73,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         #[cfg(target_os = "windows")]
         {
+            println!("Using Windows OS");
             use crate::pipe_stream::get_named_pipe_connection_stream;
             Server::builder()
                 .add_service(ProviderServiceServer::new(provider))
