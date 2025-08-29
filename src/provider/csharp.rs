@@ -1,7 +1,4 @@
-use anyhow::Error;
-use std::sync::Arc;
-use std::{path::PathBuf, process::Command};
-
+use crate::c_sharp_graph::{find_node::FindNode, loader::load_database};
 use crate::{
     analyzer_service::{
         CapabilitiesResponse, Capability, Config, DependencyDagResponse, DependencyResponse,
@@ -9,16 +6,16 @@ use crate::{
         NotifyFileChangesRequest, NotifyFileChangesResponse, Position, ProviderEvaluateResponse,
         ServiceRequest, provider_service_server::ProviderService,
     },
-    provider::{Dependencies, Project},
+    provider::Project,
 };
 use prost_types::Struct;
-use tokio::task::JoinHandle;
-use tokio::{sync::Mutex, task};
-use tonic::{Request, Response, Status};
-use utoipa::{OpenApi, ToSchema};
-
-use crate::c_sharp_graph::{find_node::FindNode, loader::load_database};
 use serde::Deserialize;
+use std::path::PathBuf;
+use std::sync::Arc;
+use tokio::sync::Mutex;
+use tonic::{Request, Response, Status};
+use tracing::debug;
+use utoipa::{OpenApi, ToSchema};
 
 #[derive(ToSchema, Deserialize, Debug)]
 struct ReferenceCondition {
@@ -36,6 +33,17 @@ struct CSharpCondition {
 pub struct CSharpProvider {
     pub db_path: PathBuf,
     pub config: Mutex<Option<Arc<Config>>>,
+    pub project: Mutex<Option<Arc<Project>>>,
+}
+
+impl CSharpProvider {
+    pub fn new(db_path: PathBuf) -> CSharpProvider {
+        CSharpProvider {
+            db_path,
+            config: Mutex::new(None),
+            project: Mutex::new(None),
+        }
+    }
 }
 
 #[tonic::async_trait]
@@ -52,7 +60,7 @@ impl ProviderService for CSharpProvider {
             return Err(Status::from_error(Box::new(json.err().unwrap())));
         }
 
-        println!("returning referenced capability: {:?}", json.ok());
+        debug!("returning refernced capability: {:?}", json.ok());
 
         return Ok(Response::new(CapabilitiesResponse {
             capabilities: vec![Capability {
@@ -71,34 +79,31 @@ impl ProviderService for CSharpProvider {
         let mut m = self.config.lock().await;
         let saved_config = m.insert(config);
         let _ = m;
-        let project = Project {
-            location: saved_config.location.clone(),
-        };
+        let project = Project::new(saved_config.location.clone());
 
-        let get_deps_handle: JoinHandle<Result<Vec<Dependencies>, Error>> =
-            task::spawn(async move {
-                return project.resolve().await;
-            });
+        //This clone is a actually still pointing to the project IIUC.
+        let _ = self.project.lock().await.replace(project.clone());
 
-        println!("db_path {:?}", self.db_path);
+        let get_deps_handle = project.resolve();
+
+        debug!("db_path {:?}", self.db_path);
         let path = PathBuf::from(saved_config.location.clone());
-        let stats = load_database(path, self.db_path.to_path_buf());
-        println!("loaded files: {:?}", stats);
+        let stats = load_database(&path, self.db_path.to_path_buf());
+        debug!("loaded files: {:?}", stats);
 
         let res = match get_deps_handle.await {
-            Ok(res) => match res {
-                Ok(res) => res,
-                Err(e) => {
-                    println!("unable to get deps: {}", e);
-                    Vec::new()
-                }
-            },
+            Ok(res) => res,
             Err(e) => {
-                println!("unable to get deps: {}", e);
-                Vec::new()
+                debug!("unable to get deps: {}", e);
+                return Err(Status::internal("unable to resolve dependenies"));
             }
         };
-        println!("got task result: {:?}", res);
+        debug!("got task result: {:?} -- project: {:?}", res, project);
+        let res = project.load_to_database(self.db_path.to_path_buf()).await;
+        debug!(
+            "loading project to database: {:?} -- project: {:?}",
+            res, project
+        );
 
         return Ok(Response::new(InitResponse {
             error: String::new(),
@@ -112,9 +117,9 @@ impl ProviderService for CSharpProvider {
         &self,
         r: Request<EvaluateRequest>,
     ) -> Result<Response<EvaluateResponse>, Status> {
-        println!("request: {:?}", r);
+        debug!("request: {:?}", r);
         let evaluate_request = r.get_ref();
-        println!("evaluate request: {:?}", evaluate_request.condition_info);
+        debug!("evaluate request: {:?}", evaluate_request.condition_info);
 
         if evaluate_request.cap != "referenced" {
             return Err(Status::invalid_argument("unknown capabilities"));
@@ -125,7 +130,7 @@ impl ProviderService for CSharpProvider {
                 Status::new(tonic::Code::Internal, "failed")
             })?;
 
-        println!("condition: {:?}", condition);
+        debug!("condition: {:?}", condition);
         let search = FindNode {
             node_type: condition.referenced.location,
             regex: condition.referenced.pattern,

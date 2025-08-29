@@ -17,7 +17,7 @@ pub struct FindNode {
 impl FindNode {
     pub fn run(self, db_path: &PathBuf) -> anyhow::Result<Vec<results::Result>, anyhow::Error> {
         println!("running search");
-        let mut db = SQLiteReader::open(&db_path)?;
+        let mut db = SQLiteReader::open(db_path)?;
 
         let paths = Self::get_file_strings(&mut db)?;
         println!("paths: {:?}", paths);
@@ -27,9 +27,9 @@ impl FindNode {
         }
         let (graph, _, _) = db.get();
 
-        let mut q = Querier::new(graph);
+        let mut q = Querier::get_query(graph);
 
-        return q.query(self.regex);
+        q.query(self.regex)
     }
 
     fn get_file_strings(db: &mut SQLiteReader) -> anyhow::Result<Vec<String>, Error> {
@@ -40,6 +40,6 @@ impl FindNode {
             let file_path = entry.path.into_os_string().into_string().unwrap();
             file_strings.push(file_path);
         }
-        return Ok(file_strings);
+        Ok(file_strings)
     }
 }

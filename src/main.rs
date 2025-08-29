@@ -8,11 +8,9 @@ use std::env::temp_dir;
 use crate::analyzer_service::proto;
 use crate::analyzer_service::provider_service_server::ProviderServiceServer;
 use crate::provider::CSharpProvider;
-use clap::{Parser, command};
-use env_logger::Env;
-use tokio::sync::Mutex;
+use clap::{command, Parser};
 use tonic::transport::Server;
-use tracing::Level;
+use tracing::info;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -25,22 +23,28 @@ struct Args {
 
     #[arg(long)]
     name: Option<String>,
+    #[arg(long)]
+    log_file: Option<String>,
+    #[command(flatten)]
+    verbosity: clap_verbosity_flag::Verbosity,
 }
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    env_logger::Builder::from_env(Env::default().default_filter_or("trace")).init();
-    //tracing_subscriber::fmt().init();
     let args = Args::parse();
 
-    let provider = CSharpProvider {
-        db_path: temp_dir().join("c_sharp_provider.db"),
-        config: Mutex::new(None),
-    };
+    // construct a subscriber that prints formatted traces to stdout
+    let subscriber = tracing_subscriber::FmtSubscriber::builder()
+        .with_max_level(tracing::Level::DEBUG)
+        .finish();
+    // use that subscriber to process traces emitted after this point
+    tracing::subscriber::set_global_default(subscriber)?;
 
+    info!("alskdfjalsdkfjasd;lfkjasdf");
+    let provider = CSharpProvider::new(temp_dir().join("c_sharp_provider.db"));
     let service = tonic_reflection::server::Builder::configure()
         .register_encoded_file_descriptor_set(proto::FILE_DESCRIPTOR_SET)
-        .build_v1()
+        .build_v1alpha()
         .unwrap();
 
     if args.port.is_some() {
@@ -55,6 +59,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             .serve(addr)
             .await?;
     } else {
+        info!("using uds");
         #[cfg(not(windows))]
         {
             println!("Running on Unix-like OS");

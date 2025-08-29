@@ -492,10 +492,13 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   edge @arg.def -> @expr.def
 }
 
+(type_argument_list) @list {
+    node @list.def
+}
+
 (type_argument_list
   (type) @type
 ) @list {
-  node @list.def
   edge @list.def -> @type.def
 }
 
@@ -717,11 +720,13 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
 
 
 ;;; handle expressions
+(element_access_expression) @expr {
+    node @expr.def
+}
 
 (element_access_expression
   expression: (_) @n_expr
 ) @element_access_expression {
-  node @element_access_expression.def
   edge @element_access_expression.def -> @n_expr.def
 }
 
