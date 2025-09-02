@@ -1,10 +1,10 @@
 use crate::c_sharp_graph::{find_node::FindNode, loader::load_database};
 use crate::{
     analyzer_service::{
-        CapabilitiesResponse, Capability, Config, DependencyDagResponse, DependencyResponse,
-        EvaluateRequest, EvaluateResponse, IncidentContext, InitResponse, Location,
-        NotifyFileChangesRequest, NotifyFileChangesResponse, Position, ProviderEvaluateResponse,
-        ServiceRequest, provider_service_server::ProviderService,
+        provider_service_server::ProviderService, CapabilitiesResponse, Capability, Config,
+        DependencyDagResponse, DependencyResponse, EvaluateRequest, EvaluateResponse,
+        IncidentContext, InitResponse, Location, NotifyFileChangesRequest,
+        NotifyFileChangesResponse, Position, ProviderEvaluateResponse, ServiceRequest,
     },
     provider::Project,
 };
@@ -14,7 +14,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status};
-use tracing::debug;
+use tracing::{debug, error};
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(ToSchema, Deserialize, Debug)]
@@ -126,7 +126,7 @@ impl ProviderService for CSharpProvider {
         }
         let condition: CSharpCondition =
             serde_yml::from_str(evaluate_request.condition_info.as_str()).map_err(|err| {
-                println!("{:?}", err);
+                error!("{:?}", err);
                 Status::new(tonic::Code::Internal, "failed")
             })?;
 

@@ -3,6 +3,7 @@ use anyhow::Ok;
 use stack_graphs::storage::SQLiteReader;
 use std::path::PathBuf;
 use std::vec;
+use tracing::debug;
 
 use crate::c_sharp_graph::query::Querier;
 use crate::c_sharp_graph::query::Query;
@@ -16,11 +17,11 @@ pub struct FindNode {
 
 impl FindNode {
     pub fn run(self, db_path: &PathBuf) -> anyhow::Result<Vec<results::Result>, anyhow::Error> {
-        println!("running search");
+        debug!("running search");
         let mut db = SQLiteReader::open(db_path)?;
 
         let paths = Self::get_file_strings(&mut db)?;
-        println!("paths: {:?}", paths);
+        debug!("paths in DB: {:?}", paths);
 
         for path in paths {
             let _ = db.load_graph_for_file(path.as_str())?;

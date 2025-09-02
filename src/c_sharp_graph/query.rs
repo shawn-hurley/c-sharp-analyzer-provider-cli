@@ -11,6 +11,7 @@ use stack_graphs::{
     arena::Handle,
     graph::{File, Node, StackGraph},
 };
+use tracing::debug;
 use url::Url;
 
 pub struct Querier<'a> {
@@ -25,7 +26,7 @@ impl Query for Querier<'_> {
     fn query(&mut self, query: String) -> anyhow::Result<Vec<Result>, Error> {
         let search: Search = self.get_search(query)?;
 
-        println!("search: {:?}", search);
+        debug!("search: {:?}", search);
 
         let mut results: Vec<Result> = vec![];
 
@@ -47,7 +48,6 @@ impl Query for Querier<'_> {
             let mut file_to_compunit_handle: HashMap<Handle<File>, Handle<Node>> = HashMap::new();
 
             for node_handle in self.db.iter_nodes() {
-                println!("node_handle: {}", node_handle.display(self.db));
                 let node: &Node = &self.db[node_handle];
                 let symbol_option = node.symbol();
                 if symbol_option.is_none() {
@@ -59,7 +59,6 @@ impl Query for Querier<'_> {
                 let symbol = &self.db[node.symbol().unwrap()];
                 let source_info = self.db.source_info(node_handle);
                 if source_info.is_none() {
-                    println!("continue source_info: {}", node.display(self.db));
                     continue;
                 }
                 match source_info.unwrap().syntax_type.into_option() {
@@ -88,6 +87,12 @@ impl Query for Querier<'_> {
                                 }
                             }
                             "namespace-declaration" => {
+                                debug!(
+                                    "handling: node: {} symbol: {} with syntax_type: {:?}",
+                                    node.display(self.db),
+                                    &symbol,
+                                    &syntax_type
+                                );
                                 if search.match_namespace(symbol) {
                                     definition_root_nodes.push(node_handle);
                                     match node.file() {
@@ -107,18 +112,15 @@ impl Query for Querier<'_> {
             // Now that we have the all the nodes we need to build the reference symbols to match the *
             let namespace_symbols = NamespaceSymbols::new(self.db, definition_root_nodes)?;
 
-            println!("referenced_files: {:?}", referenced_files);
             for file in referenced_files.iter() {
                 let file_handle = file.to_owned();
                 let comp_unit_node = file_to_compunit_handle.get(&file_handle);
                 if comp_unit_node.is_none() {
-                    println!("something went very wrong");
                     break;
                 }
                 let f = &self.db[file_handle];
                 let file_url = Url::from_file_path(f.name());
                 if file_url.is_err() {
-                    println!("something went very wrong URI");
                     break;
                 }
                 let file_uri = file_url.unwrap().as_str().to_string();
@@ -130,8 +132,6 @@ impl Query for Querier<'_> {
                     file_uri,
                 );
             }
-
-            println!("results - {:?}", results)
         }
         Ok(results)
     }
@@ -182,19 +182,11 @@ impl Querier<'_> {
                                         .collect()
                                 });
 
-                        println!(
-                            "{:?} -- {} - {:?} -- {:?}",
-                            child_node.scope(),
-                            child_node.display(self.db),
-                            debug_node,
-                            edge_debug
-                        );
                         let code_location: Location;
                         let line_number: usize;
                         let mut line: Option<String> = None;
                         match self.db.source_info(edge.sink) {
                             None => {
-                                println!("something is wrong this shouldn't happen");
                                 continue;
                             }
                             Some(source_info) => {
@@ -219,9 +211,7 @@ impl Querier<'_> {
                         }
                         let mut var: BTreeMap<String, Value> =
                             BTreeMap::from([("file".to_string(), Value::from(file_uri.clone()))]);
-                        println!("LINE -- {:?}", line);
                         if let Some(line) = line {
-                            println!("here -- {:?}", line);
                             var.insert("line".to_string(), Value::from(line.as_str()));
                         }
 
@@ -267,9 +257,6 @@ impl NamespaceSymbols {
             )
         }
 
-        println!("classes- {:?}", classes);
-        println!("class methods -{:?}", class_methods);
-        println!("class fields - {:?}", class_fields);
         Ok(NamespaceSymbols {
             classes,
             class_fields,
@@ -365,7 +352,6 @@ impl Search {
 
     fn all_references_search(&self) -> bool {
         let last = self.parts.last();
-        println!("last: {:?}", last);
         match last {
             None => false,
             Some(part) => {

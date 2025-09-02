@@ -1,4 +1,5 @@
-use anyhow::{Error, anyhow};
+use anyhow::{anyhow, Error};
+use std::collections::HashSet;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
 use std::sync::Arc;
@@ -11,10 +12,9 @@ use tracing::{debug, error, info};
 use crate::c_sharp_graph::loader::load_database;
 
 const INTERNAL_CLASS_MODULE_STRING: &str = "internal class <Module>";
-const IMPLICT_BASE_CONSTRUCTOR_CALL: &str = "base..ctor()";
+const IMPLICT_BASE_CONSTRUCTOR_CALL: &str = "..ctor(";
 const REFERNCE_ASSEMBLIES_NAME: &str = "Microsoft.NETFramework.ReferenceAssemblies";
 const COMPILER_GENERATED_ANNOTATION: &str = "[CompilerGenerated]";
-const COMPILER_GENERATE_CLASS: &str = "private sealed calss";
 
 #[derive(Debug)]
 pub struct Dependencies {
@@ -23,7 +23,7 @@ pub struct Dependencies {
     pub name: String,
     #[allow(dead_code)]
     pub version: String,
-    pub decompiled_location: Arc<Mutex<Vec<PathBuf>>>,
+    pub decompiled_location: Arc<Mutex<HashSet<PathBuf>>>,
 }
 
 #[derive(Debug)]
@@ -131,7 +131,7 @@ impl Project {
                 location: dep_path,
                 name: name.to_string(),
                 version: version.to_string(),
-                decompiled_location: Arc::new(Mutex::new(vec![])),
+                decompiled_location: Arc::new(Mutex::new(HashSet::new())),
             };
             let reference_assmblies = reference_assmblies.clone();
             set.spawn(async move {
@@ -154,13 +154,14 @@ impl Project {
         if let Some(ref mut vec) = *x {
             //do something
             for d in vec {
-                let decompiled_locations: Arc<Mutex<Vec<PathBuf>>> =
+                let decompiled_locations: Arc<Mutex<HashSet<PathBuf>>> =
                     Arc::clone(&d.decompiled_location);
                 let decompiled_locations = decompiled_locations.lock().unwrap();
                 let decompiled_files = &(*decompiled_locations);
                 for decompiled_file in decompiled_files {
+                    debug!("loading file {:?} into database", &decompiled_file);
                     let stats = load_database(decompiled_file, db.to_path_buf());
-                    debug!("stats: {:?}", stats);
+                    debug!("loaded file: {:?} stats: {:?}", &decompiled_file, stats);
                 }
             }
         }
@@ -197,12 +198,12 @@ impl Dependencies {
                 return Ok(());
             }
         };
-        let mut decompiled_files: Vec<PathBuf> = vec![];
+        let mut decompiled_files: HashSet<PathBuf> = HashSet::new();
         for file_to_decompile in to_decompile_locations {
             let decompiled_file = self
                 .decompile_file(&reference_assmblies, file_to_decompile)
                 .await?;
-            decompiled_files.push(decompiled_file);
+            decompiled_files.insert(decompiled_file);
         }
 
         let mut guard = self.decompiled_location.lock().unwrap();
@@ -227,13 +228,6 @@ impl Dependencies {
         let mut valid_file_match_start = "".to_string();
 
         while let Some(line) = lines.next_line().await? {
-            debug!(
-                "LINE: {} -- {} -- {} -- {}",
-                line,
-                line.contains("D: /lib/"),
-                (line <= top_of_version),
-                top_of_version
-            );
             if line.contains("D: /lib/")
                 && line <= top_of_version
                 && (valid_file_match_start.is_empty() || line > valid_dir_to_search)
@@ -260,6 +254,9 @@ impl Dependencies {
             })
             .collect();
 
+        if dlls.is_empty() {
+            error!("Unable to get dlls from file");
+        }
         Ok(dll_paths)
     }
 
@@ -289,6 +286,9 @@ impl Dependencies {
             .arg(reference_assmblies)
             .arg("--no-dead-code")
             .arg("--no-dead-stores")
+            .arg("-lv")
+            .arg("CSharp7_3")
+            .arg("-p")
             .arg(&file_to_decompile)
             .current_dir(&self.location)
             .output()?;
@@ -304,9 +304,10 @@ impl Dependencies {
 
         // read the file that was decompiled, and look for invalid
         // things that are not valid C# but come from the intermediate language
-        let decompile_out_name =
-            decompile_out_name.join(format!("{}.decompiled.cs", decompiled_file_name));
+        //let decompile_out_name =
+        //   decompile_out_name.join(format!("{}.decompiled.cs", decompiled_file_name));
 
+        /*
         let file = match File::open(&decompile_out_name).await {
             Ok(f) => f,
             Err(e) => {
@@ -326,9 +327,11 @@ impl Dependencies {
         let mut bracket_matching = 0;
         let mut compiler_generated_classes: Vec<String> = vec![];
         let mut new_lines: Vec<String> = vec![];
+        let mut old_lines: Vec<String> = vec![];
+        let mut compler_generated_line: Option<String> = None;
         while let Some(line) = lines.next_line().await? {
+            old_lines.push(line.clone());
             if line.contains(INTERNAL_CLASS_MODULE_STRING) {
-                info!("found class_module");
                 in_class_module = true;
                 continue;
             }
@@ -336,54 +339,16 @@ impl Dependencies {
             // the internal Module is for the last one.
             if in_class_module && line.contains("{") {
                 bracket_matching += 1;
-                info!("found Open bracket");
                 continue;
             }
             if in_class_module && line.contains("}") {
                 bracket_matching -= 1;
-                info!("found closed bracket");
                 if bracket_matching == 0 {
-                    info!("exit in class module");
                     in_class_module = false;
                 }
                 continue;
             }
             if in_class_module {
-                debug!("still in class module");
-                continue;
-            }
-            if line.contains(COMPILER_GENERATED_ANNOTATION) {
-                debug!("compiler_generated");
-                in_compiler_generated = true;
-                continue;
-            }
-            if in_compiler_generated && line.contains(COMPILER_GENERATE_CLASS) {
-                let class = line.replace(COMPILER_GENERATE_CLASS, "");
-                debug!("compiler_generated_class: {}", class);
-                compiler_generated_classes.push(class.trim().to_string());
-                continue;
-            }
-            if in_compiler_generated && line.contains("{") {
-                bracket_matching += 1;
-                info!("found Open bracket");
-                continue;
-            }
-            if in_compiler_generated && line.contains("}") {
-                bracket_matching -= 1;
-                info!("found closed bracket");
-                if bracket_matching == 0 {
-                    info!("exit in class module");
-                    in_compiler_generated = false;
-                }
-                continue;
-            }
-
-            if line.contains(IMPLICT_BASE_CONSTRUCTOR_CALL) {
-                debug!("found base constructor");
-                continue;
-            }
-            // Ignore preproccessor additions from ilspy.
-            if line.contains("#define") {
                 continue;
             }
             // Handle when the decompiler can't determine the type for LHS
@@ -397,19 +362,74 @@ impl Dependencies {
                     continue;
                 }
             }
+            if line.contains(IMPLICT_BASE_CONSTRUCTOR_CALL) {
+                continue;
+            }
+            if line.contains(COMPILER_GENERATED_ANNOTATION) {
+                compler_generated_line = Some(line);
+                continue;
+            }
+            if let Some(prev_line) = &compler_generated_line {
+                // These appear to be notations that ILSPY uses to denote
+                // that it can not resolve.
+                if line.contains("ctor>") || line.contains("<>") {
+                    // Strip out the class name if one,
+                    // add to list of classes to ignore.
+                    let mut parts = line.split("class ");
+                    if let Some(class_name_part) = parts.nth(1) {
+                        compiler_generated_classes
+                            .push(class_name_part.to_string().trim().to_string());
+                    }
+                    in_compiler_generated = true;
+                    compler_generated_line = None;
+                    continue;
+                }
+                new_lines.push(prev_line.clone());
+                compler_generated_line = None;
+            }
+            if in_compiler_generated && line.contains("{") {
+                bracket_matching += 1;
+                continue;
+            }
+            if in_compiler_generated && line.contains("}") {
+                bracket_matching -= 1;
+                if bracket_matching == 0 {
+                    info!("exit in compiler generated module");
+                    in_compiler_generated = false;
+                }
+                continue;
+            }
+            if in_compiler_generated {
+                continue;
+            }
+
+            // Ignore preproccessor additions from ilspy.
+            if line.contains("#define") {
+                continue;
+            }
 
             // If there is a compiler generated class and the line references we should skip that
             // line.
             if compiler_generated_classes.iter().any(|f| line.contains(f)) {
+                debug!("Here skip");
                 continue;
             }
+            new_lines.push(line);
         }
         drop(lines);
+
+        if new_lines.is_empty() {
+            error!(
+                "NO LINES WRITEN: {:?} -> falling back to old lines",
+                &decompile_out_name
+            );
+            new_lines = old_lines;
+        }
 
         let lines = new_lines.join("\n");
 
         let res = tokio::fs::write(&decompile_out_name, lines).await;
-        debug!("write_file {:?}", res);
+        */
 
         Ok(decompile_out_name)
     }

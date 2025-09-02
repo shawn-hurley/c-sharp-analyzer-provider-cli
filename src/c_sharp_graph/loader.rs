@@ -8,9 +8,10 @@ use stack_graphs::{
     storage::SQLiteWriter,
 };
 use std::path::{Path, PathBuf};
+use tracing::error;
 use tree_sitter_stack_graphs::{
-    FILE_PATH_VAR, NoCancellation, ROOT_PATH_VAR, Variables,
     loader::{FileReader, Loader},
+    NoCancellation, Variables, FILE_PATH_VAR, ROOT_PATH_VAR,
 };
 use walkdir::WalkDir;
 
@@ -21,10 +22,7 @@ pub struct Stats {
 pub fn load_database(source_location: &Path, db_path: PathBuf) -> Result<Stats, Error> {
     let mut db: SQLiteWriter = SQLiteWriter::open(db_path.as_path())?;
 
-    let lc = try_language_configuration(&NoCancellation).map_err(|err| {
-        println!("{}", err.display_pretty());
-        Error::new(err)
-    })?;
+    let lc = try_language_configuration(&NoCancellation).map_err(|err| Error::new(err))?;
 
     // If the db is already populated at the location specified, then we should return as already populated.
     let mut loader = Loader::from_language_configurations(vec![lc], None).map_err(Error::new)?;
@@ -88,7 +86,7 @@ pub fn load_database(source_location: &Path, db_path: PathBuf) -> Result<Stats, 
             lcs.sgl
                 .build_stack_graph_into(&mut graph, file, source, &globals, &NoCancellation);
         if build_result.is_err() {
-            println!(
+            error!(
                 "unable to build graph for {:?}: {:?}",
                 entry,
                 build_result.err()

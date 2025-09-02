@@ -3,7 +3,7 @@ mod c_sharp_graph;
 mod pipe_stream;
 mod provider;
 
-use std::env::temp_dir;
+use std::{env::temp_dir, path::PathBuf};
 
 use crate::analyzer_service::proto;
 use crate::analyzer_service::provider_service_server::ProviderServiceServer;
@@ -27,6 +27,8 @@ struct Args {
     log_file: Option<String>,
     #[command(flatten)]
     verbosity: clap_verbosity_flag::Verbosity,
+    #[arg(long)]
+    db_path: Option<PathBuf>,
 }
 
 #[tokio::main]
@@ -41,7 +43,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing::subscriber::set_global_default(subscriber)?;
 
     info!("alskdfjalsdkfjasd;lfkjasdf");
-    let provider = CSharpProvider::new(temp_dir().join("c_sharp_provider.db"));
+    let provider = CSharpProvider::new(
+        args.db_path
+            .map_or(temp_dir().join("c_sharp_provider.db"), |x| x),
+    );
     let service = tonic_reflection::server::Builder::configure()
         .register_encoded_file_descriptor_set(proto::FILE_DESCRIPTOR_SET)
         .build_v1alpha()
@@ -49,7 +54,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     if args.port.is_some() {
         let s = format!("[::1]:{}", args.port.unwrap());
-        println!("Using gRPC over HTTP/2 on port {}", s);
+        info!("Using gRPC over HTTP/2 on port {}", s);
 
         let addr = s.parse()?;
 
@@ -62,10 +67,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         info!("using uds");
         #[cfg(not(windows))]
         {
-            println!("Running on Unix-like OS");
+            debug!("Running on Unix-like OS");
 
             use tokio::net::UnixListener;
             use tokio_stream::wrappers::UnixListenerStream;
+            use tracing::debug;
 
             let uds = UnixListener::bind(args.socket.unwrap())?;
             let uds_stream = UnixListenerStream::new(uds);
@@ -78,7 +84,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         #[cfg(target_os = "windows")]
         {
-            println!("Using Windows OS");
+            debug!("Using Windows OS");
             use crate::pipe_stream::get_named_pipe_connection_stream;
             Server::builder()
                 .add_service(ProviderServiceServer::new(provider))
