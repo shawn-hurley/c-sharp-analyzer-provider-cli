@@ -7,14 +7,12 @@ use std::sync::Mutex;
 use tokio::fs::{self, File};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::task::JoinSet;
-use tracing::{debug, error, info};
+use tracing::{debug, error, info, trace};
 
 use crate::c_sharp_graph::loader::load_database;
 
-const INTERNAL_CLASS_MODULE_STRING: &str = "internal class <Module>";
-const IMPLICT_BASE_CONSTRUCTOR_CALL: &str = "..ctor(";
+// TODO: Find a way to calculate this from the paket files
 const REFERNCE_ASSEMBLIES_NAME: &str = "Microsoft.NETFramework.ReferenceAssemblies";
-const COMPILER_GENERATED_ANNOTATION: &str = "[CompilerGenerated]";
 
 #[derive(Debug)]
 pub struct Dependencies {
@@ -293,143 +291,7 @@ impl Dependencies {
             .current_dir(&self.location)
             .output()?;
 
-        debug!("decompile output: {:?}", decompile_output);
-
-        let decompiled_file_name = match file_to_decompile.file_stem() {
-            Some(s) => s.to_string_lossy(),
-            None => {
-                return Err(anyhow!("unable to get file stem for dll"));
-            }
-        };
-
-        // read the file that was decompiled, and look for invalid
-        // things that are not valid C# but come from the intermediate language
-        //let decompile_out_name =
-        //   decompile_out_name.join(format!("{}.decompiled.cs", decompiled_file_name));
-
-        /*
-        let file = match File::open(&decompile_out_name).await {
-            Ok(f) => f,
-            Err(e) => {
-                return Err(anyhow!(
-                    "unable to open file: {:?} - {}",
-                    &decompile_out_name,
-                    e
-                ));
-            }
-        };
-
-        let reader = BufReader::new(file);
-        let mut lines = reader.lines();
-
-        let mut in_class_module = false;
-        let mut in_compiler_generated = false;
-        let mut bracket_matching = 0;
-        let mut compiler_generated_classes: Vec<String> = vec![];
-        let mut new_lines: Vec<String> = vec![];
-        let mut old_lines: Vec<String> = vec![];
-        let mut compler_generated_line: Option<String> = None;
-        while let Some(line) = lines.next_line().await? {
-            old_lines.push(line.clone());
-            if line.contains(INTERNAL_CLASS_MODULE_STRING) {
-                in_class_module = true;
-                continue;
-            }
-            // These sections allow me to determine when the closing brack for
-            // the internal Module is for the last one.
-            if in_class_module && line.contains("{") {
-                bracket_matching += 1;
-                continue;
-            }
-            if in_class_module && line.contains("}") {
-                bracket_matching -= 1;
-                if bracket_matching == 0 {
-                    in_class_module = false;
-                }
-                continue;
-            }
-            if in_class_module {
-                continue;
-            }
-            // Handle when the decompiler can't determine the type for LHS
-            //
-            if line.contains("? ") {
-                let trimmed_line = line.as_str();
-                //
-                if trimmed_line.trim().starts_with("? ") {
-                    let line = trimmed_line.replacen("? ", "System.Object", 1);
-                    new_lines.push(line);
-                    continue;
-                }
-            }
-            if line.contains(IMPLICT_BASE_CONSTRUCTOR_CALL) {
-                continue;
-            }
-            if line.contains(COMPILER_GENERATED_ANNOTATION) {
-                compler_generated_line = Some(line);
-                continue;
-            }
-            if let Some(prev_line) = &compler_generated_line {
-                // These appear to be notations that ILSPY uses to denote
-                // that it can not resolve.
-                if line.contains("ctor>") || line.contains("<>") {
-                    // Strip out the class name if one,
-                    // add to list of classes to ignore.
-                    let mut parts = line.split("class ");
-                    if let Some(class_name_part) = parts.nth(1) {
-                        compiler_generated_classes
-                            .push(class_name_part.to_string().trim().to_string());
-                    }
-                    in_compiler_generated = true;
-                    compler_generated_line = None;
-                    continue;
-                }
-                new_lines.push(prev_line.clone());
-                compler_generated_line = None;
-            }
-            if in_compiler_generated && line.contains("{") {
-                bracket_matching += 1;
-                continue;
-            }
-            if in_compiler_generated && line.contains("}") {
-                bracket_matching -= 1;
-                if bracket_matching == 0 {
-                    info!("exit in compiler generated module");
-                    in_compiler_generated = false;
-                }
-                continue;
-            }
-            if in_compiler_generated {
-                continue;
-            }
-
-            // Ignore preproccessor additions from ilspy.
-            if line.contains("#define") {
-                continue;
-            }
-
-            // If there is a compiler generated class and the line references we should skip that
-            // line.
-            if compiler_generated_classes.iter().any(|f| line.contains(f)) {
-                debug!("Here skip");
-                continue;
-            }
-            new_lines.push(line);
-        }
-        drop(lines);
-
-        if new_lines.is_empty() {
-            error!(
-                "NO LINES WRITEN: {:?} -> falling back to old lines",
-                &decompile_out_name
-            );
-            new_lines = old_lines;
-        }
-
-        let lines = new_lines.join("\n");
-
-        let res = tokio::fs::write(&decompile_out_name, lines).await;
-        */
+        trace!("decompile output: {:?}", decompile_output);
 
         Ok(decompile_out_name)
     }

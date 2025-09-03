@@ -22,7 +22,7 @@ pub struct Stats {
 pub fn load_database(source_location: &Path, db_path: PathBuf) -> Result<Stats, Error> {
     let mut db: SQLiteWriter = SQLiteWriter::open(db_path.as_path())?;
 
-    let lc = try_language_configuration(&NoCancellation).map_err(|err| Error::new(err))?;
+    let lc = try_language_configuration(&NoCancellation).map_err(Error::new)?;
 
     // If the db is already populated at the location specified, then we should return as already populated.
     let mut loader = Loader::from_language_configurations(vec![lc], None).map_err(Error::new)?;

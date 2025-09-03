@@ -11,7 +11,7 @@ use stack_graphs::{
     arena::Handle,
     graph::{File, Node, StackGraph},
 };
-use tracing::debug;
+use tracing::{debug, trace};
 use url::Url;
 
 pub struct Querier<'a> {
@@ -169,6 +169,7 @@ impl Querier<'_> {
                                 })
                                 .collect()
                         });
+
                         let edge_debug =
                             self.db
                                 .edge_debug_info(edge.source, edge.sink)
@@ -215,6 +216,11 @@ impl Querier<'_> {
                             var.insert("line".to_string(), Value::from(line.as_str()));
                         }
 
+                        trace!(
+                            "found result for node: {:?} and edge: {:?}",
+                            debug_node,
+                            edge_debug
+                        );
                         results.push(Result {
                             file_uri: file_uri.clone(),
                             line_number,
