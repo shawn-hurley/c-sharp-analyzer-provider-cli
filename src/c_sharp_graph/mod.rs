@@ -21,7 +21,7 @@ pub const STACK_GRAPHS_BUILTINS_SOURCE: &str = include_str!("builtins.cs");
 
 pub fn try_language_configuration(
     cancellation_flag: &dyn CancellationFlag,
-) -> Result<LanguageConfiguration, LoadError> {
+) -> Result<LanguageConfiguration, Box<LoadError<'_>>> {
     LanguageConfiguration::from_sources(
         tree_sitter_c_sharp::LANGUAGE.into(),
         Some(String::from("source.cs")),
@@ -36,4 +36,5 @@ pub fn try_language_configuration(
         Some(STACK_GRAPHS_BUILTINS_CONFIG),
         cancellation_flag,
     )
+    .map_err(Box::new)
 }

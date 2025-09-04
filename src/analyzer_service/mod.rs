@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 include!("provider.rs");
 
 pub mod proto {

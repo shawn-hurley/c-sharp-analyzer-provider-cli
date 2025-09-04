@@ -313,7 +313,6 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   (join_clause (_) @expr)
   (group_clause (_) @expr)
 ] @stmt {
-  print @stmt, @expr
   if (not (eq "comment" (node-type @expr))) {
     edge @stmt.def -> @expr.def
   }
@@ -492,10 +491,13 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   edge @arg.def -> @expr.def
 }
 
+(type_argument_list) @list {
+    node @list.def
+}
+
 (type_argument_list
   (type) @type
 ) @list {
-  node @list.def
   edge @list.def -> @type.def
 }
 
@@ -537,7 +539,6 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   type: (_)? @type
 ) @array_type {
   node @array_type.def
-  node @specifier.def
   if some @type {
     edge @array_type.def -> @type.def
   }
@@ -548,9 +549,13 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   (_) @expr
 ) @array_rank_specifier {
   ; TODO: Handle all expressions
-  node @array_rank_specifier.def
-  node @expr.def
   edge @array_rank_specifier.def -> @expr.def
+}
+
+
+(array_rank_specifier
+) @array_rank_specifier {
+  node @array_rank_specifier.def
 }
 
 ;; function_pointer_type
@@ -717,11 +722,13 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
 
 
 ;;; handle expressions
+(element_access_expression) @expr {
+    node @expr.def
+}
 
 (element_access_expression
   expression: (_) @n_expr
 ) @element_access_expression {
-  node @element_access_expression.def
   edge @element_access_expression.def -> @n_expr.def
 }
 
@@ -750,7 +757,6 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   (element_binding_expression (argument) @argument) 
   (tuple_expression (argument) @argument)
 ] @decl {
-  node @decl.def
   edge @decl.def -> @argument.def
 }
 
@@ -851,7 +857,9 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   right: (_)? @type
 ) @expr {
   edge @expr.def -> @l_expr.def
-  edge @expr.def -> @type.def
+  if some @type {
+    edge @expr.def -> @type.def
+  }
 }
 
 (as_expression
@@ -859,7 +867,9 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   right: (_)? @type
 ) @expr {
   edge @expr.def -> @l_expr.def
-  edge @expr.def -> @type.def
+  if some @type {
+    edge @expr.def -> @type.def
+  }
 }
 
 (assignment_expression
@@ -867,15 +877,20 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   right: (_)? @type
 ) @expr {
   edge @expr.def -> @l_expr.def
-  edge @expr.def -> @type.def
+  if some @type {
+    edge @expr.def -> @type.def
+  }
 }
 
 ; (cast_expression)
 (cast_expression
+) @expr {
+  node @expr.def
+}
+(cast_expression
   type: (_) @type
   value: (_) @v_expr
 ) @expr {
-  node @expr.def
   edge @expr.def -> @type.def
   edge @expr.def -> @v_expr.def
 }
@@ -958,24 +973,60 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   edge @expr.def -> @type.def
 }
 
+; Doing these to get deps into the graph,
+; may need to come back and get the edges correct.
+(member_binding_expression) @expr {
+    node @expr.def
+}
+
+(is_pattern_expression) @expr {
+    node @expr.def
+}
+
+(switch_expression) @expr {
+    node @expr.def
+}
+
+(postfix_unary_expression) @expr {
+    node @expr.def
+}
+
+(is_expression) @expr {
+    node @expr.def
+}
+
+(default_expression) @expr {
+    node @expr.def
+}
+
+(interpolated_string_expression) @expr {
+    node @expr.def
+}
+(ref_expression) @expr {
+    node @expr.def
+}
+
+(continue_statement) @stmt {
+    node @stmt.def
+}
+
+(break_statement) @stmt {
+    node @stmt.def
+}
+
+
+
 ;; TODO
-; (default_expression)
 ; (implicit_array_creation_expression)
 ; (implicit_object_creation_expression)
 ; (implicit_stackalloc_expression)
-; (interpolated_string_expression)
-; (is_expression)
-; (is_pattern_expression)
 ; (literal)
 ; (makeref_expression)
-; (postfix_unary_expression)
 ; (preproc_if)
 ; (range_expression)
-; (ref_expression)
 ; (reftype_expression)
 ; (refvalue_expression)
 ; (sizeof_expression)
 ; (stackalloc_expression)
-; (switch_expression)
 ; (throw_expression)
 ; (with_expression) 

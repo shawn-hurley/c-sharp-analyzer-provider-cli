@@ -7,10 +7,11 @@ use stack_graphs::{
     partial::{PartialPath, PartialPaths},
     storage::SQLiteWriter,
 };
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
+use tracing::error;
 use tree_sitter_stack_graphs::{
-    FILE_PATH_VAR, NoCancellation, ROOT_PATH_VAR, Variables,
     loader::{FileReader, Loader},
+    NoCancellation, Variables, FILE_PATH_VAR, ROOT_PATH_VAR,
 };
 use walkdir::WalkDir;
 
@@ -18,19 +19,16 @@ use walkdir::WalkDir;
 pub struct Stats {
     pub files_loaded: usize,
 }
-pub fn load_database(source_location: PathBuf, db_path: PathBuf) -> Result<Stats, Error> {
+pub fn load_database(source_location: &Path, db_path: PathBuf) -> Result<Stats, Error> {
     let mut db: SQLiteWriter = SQLiteWriter::open(db_path.as_path())?;
 
-    let lc = try_language_configuration(&NoCancellation).map_err(|err| {
-        println!("{}", err.display_pretty());
-        Error::new(err)
-    })?;
+    let lc = try_language_configuration(&NoCancellation).map_err(Error::new)?;
 
     // If the db is already populated at the location specified, then we should return as already populated.
     let mut loader = Loader::from_language_configurations(vec![lc], None).map_err(Error::new)?;
 
     let mut stats = Stats { files_loaded: 0 };
-    for path in WalkDir::new(source_location.as_path()).into_iter() {
+    for path in WalkDir::new(source_location).into_iter() {
         let entry = match path {
             Ok(entry) => {
                 if entry.file_type().is_dir() {
@@ -45,15 +43,10 @@ pub fn load_database(source_location: PathBuf, db_path: PathBuf) -> Result<Stats
         let mut file_reader = FileReader::new();
         let lcs = match loader.load_for_file(entry.path(), &mut file_reader, &NoCancellation) {
             Ok(lcs) => {
-                println!(
-                    "lcs available: {} -- path: {:?}",
-                    lcs.has_some(),
-                    entry.path()
-                );
                 if lcs.primary.is_some() {
                     lcs.primary.unwrap()
                 } else {
-                    stats.files_loaded = stats.files_loaded - 1;
+                    stats.files_loaded -= 1;
                     continue;
                 }
             }
@@ -93,8 +86,12 @@ pub fn load_database(source_location: PathBuf, db_path: PathBuf) -> Result<Stats
             lcs.sgl
                 .build_stack_graph_into(&mut graph, file, source, &globals, &NoCancellation);
         if build_result.is_err() {
-            println!("unable to build graph: {:?}", build_result.err());
-            stats.files_loaded = stats.files_loaded - 1;
+            error!(
+                "unable to build graph for {:?}: {:?}",
+                entry,
+                build_result.err()
+            );
+            stats.files_loaded -= 1;
         }
 
         let mut partials = PartialPaths::new();

@@ -11,6 +11,7 @@ use stack_graphs::{
     arena::Handle,
     graph::{File, Node, StackGraph},
 };
+use tracing::{debug, trace};
 use url::Url;
 
 pub struct Querier<'a> {
@@ -25,7 +26,7 @@ impl Query for Querier<'_> {
     fn query(&mut self, query: String) -> anyhow::Result<Vec<Result>, Error> {
         let search: Search = self.get_search(query)?;
 
-        println!("search: {:?}", search);
+        debug!("search: {:?}", search);
 
         let mut results: Vec<Result> = vec![];
 
@@ -47,7 +48,6 @@ impl Query for Querier<'_> {
             let mut file_to_compunit_handle: HashMap<Handle<File>, Handle<Node>> = HashMap::new();
 
             for node_handle in self.db.iter_nodes() {
-                println!("node_handle: {}", node_handle.display(self.db));
                 let node: &Node = &self.db[node_handle];
                 let symbol_option = node.symbol();
                 if symbol_option.is_none() {
@@ -59,7 +59,6 @@ impl Query for Querier<'_> {
                 let symbol = &self.db[node.symbol().unwrap()];
                 let source_info = self.db.source_info(node_handle);
                 if source_info.is_none() {
-                    println!("continue source_info: {}", node.display(self.db));
                     continue;
                 }
                 match source_info.unwrap().syntax_type.into_option() {
@@ -88,6 +87,12 @@ impl Query for Querier<'_> {
                                 }
                             }
                             "namespace-declaration" => {
+                                debug!(
+                                    "handling: node: {} symbol: {} with syntax_type: {:?}",
+                                    node.display(self.db),
+                                    &symbol,
+                                    &syntax_type
+                                );
                                 if search.match_namespace(symbol) {
                                     definition_root_nodes.push(node_handle);
                                     match node.file() {
@@ -107,18 +112,15 @@ impl Query for Querier<'_> {
             // Now that we have the all the nodes we need to build the reference symbols to match the *
             let namespace_symbols = NamespaceSymbols::new(self.db, definition_root_nodes)?;
 
-            println!("referenced_files: {:?}", referenced_files);
             for file in referenced_files.iter() {
                 let file_handle = file.to_owned();
                 let comp_unit_node = file_to_compunit_handle.get(&file_handle);
                 if comp_unit_node.is_none() {
-                    println!("something went very wrong");
                     break;
                 }
                 let f = &self.db[file_handle];
                 let file_url = Url::from_file_path(f.name());
                 if file_url.is_err() {
-                    println!("something went very wrong URI");
                     break;
                 }
                 let file_uri = file_url.unwrap().as_str().to_string();
@@ -130,19 +132,17 @@ impl Query for Querier<'_> {
                     file_uri,
                 );
             }
-
-            println!("results - {:?}", results)
         }
         Ok(results)
     }
 }
 
 impl Querier<'_> {
-    pub fn new(db: &mut StackGraph) -> impl Query + use<'_> {
-        return Querier { db };
+    pub fn get_query(db: &mut StackGraph) -> impl Query + use<'_> {
+        Querier { db }
     }
     fn get_search(&self, query: String) -> anyhow::Result<Search, Error> {
-        return Search::create_search(query);
+        Search::create_search(query)
     }
     fn traverse_node_search(
         &mut self,
@@ -161,42 +161,33 @@ impl Querier<'_> {
                     let symbol = &self.db[symbol_handle];
                     if namespace_symbols.symbol_in_namespace(symbol.to_string()) {
                         let debug_node = self.db.node_debug_info(edge.sink).map_or(vec![], |d| {
-                            return d
-                                .iter()
+                            d.iter()
                                 .map(|e| {
                                     let k = self.db[e.key].to_string();
                                     let v = self.db[e.value].to_string();
-                                    return (k, v);
+                                    (k, v)
                                 })
-                                .collect();
+                                .collect()
                         });
+
                         let edge_debug =
                             self.db
                                 .edge_debug_info(edge.source, edge.sink)
                                 .map_or(vec![], |d| {
-                                    return d
-                                        .iter()
+                                    d.iter()
                                         .map(|e| {
                                             let k = self.db[e.key].to_string();
                                             let v = self.db[e.value].to_string();
-                                            return (k, v);
+                                            (k, v)
                                         })
-                                        .collect();
+                                        .collect()
                                 });
 
-                        println!(
-                            "{:?} -- {} - {:?} -- {:?}",
-                            child_node.scope(),
-                            child_node.display(self.db),
-                            debug_node,
-                            edge_debug
-                        );
                         let code_location: Location;
                         let line_number: usize;
                         let mut line: Option<String> = None;
                         match self.db.source_info(edge.sink) {
                             None => {
-                                println!("something is wrong this shouldn't happen");
                                 continue;
                             }
                             Some(source_info) => {
@@ -221,12 +212,15 @@ impl Querier<'_> {
                         }
                         let mut var: BTreeMap<String, Value> =
                             BTreeMap::from([("file".to_string(), Value::from(file_uri.clone()))]);
-                        println!("LINE -- {:?}", line);
-                        if line.is_some() {
-                            println!("here -- {:?}", line);
-                            var.insert("line".to_string(), Value::from(line.unwrap().as_str()));
+                        if let Some(line) = line {
+                            var.insert("line".to_string(), Value::from(line.as_str()));
                         }
 
+                        trace!(
+                            "found result for node: {:?} and edge: {:?}",
+                            debug_node,
+                            edge_debug
+                        );
                         results.push(Result {
                             file_uri: file_uri.clone(),
                             line_number,
@@ -269,13 +263,10 @@ impl NamespaceSymbols {
             )
         }
 
-        println!("classes- {:?}", classes);
-        println!("class methods -{:?}", class_methods);
-        println!("class fields - {:?}", class_fields);
         Ok(NamespaceSymbols {
-            classes: classes,
-            class_fields: class_fields,
-            class_methods: class_methods,
+            classes,
+            class_fields,
+            class_methods,
         })
     }
 
@@ -283,7 +274,7 @@ impl NamespaceSymbols {
         db: &mut StackGraph,
         node: Handle<Node>,
         classes: &mut HashMap<String, Handle<Node>>,
-        class_fields: &mut HashMap<String, Handle<Node>>,
+        _class_fields: &mut HashMap<String, Handle<Node>>,
         class_methods: &mut HashMap<String, Handle<Node>>,
     ) {
         let mut child_edges: Vec<Handle<Node>> = vec![];
@@ -311,7 +302,7 @@ impl NamespaceSymbols {
             }
         }
         for child_edge in child_edges {
-            Self::traverse_node(db, child_edge, classes, class_fields, class_methods);
+            Self::traverse_node(db, child_edge, classes, _class_fields, class_methods);
         }
     }
 
@@ -323,7 +314,7 @@ impl NamespaceSymbols {
         if class_match.is_some() || method_match.is_some() || field_match.is_some() {
             return true;
         }
-        return false;
+        false
     }
 }
 
@@ -341,14 +332,14 @@ struct Search {
 impl Search {
     fn create_search(query: String) -> anyhow::Result<Search, Error> {
         let mut parts: Vec<SearchPart> = vec![];
+        let star_regex = Regex::new(".*")?;
         for part in query.split(".") {
             if part.contains("*") {
-                let regex: Regex;
-                if part == "*" {
-                    regex = Regex::new(".*")?;
+                let regex: Regex = if part == "*" {
+                    star_regex.clone()
                 } else {
-                    regex = Regex::new(part)?;
-                }
+                    Regex::new(part)?
+                };
 
                 parts.push(SearchPart {
                     part: part.to_string(),
@@ -362,21 +353,18 @@ impl Search {
             }
         }
 
-        return Ok(Search { parts: parts });
+        Ok(Search { parts })
     }
 
     fn all_references_search(&self) -> bool {
         let last = self.parts.last();
-        println!("last: {:?}", last);
         match last {
-            None => {
-                return false;
-            }
+            None => false,
             Some(part) => {
                 if part.part == "*" {
                     return true;
                 }
-                return false;
+                false
             }
         }
     }
@@ -389,7 +377,7 @@ impl Search {
                 return false;
             }
         }
-        return true;
+        true
     }
 
     fn match_namespace(&self, symbol: &str) -> bool {
@@ -402,7 +390,7 @@ impl Search {
                 return false;
             }
         }
-        return true;
+        true
     }
 
     // fn import_match
@@ -415,8 +403,8 @@ impl Search {
 impl SearchPart {
     fn matches(&self, match_string: String) -> bool {
         match &self.regex {
-            None => return self.part == match_string,
-            Some(r) => return r.is_match(match_string.as_str()),
+            None => self.part == match_string,
+            Some(r) => r.is_match(match_string.as_str()),
         }
     }
 }
