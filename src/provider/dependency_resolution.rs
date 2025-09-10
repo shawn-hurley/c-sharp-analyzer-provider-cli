@@ -1,10 +1,12 @@
 use anyhow::{anyhow, Error};
+use stack_graphs::graph::StackGraph;
+use stack_graphs::partial::PartialPath;
+use stack_graphs::partial::PartialPaths;
+use stack_graphs::storage::SQLiteWriter;
 use std::collections::HashSet;
-use std::ops::DerefMut;
 use std::path::Path;
 use std::path::PathBuf;
 use std::process::Command;
-use std::process::Output;
 use std::sync::Arc;
 use std::sync::Mutex;
 use tokio::fs::{self, File};
@@ -216,39 +218,16 @@ impl Project {
                 }
             }
         }
-        let mut d = self.dependencies.lock().unwrap();
+        let mut d = self.dependencies.lock().await;
         *d = Some(deps);
 
         Ok(())
     }
 
     pub async fn load_to_database(&self) -> Result<(), Error> {
-        let mut lc_guard = self
-            .source_language_config
-            .lock()
-            .expect("project may not have been initialized");
-        let lc = match lc_guard.deref_mut() {
-            Some(x) => x,
-            None => {
-                return Err(anyhow!("unable to get source language config"));
-            }
-        };
-
-        let mut graph_guard = self
-            .graph
-            .lock()
-            .expect("project may not have been initialized");
-        let mut graph = match graph_guard.take() {
-            Some(x) => x,
-            None => {
-                return Err(anyhow!(
-                    "unable to get graph, project may not have been initialized"
-                ));
-            }
-        };
-
         let shared_deps = Arc::clone(&self.dependencies);
-        let mut x = shared_deps.lock().unwrap();
+        let mut x = shared_deps.lock().await;
+        let mut set = JoinSet::new();
         if let Some(ref mut vec) = *x {
             // For each dependnecy in the list we will try and load the decompiled files
             // Into the stack graph database.
@@ -258,30 +237,87 @@ impl Project {
                 let decompiled_locations = decompiled_locations.lock().unwrap();
                 let decompiled_files = &(*decompiled_locations);
                 for decompiled_file in decompiled_files {
-                    debug!("loading file {:?} into database", &decompiled_file);
-                    let initialized_graph = match add_dir_to_graph(
-                        decompiled_file,
-                        &self.db_path,
-                        &lc.dependnecy_type_node_info,
-                        &mut lc.loader,
-                        graph,
-                    ) {
-                        Ok(i) => i,
-                        Err(e) => {
-                            error!("unable to load graph for dependency: {}", e);
-                            return Err(anyhow!("unable to load graph for dependency"));
-                        }
-                    };
-                    debug!(
-                        "loaded file: {:?} for dep: {:?} stats: {:?}",
-                        &decompiled_file, d, initialized_graph.files_loaded,
-                    );
-                    graph = initialized_graph.stack_graph;
+                    let file = decompiled_file.clone();
+                    let lc = self.source_language_config.clone();
+                    set.spawn(async move {
+                        let graph = StackGraph::new();
+                        let lc_guard = lc.read().await;
+                        let lc = match lc_guard.as_ref() {
+                            Some(x) => x,
+                            None => {
+                                return Err(anyhow!("unable to get source language config"));
+                            }
+                        };
+
+                        add_dir_to_graph(
+                            &file,
+                            &lc.dependnecy_type_node_info,
+                            &lc.language_config,
+                            graph,
+                        )
+                    });
                 }
             }
         }
+        let mut db: SQLiteWriter = SQLiteWriter::open(&self.db_path)?;
+        for res in set.join_all().await {
+            let init_graph = match res {
+                Ok(i) => i,
+                Err(e) => {
+                    return Err(anyhow!(
+                        "unable to get graph, project may not have been initialized: {}",
+                        e
+                    ));
+                }
+            };
 
-        let _ = graph_guard.insert(graph);
+            //conside a new thread to handle writing to the database.
+            for (k, tag) in init_graph.file_to_tag {
+                let entry_path_str = match k.to_str() {
+                    Some(path) => path,
+                    None => {
+                        return Err(anyhow!("unable to get path string"));
+                    }
+                };
+                let file = match init_graph.stack_graph.get_file(&entry_path_str) {
+                    Some(f) => f,
+                    None => {
+                        return Err(anyhow!("unable to get captured file name from graph"));
+                    }
+                };
+                let mut partials = PartialPaths::new();
+                let paths: Vec<PartialPath> = Vec::new();
+                match db.store_result_for_file(
+                    &init_graph.stack_graph,
+                    file,
+                    &tag,
+                    &mut partials,
+                    &paths,
+                ) {
+                    Ok(_) => (),
+                    Err(e) => {
+                        error!("unable to store graph: {}", e);
+                    }
+                }
+            }
+            let mut graph_guard = self
+                .graph
+                .lock()
+                .expect("project may not have been initialized");
+            let mut graph = match graph_guard.take() {
+                Some(x) => x,
+                None => {
+                    return Err(anyhow!(
+                        "unable to get graph, project may not have been initialized"
+                    ));
+                }
+            };
+
+            debug!("adding {} files from other graph", init_graph.files_loaded);
+
+            let _ = graph.add_from_graph(&init_graph.stack_graph);
+            let _ = graph_guard.insert(graph);
+        }
         Ok(())
     }
 

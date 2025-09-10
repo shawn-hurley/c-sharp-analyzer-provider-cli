@@ -32,7 +32,7 @@ pub const STACK_GRAPHS_BUILTINS_SOURCE: &str = include_str!("builtins.cs");
 const BUILTINS_FILENAME: &str = "<builtins>";
 
 pub struct SourceNodeLanguageConfiguration {
-    pub loader: Loader,
+    pub language_config: LanguageConfiguration,
     pub source_type_node_info: Arc<SourceType>,
     pub dependnecy_type_node_info: Arc<SourceType>,
 }
@@ -138,9 +138,9 @@ impl SourceNodeLanguageConfiguration {
             special_files: FileAnalyzers::new(),
             no_similar_paths_in_file: false,
         };
-        let loader = Loader::from_language_configurations(vec![lc], None)?;
+        //let loader = Loader::from_language_configurations(vec![lc], None)?;
         Ok(SourceNodeLanguageConfiguration {
-            loader,
+            language_config: lc,
             source_type_node_info: Arc::new(source_type_node_info),
             dependnecy_type_node_info: Arc::new(dependnecy_type_node_info),
         })

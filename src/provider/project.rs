@@ -1,17 +1,16 @@
 use anyhow::{anyhow, Error};
-use stack_graphs::graph::Edge;
 use stack_graphs::graph::StackGraph;
 use stack_graphs::serde::StackGraph as serialize_stack_graph;
 use stack_graphs::stitching::ForwardCandidates;
 use stack_graphs::storage::SQLiteReader;
 use stack_graphs::NoCancellation;
 use std::fmt::Debug;
-use std::ops::DerefMut;
 use std::path::PathBuf;
 use std::sync::Arc;
 use std::sync::Mutex;
+use tokio::sync::Mutex as TokioMutex;
+use tokio::sync::RwLock;
 use tracing::debug;
-use tracing::error;
 
 use crate::c_sharp_graph::language_config::SourceNodeLanguageConfiguration;
 use crate::c_sharp_graph::loader::{init_stack_graph, SourceType};
@@ -20,9 +19,9 @@ use crate::provider::dependency_resolution::Dependencies;
 pub struct Project {
     pub location: PathBuf,
     pub db_path: PathBuf,
-    pub dependencies: Arc<Mutex<Option<Vec<Dependencies>>>>,
+    pub dependencies: Arc<TokioMutex<Option<Vec<Dependencies>>>>,
     pub graph: Arc<Mutex<Option<StackGraph>>>,
-    pub source_language_config: Arc<Mutex<Option<SourceNodeLanguageConfiguration>>>,
+    pub source_language_config: Arc<RwLock<Option<SourceNodeLanguageConfiguration>>>,
     pub analysis_mode: AnalysisMode,
 }
 
@@ -76,29 +75,22 @@ impl Project {
         Project {
             location,
             db_path,
-            dependencies: Arc::new(Mutex::new(None)),
+            dependencies: Arc::new(TokioMutex::new(None)),
             graph: Arc::new(Mutex::new(None)),
-            source_language_config: Arc::new(Mutex::new(None)),
+            source_language_config: Arc::new(RwLock::new(None)),
             analysis_mode,
         }
     }
 
-    pub fn validate_language_configuration(self: &Arc<Self>) -> Result<(), Error> {
+    pub async fn validate_language_configuration(self: &Arc<Self>) -> Result<(), Error> {
         let clone = self.clone();
         let lc = SourceNodeLanguageConfiguration::new(&tree_sitter_stack_graphs::NoCancellation)?;
-        match clone.source_language_config.lock() {
-            Ok(mut lc_guard) => {
-                lc_guard.replace(lc);
-                Ok(())
-            }
-            Err(e) => {
-                error!("unable to get project source language config: {}", e);
-                Err(anyhow!("unable to get project source config"))
-            }
-        }
+        let mut lc_guard = clone.source_language_config.write().await;
+        lc_guard.replace(lc);
+        Ok(())
     }
 
-    pub fn get_project_graph(self: &Arc<Self>) -> Result<usize, Error> {
+    pub async fn get_project_graph(self: &Arc<Self>) -> Result<usize, Error> {
         // TODO: Handle database already exists
         if self.db_path.exists() {
             debug!("trying to load from existing db: {:?}", &self.db_path);
@@ -131,21 +123,6 @@ impl Project {
                 debug!("unable to load graph: {}", e);
             }
             debug!("finish loading graph");
-            if let Ok(mut lc_guard) = self.source_language_config.lock()
-                && let Some(lc) = lc_guard.deref_mut()
-            {
-                graph.iter_nodes().for_each(|n| {
-                    let node = &graph[n];
-                    if let Some(symbol) = node.symbol() {
-                        if symbol == lc.source_type_node_info.get_symbol_handle()
-                            || symbol == lc.dependnecy_type_node_info.get_symbol_handle()
-                        {
-                            let edges: Vec<Edge> = graph.outgoing_edges(n).collect();
-                            debug!("edges: {:?} for node: {}", edges, node.display(&graph))
-                        }
-                    }
-                });
-            }
             if graph.iter_symbols().count() == 0 {
                 debug!("unable to load graph");
             } else {
@@ -160,47 +137,28 @@ impl Project {
             drop(graph);
         }
 
-        if let Ok(mut lc_guard) = self.source_language_config.lock()
-            && let Some(lc) = lc_guard.deref_mut()
-        {
-            // If the databse is present we should consider use that and load into the graph
-            let initialized_results = match init_stack_graph(
-                &self.location,
-                &self.db_path,
-                &lc.source_type_node_info,
-                &mut lc.loader,
-            ) {
-                Ok(i) => i,
-                Err(e) => return Err(anyhow!(e)),
-            };
-            initialized_results.stack_graph.iter_nodes().for_each(|n| {
-                let node = &initialized_results.stack_graph[n];
-                if let Some(symbol) = node.symbol() {
-                    if symbol == lc.source_type_node_info.get_symbol_handle()
-                        || symbol == lc.dependnecy_type_node_info.get_symbol_handle()
-                    {
-                        let edges: Vec<Edge> =
-                            initialized_results.stack_graph.outgoing_edges(n).collect();
-                        debug!(
-                            "edges: {:?} for node: {}",
-                            edges,
-                            node.display(&initialized_results.stack_graph)
-                        )
-                    }
-                }
-            });
-
-            if let Ok(mut graph_guard) = self.graph.lock() {
-                graph_guard.replace(initialized_results.stack_graph);
-            }
-            return Ok(initialized_results.files_loaded);
+        let lc_guard = self.source_language_config.read().await;
+        // If the databse is present we should consider use that and load into the graph
+        let lc = lc_guard.as_ref().expect("unable to get read lock");
+        let initialized_results = match init_stack_graph(
+            &self.location,
+            &self.db_path,
+            &lc.source_type_node_info,
+            &lc.language_config,
+        ) {
+            Ok(i) => i,
+            Err(e) => return Err(anyhow!(e)),
         };
-        Err(anyhow!("unable to get project graph"))
+
+        if let Ok(mut graph_guard) = self.graph.lock() {
+            graph_guard.replace(initialized_results.stack_graph);
+        }
+        Ok(initialized_results.files_loaded)
     }
 
-    pub fn get_source_type(self: &Arc<Self>) -> Option<Arc<SourceType>> {
+    pub async fn get_source_type(self: &Arc<Self>) -> Option<Arc<SourceType>> {
         let clone = self.source_language_config.clone();
-        let lc_guard = clone.lock().expect("unable to get source language config");
+        let lc_guard = clone.read().await;
 
         match lc_guard.as_ref() {
             Some(x) => match self.analysis_mode {

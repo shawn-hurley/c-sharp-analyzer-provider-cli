@@ -14,7 +14,7 @@ use stack_graphs::{
     arena::Handle,
     graph::{Edge, File, Node, StackGraph},
 };
-use tracing::{debug, field::debug, trace};
+use tracing::{debug, trace};
 use url::Url;
 
 pub struct Querier<'a> {
@@ -50,7 +50,6 @@ impl<'a> Query for Querier<'a> {
             let mut definition_root_nodes: Vec<Handle<Node>> = vec![];
             let mut referenced_files: HashSet<Handle<File>> = HashSet::new();
             let mut file_to_compunit_handle: HashMap<Handle<File>, Handle<Node>> = HashMap::new();
-            let mut file_to_source_type_node: HashMap<Handle<File>, Handle<Node>> = HashMap::new();
 
             for node_handle in self.db.iter_nodes() {
                 let node: &Node = &self.db[node_handle];
@@ -116,8 +115,7 @@ impl<'a> Query for Querier<'a> {
                 if let SourceType::Source {
                     symbol_handle: symobl_handle,
                 } = self.source_type
-                {
-                    if let None = self.db.nodes_for_file(*file).find(|node_handle| {
+                    && let None = self.db.nodes_for_file(*file).find(|node_handle| {
                         let node = &self.db[*node_handle];
                         if let Some(sh) = node.symbol()
                             && sh.as_usize() == symobl_handle.as_usize()
@@ -130,9 +128,9 @@ impl<'a> Query for Querier<'a> {
                             }
                         }
                         false
-                    }) {
-                        continue;
-                    }
+                    })
+                {
+                    continue;
                 }
                 let f = &self.db[*file];
                 let file_url = Url::from_file_path(f.name());
@@ -217,6 +215,7 @@ impl<'a> Querier<'a> {
                                         character: source_info.span.end.column.utf8_offset,
                                     },
                                 };
+                                debug!("containing_line: {:?}", source_info.syntax_type);
                                 match source_info.containing_line.into_option() {
                                     None => (),
                                     Some(string_handle) => {
@@ -228,7 +227,7 @@ impl<'a> Querier<'a> {
                         let mut var: BTreeMap<String, Value> =
                             BTreeMap::from([("file".to_string(), Value::from(file_uri.clone()))]);
                         if let Some(line) = line {
-                            var.insert("line".to_string(), Value::from(line.as_str()));
+                            var.insert("line".to_string(), Value::from(line.trim()));
                         }
 
                         trace!(

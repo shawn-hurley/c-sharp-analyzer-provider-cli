@@ -3,14 +3,17 @@ use base64::Engine;
 use sha1::{Digest, Sha1};
 use stack_graphs::{
     arena::Handle,
-    graph::{File, Node, NodeID, StackGraph, Symbol},
+    graph::{File, NodeID, StackGraph, Symbol},
     partial::{PartialPath, PartialPaths},
     storage::SQLiteWriter,
 };
-use std::path::{Path, PathBuf};
+use std::{
+    collections::HashMap,
+    path::{Path, PathBuf},
+};
 use tracing::{debug, error, trace};
 use tree_sitter_stack_graphs::{
-    loader::{FileReader, Loader},
+    loader::{FileReader, LanguageConfiguration},
     NoCancellation, Variables, FILE_PATH_VAR, ROOT_PATH_VAR,
 };
 use walkdir::WalkDir;
@@ -64,24 +67,22 @@ pub struct InitializedGraph {
     pub stack_graph: StackGraph,
 }
 
+pub struct AsyncInitializeGraph {
+    pub files_loaded: usize,
+    pub stack_graph: StackGraph,
+    pub file_to_tag: HashMap<PathBuf, String>,
+}
+
 pub fn add_dir_to_graph(
     source_location: &Path,
-    db_path: &Path,
     source_type: &SourceType,
-    loader: &mut Loader,
+    language_config: &LanguageConfiguration,
     original_graph: StackGraph,
-) -> Result<InitializedGraph, Error> {
-    let mut db: SQLiteWriter = SQLiteWriter::open(db_path)?;
-
+) -> Result<AsyncInitializeGraph, Error> {
     let mut stack_graph = original_graph;
     let mut files_loaded = 0;
+    let mut file_to_tag: HashMap<PathBuf, String> = HashMap::new();
     for path in WalkDir::new(source_location).into_iter() {
-        debug!(
-            "stack_graph files: {}, nodes: {}, symbols: {}",
-            stack_graph.iter_files().count(),
-            stack_graph.iter_nodes().count(),
-            stack_graph.iter_symbols().count()
-        );
         let entry = match path {
             Ok(entry) => {
                 if entry.file_type().is_dir() {
@@ -108,13 +109,13 @@ pub fn add_dir_to_graph(
         match load_graph_for_file(
             entry_path.clone(),
             &mut stack_graph,
-            loader,
-            &mut db,
+            language_config,
             source_type,
         ) {
             Ok(res) => match res {
-                Some(f) => {
+                Some((f, tag)) => {
                     files_loaded += 1;
+                    file_to_tag.insert(entry_path.clone(), tag);
                     debug!("loaded file handle: {:?} - file: {:?}", f, &entry_path)
                 }
                 None => {
@@ -126,33 +127,26 @@ pub fn add_dir_to_graph(
             }
         }
     }
-    Ok(InitializedGraph {
+    Ok(AsyncInitializeGraph {
         files_loaded,
         stack_graph,
+        file_to_tag,
     })
 }
 
 fn load_graph_for_file(
     entry: PathBuf,
     stack_graph: &mut StackGraph,
-    loader: &mut Loader,
-    db: &mut SQLiteWriter,
+    language_config: &LanguageConfiguration,
     source_type: &SourceType,
-) -> Result<Option<Handle<File>>, Error> {
+) -> Result<Option<(Handle<File>, String)>, Error> {
     let mut file_reader = FileReader::new();
     debug!("loading file: {:?}", entry);
     let entry_parent = entry.parent().expect("parent path should be available");
 
-    let lc = match loader
-        .load_for_file(&entry, &mut file_reader, &NoCancellation)?
-        .primary
-    {
-        Some(x) => x,
-        None => {
-            return Ok(None);
-        }
-    };
-
+    if !language_config.matches_file(&entry, &mut file_reader)? {
+        return Ok(None);
+    }
     let source = file_reader.get(&entry)?;
     let tag: String = sha1(source);
 
@@ -171,10 +165,6 @@ fn load_graph_for_file(
         )
         .expect("failed to add root path variable");
 
-    let res = stack_graph.add_from_graph(&lc.builtins);
-    if let Err(e) = res {
-        error!("builtin error: {:?}", e);
-    }
     let file = match stack_graph.add_file(&entry.to_str().unwrap()) {
         Ok(x) => x,
         Err(_) => {
@@ -188,7 +178,9 @@ fn load_graph_for_file(
             return Err(anyhow!(e));
         }
     };
-    let mut builder = lc.sgl.builder_into_stack_graph(stack_graph, file, source);
+    let mut builder = language_config
+        .sgl
+        .builder_into_stack_graph(stack_graph, file, source);
     let graph_node = builder.inject_node(source_type_node_id);
     globals
         .add(SOURCE_TYPE_NODE.into(), graph_node.into())
@@ -199,24 +191,14 @@ fn load_graph_for_file(
         error!("unable to build graph for {:?}: {:?}", entry, e);
         return Err(anyhow!("unable to build graph"));
     }
-
-    let mut partials = PartialPaths::new();
-    let paths: Vec<PartialPath> = Vec::new();
-
-    match db.store_result_for_file(stack_graph, file, &tag, &mut partials, &paths) {
-        Ok(_) => Ok(Some(file)),
-        Err(err) => {
-            error!("error: {}", err);
-            Err(anyhow!(err))
-        }
-    }
+    Ok(Some((file, tag)))
 }
 
 pub fn init_stack_graph(
     source_location: &Path,
     db_path: &Path,
     source_type: &SourceType,
-    loader: &mut Loader,
+    language_config: &LanguageConfiguration,
 ) -> Result<InitializedGraph, Error> {
     let mut db: SQLiteWriter = SQLiteWriter::open(db_path)?;
 
@@ -243,13 +225,22 @@ pub fn init_stack_graph(
         match load_graph_for_file(
             entry_path.clone(),
             &mut stack_graph,
-            loader,
-            &mut db,
+            language_config,
             source_type,
         ) {
             Ok(res) => match res {
-                Some(f) => {
+                Some((f, tag)) => {
                     files_loaded += 1;
+                    let mut partials = PartialPaths::new();
+                    let paths: Vec<PartialPath> = Vec::new();
+
+                    match db.store_result_for_file(&stack_graph, f, &tag, &mut partials, &paths) {
+                        Ok(_) => (),
+                        Err(err) => {
+                            error!("error: {}", err);
+                            return Err(anyhow!(err));
+                        }
+                    }
                     debug!("loaded file handle: {:?} - file: {:?}", f, entry_path)
                 }
                 None => debug!("skipped file: {:?}", entry_path),

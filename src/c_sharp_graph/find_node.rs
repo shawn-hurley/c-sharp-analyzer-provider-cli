@@ -16,23 +16,24 @@ pub struct FindNode {
 }
 
 impl FindNode {
-    pub fn run(self, project: &Arc<Project>) -> Result<Vec<ResultNode>, Error> {
+    pub async fn run(self, project: &Arc<Project>) -> Result<Vec<ResultNode>, Error> {
         debug!("running search");
 
-        let mut graph_guard = project.graph.lock().expect("unable to get project graph");
-        let graph = match graph_guard.deref_mut() {
-            Some(x) => x,
-            None => {
-                return Err(anyhow!("project graph not found, may not be initialized"));
-            }
-        };
-        let source_node_type_info = match project.get_source_type() {
+        let project = Arc::clone(project);
+        let source_node_type_info = match project.get_source_type().await {
             Some(x) => x,
 
             None => {
                 return Err(anyhow!(
                     "unable to get source node type, may not be initialized"
                 ));
+            }
+        };
+        let mut graph_guard = project.graph.lock().expect("unable to get project graph");
+        let graph = match graph_guard.deref_mut() {
+            Some(x) => x,
+            None => {
+                return Err(anyhow!("project graph not found, may not be initialized"));
             }
         };
         let mut q = Querier::get_query(graph, Arc::as_ref(&source_node_type_info));

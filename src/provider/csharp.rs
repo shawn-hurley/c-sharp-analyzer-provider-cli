@@ -95,13 +95,16 @@ impl ProviderService for CSharpProvider {
             }
         };
 
-        if let Err(e) = project.validate_language_configuration() {
+        if let Err(e) = project.validate_language_configuration().await {
             error!("unable to create language configuration: {}", e);
             return Err(Status::internal(
                 "unable to create language configuration for project",
             ));
         }
-        let stats = project.get_project_graph();
+        let stats = project.get_project_graph().await.map_err(|err| {
+            error!("{:?}", err);
+            Status::new(tonic::Code::Internal, "failed")
+        })?;
         debug!("loaded files: {:?}", stats);
         let get_deps_handle = project.resolve();
 
@@ -180,7 +183,7 @@ impl ProviderService for CSharpProvider {
                 return Err(Status::internal("project may not be initialized"));
             }
         };
-        let results = search.run(project).map_or_else(
+        let results = search.run(project).await.map_or_else(
             |err| EvaluateResponse {
                 error: err.to_string(),
                 successful: false,
