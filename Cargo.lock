@@ -353,6 +353,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "tree-sitter-c-sharp",
+ "tree-sitter-graph",
  "tree-sitter-stack-graphs",
  "url",
  "utoipa",

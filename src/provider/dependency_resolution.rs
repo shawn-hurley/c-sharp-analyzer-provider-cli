@@ -1,7 +1,10 @@
 use anyhow::{anyhow, Error};
 use std::collections::HashSet;
-use std::path::{Path, PathBuf};
-use std::process::{Command, Output};
+use std::ops::DerefMut;
+use std::path::Path;
+use std::path::PathBuf;
+use std::process::Command;
+use std::process::Output;
 use std::sync::Arc;
 use std::sync::Mutex;
 use tokio::fs::{self, File};
@@ -9,10 +12,10 @@ use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::task::JoinSet;
 use tracing::{debug, error, info, trace};
 
-use crate::c_sharp_graph::loader::load_database;
+use crate::c_sharp_graph::loader::add_dir_to_graph;
+use crate::provider::Project;
 
 const REFERNCE_ASSEMBLIES_NAME: &str = "Microsoft.NETFramework.ReferenceAssemblies";
-
 #[derive(Debug)]
 pub struct Dependencies {
     pub location: PathBuf,
@@ -21,216 +24,6 @@ pub struct Dependencies {
     #[allow(dead_code)]
     pub version: String,
     pub decompiled_location: Arc<Mutex<HashSet<PathBuf>>>,
-}
-
-#[derive(Debug)]
-pub struct Project {
-    pub location: String,
-    pub dependencies: Arc<Mutex<Option<Vec<Dependencies>>>>,
-}
-
-impl Project {
-    pub fn new(location: String) -> Arc<Project> {
-        Arc::new(Project {
-            location,
-            dependencies: Arc::new(Mutex::new(None)),
-        })
-    }
-
-    pub async fn resolve(self: &Arc<Self>) -> Result<(), Error> {
-        // First need to run packet.
-        // Need to convert and download all DLL's
-        //TODO: Add paket location as a provider specific config.
-        let paket_output = Command::new("/Users/shurley/.dotnet/tools/paket")
-            .args(["convert-from-nuget", "-f"])
-            .current_dir(self.location.as_str())
-            .output()?;
-
-        let deps_response = self.read_packet_output(paket_output);
-        let deps = match deps_response {
-            Ok(d) => d,
-            Err(e) => {
-                return Err(e);
-            }
-        };
-        let paket_deps_file = PathBuf::from(self.location.clone()).join("paket.dependencies");
-        let (reference_assembly_path, highest_restriction) = self
-            .get_reference_assemblies(paket_deps_file.as_path())
-            .await?;
-        debug!(
-            "got: {:?} -- {:?}",
-            reference_assembly_path, highest_restriction
-        );
-        let mut set = JoinSet::new();
-        for d in deps {
-            let reference_assmblies = reference_assembly_path.clone();
-            let restriction = highest_restriction.clone();
-            set.spawn(async move {
-                let decomp = d.decompile(reference_assmblies, restriction).await;
-                if let Err(e) = decomp {
-                    error!("could not decompile - {:?}", e);
-                }
-                d
-            });
-        }
-        // reset deps, as all the deps should be moved into the threads.
-        let mut deps = vec![];
-        while let Some(res) = set.join_next().await {
-            match res {
-                Ok(d) => {
-                    deps.push(d);
-                }
-                Err(e) => {
-                    return Err(Error::new(e));
-                }
-            }
-        }
-        let mut d = self.dependencies.lock().unwrap();
-        *d = Some(deps);
-
-        Ok(())
-    }
-
-    fn read_packet_output(&self, output: Output) -> Result<Vec<Dependencies>, Error> {
-        if !output.status.success() {
-            //TODO: Consider a specific error type
-            debug!("paket command not successful");
-            return Err(Error::msg("paket command did not succeed"));
-        }
-        // We need to get the Reference Assemblies after we successfully
-        // convert to paket.
-        // Either this will be input into the init
-        // Or we will find a clever way to get it from the .csproj file
-        // For speed going to hardcoded for now.
-        let lines = String::from_utf8_lossy(&output.stdout).to_string();
-        let path = PathBuf::from(&self.location);
-        // Exampale lines to parse:
-        // - Microsoft.SqlServer.Types is pinned to 10.50.1600.1
-        // - Newtonsoft.Json is pinned to 5.0.4
-        // - EntityFramework is pinned to 5.0.0
-        // - DotNetOpenAuth.AspNet is pinned to 4.3.0.13117
-        let mut deps: Vec<Dependencies> = vec![];
-        for line in lines.lines() {
-            if !line.contains("-") || !line.contains("is pinned to") {
-                continue;
-            }
-
-            let parts: Vec<&str> = line.split("is pinned to").collect();
-
-            // Example parts
-            // [\" - DotNetOpenAuth.OpenId.Core \", \" 4.3.0.13117\"]"
-            let name = match parts[0].trim().strip_prefix("- ") {
-                Some(n) => n,
-                None => parts[0],
-            };
-            let version = parts[1].trim();
-            let mut dep_path = path.clone().to_path_buf();
-            dep_path.push("packages");
-            dep_path.push(name);
-
-            let d = Dependencies {
-                location: dep_path,
-                name: name.to_string(),
-                version: version.to_string(),
-                decompiled_location: Arc::new(Mutex::new(HashSet::new())),
-            };
-            deps.push(d);
-        }
-        Ok(deps)
-    }
-
-    async fn get_reference_assemblies(
-        &self,
-        paket_deps_file: &Path,
-    ) -> Result<(PathBuf, String), Error> {
-        let file = File::open(paket_deps_file).await;
-        if let Err(e) = file {
-            error!("unable to find error: {:?}", e);
-            return Err(anyhow!(e));
-        }
-        let reader = BufReader::new(file.ok().unwrap());
-        let mut lines = reader.lines();
-        let mut smallest_framework = "zzzzzzzzzzzzzzz".to_string();
-        while let Some(line) = lines.next_line().await? {
-            if !line.contains("restriction") {
-                continue;
-            }
-            let parts: Vec<&str> = line.split("restriction:").collect();
-            if let Some(ref_name) = parts.get(1) {
-                let n = ref_name.to_string();
-                if let Some(framework) = n.split_whitespace().last() {
-                    let framework_string = framework.to_string();
-                    if framework_string < smallest_framework {
-                        smallest_framework = framework_string;
-                    }
-                }
-            }
-        }
-        drop(lines);
-
-        // Now we we have the framework, we need to get the reference_assmblies
-        let base_name = format!("{}.{}", REFERNCE_ASSEMBLIES_NAME, smallest_framework);
-        let paket_reference_output = Command::new("/Users/shurley/.dotnet/tools/paket")
-            .args(["add", base_name.as_str()])
-            .current_dir(self.location.as_str())
-            .output()?;
-
-        debug!("paket_reference_output: {:?}", paket_reference_output);
-
-        let paket_install = match paket_deps_file.parent() {
-            Some(dir) => dir.to_path_buf().join("packages").join(base_name),
-            None => {
-                return Err(anyhow!(
-                    "unable to find the paket install of reference assembly"
-                ));
-            }
-        };
-        // Read the paket_install to find the directory of the DLL's
-        let file = File::open(paket_install.join("paket-installmodel.cache")).await;
-        if let Err(e) = file {
-            error!("unable to find error: {:?}", e);
-            return Err(anyhow!(e));
-        }
-        let reader = BufReader::new(file.ok().unwrap());
-        let mut lines = reader.lines();
-        while let Some(line) = lines.next_line().await? {
-            if line.contains("build/.NETFramework/")
-                && line.contains("D:")
-                && let Some(path_str) = line.strip_prefix("D: /")
-            {
-                debug!("path_str: {}", path_str);
-                let path = paket_install.join(path_str);
-                return Ok((paket_install.join(path), smallest_framework));
-            }
-        }
-
-        Err(anyhow!("unable to get reference assembly"))
-    }
-
-    pub async fn load_to_database(&self, db_path: PathBuf) -> Result<(), Error> {
-        let db = Arc::new(db_path);
-        let shared_deps = Arc::clone(&self.dependencies);
-        let mut x = shared_deps.lock().unwrap();
-        if let Some(ref mut vec) = *x {
-            // For each dependnecy in the list we will try and load the decompiled files
-            // Into the stack graph database.
-            for d in vec {
-                let decompiled_locations: Arc<Mutex<HashSet<PathBuf>>> =
-                    Arc::clone(&d.decompiled_location);
-                let decompiled_locations = decompiled_locations.lock().unwrap();
-                let decompiled_files = &(*decompiled_locations);
-                for decompiled_file in decompiled_files {
-                    debug!("loading file {:?} into database", &decompiled_file);
-                    let stats = load_database(decompiled_file, db.to_path_buf());
-                    debug!(
-                        "loaded file: {:?} for dep: {:?} stats: {:?}",
-                        &decompiled_file, d, stats
-                    );
-                }
-            }
-        }
-        Ok(())
-    }
 }
 
 impl Dependencies {
@@ -368,5 +161,228 @@ impl Dependencies {
         trace!("decompile output: {:?}", decompile_output);
 
         Ok(decompile_out_name)
+    }
+}
+
+impl Project {
+    pub async fn resolve(&self) -> Result<(), Error> {
+        // determine if the paket.dependencies already exists, if it does then we don't need to
+        // convert.
+        let paket_deps_file = self.location.clone().join("paket.dependencies");
+
+        if !paket_deps_file.exists() {
+            // Fsourcoirst need to run packet.
+            // Need to convert and download all DLL's
+            //TODO: Add paket location as a provider specific config.
+            let paket_output = Command::new("/Users/shurley/.dotnet/tools/paket")
+                .args(["convert-from-nuget", "-f"])
+                .current_dir(&self.location)
+                .output()?;
+            if !paket_output.status.success() {
+                //TODO: Consider a specific error type
+                debug!("paket command not successful");
+                return Err(Error::msg("paket command did not succeed"));
+            }
+        }
+
+        let (reference_assembly_path, highest_restriction, deps) = self
+            .read_packet_dependency_file(paket_deps_file.as_path())
+            .await?;
+        debug!(
+            "got: {:?} -- {:?}",
+            reference_assembly_path, highest_restriction
+        );
+        let mut set = JoinSet::new();
+        for d in deps {
+            let reference_assmblies = reference_assembly_path.clone();
+            let restriction = highest_restriction.clone();
+            set.spawn(async move {
+                let decomp = d.decompile(reference_assmblies, restriction).await;
+                if let Err(e) = decomp {
+                    error!("could not decompile - {:?}", e);
+                }
+                d
+            });
+        }
+        // reset deps, as all the deps should be moved into the threads.
+        let mut deps = vec![];
+        while let Some(res) = set.join_next().await {
+            match res {
+                Ok(d) => {
+                    deps.push(d);
+                }
+                Err(e) => {
+                    return Err(Error::new(e));
+                }
+            }
+        }
+        let mut d = self.dependencies.lock().unwrap();
+        *d = Some(deps);
+
+        Ok(())
+    }
+
+    pub async fn load_to_database(&self) -> Result<(), Error> {
+        let mut lc_guard = self
+            .source_language_config
+            .lock()
+            .expect("project may not have been initialized");
+        let lc = match lc_guard.deref_mut() {
+            Some(x) => x,
+            None => {
+                return Err(anyhow!("unable to get source language config"));
+            }
+        };
+
+        let mut graph_guard = self
+            .graph
+            .lock()
+            .expect("project may not have been initialized");
+        let mut graph = match graph_guard.take() {
+            Some(x) => x,
+            None => {
+                return Err(anyhow!(
+                    "unable to get graph, project may not have been initialized"
+                ));
+            }
+        };
+
+        let shared_deps = Arc::clone(&self.dependencies);
+        let mut x = shared_deps.lock().unwrap();
+        if let Some(ref mut vec) = *x {
+            // For each dependnecy in the list we will try and load the decompiled files
+            // Into the stack graph database.
+            for d in vec {
+                let decompiled_locations: Arc<Mutex<HashSet<PathBuf>>> =
+                    Arc::clone(&d.decompiled_location);
+                let decompiled_locations = decompiled_locations.lock().unwrap();
+                let decompiled_files = &(*decompiled_locations);
+                for decompiled_file in decompiled_files {
+                    debug!("loading file {:?} into database", &decompiled_file);
+                    let initialized_graph = match add_dir_to_graph(
+                        decompiled_file,
+                        &self.db_path,
+                        &lc.dependnecy_type_node_info,
+                        &mut lc.loader,
+                        graph,
+                    ) {
+                        Ok(i) => i,
+                        Err(e) => {
+                            error!("unable to load graph for dependency: {}", e);
+                            return Err(anyhow!("unable to load graph for dependency"));
+                        }
+                    };
+                    debug!(
+                        "loaded file: {:?} for dep: {:?} stats: {:?}",
+                        &decompiled_file, d, initialized_graph.files_loaded,
+                    );
+                    graph = initialized_graph.stack_graph;
+                }
+            }
+        }
+
+        let _ = graph_guard.insert(graph);
+        Ok(())
+    }
+
+    async fn read_packet_dependency_file(
+        &self,
+        paket_deps_file: &Path,
+    ) -> Result<(PathBuf, String, Vec<Dependencies>), Error> {
+        let file = File::open(paket_deps_file).await;
+        if let Err(e) = file {
+            error!("unable to find error: {:?}", e);
+            return Err(anyhow!(e));
+        }
+        let reader = BufReader::new(file.ok().unwrap());
+        let mut lines = reader.lines();
+        let mut smallest_framework = "zzzzzzzzzzzzzzz".to_string();
+        let mut deps: Vec<Dependencies> = vec![];
+        while let Some(line) = lines.next_line().await? {
+            if !line.contains("restriction") {
+                continue;
+            }
+            let parts: Vec<&str> = line.split("restriction:").collect();
+            if parts.len() != 2 {
+                continue;
+            }
+            if let Some(dep_part) = parts.first() {
+                let white_space_split: Vec<&str> = dep_part.split_whitespace().collect();
+                if white_space_split.len() < 4 {
+                    continue;
+                }
+                let mut dep_path = self.location.clone();
+                dep_path.push("packages");
+                let name = match white_space_split.get(1) {
+                    Some(n) => n,
+                    None => {
+                        continue;
+                    }
+                };
+                dep_path.push(name);
+                let version = match white_space_split.get(2) {
+                    Some(v) => v,
+                    None => {
+                        continue;
+                    }
+                };
+                let dep = Dependencies {
+                    location: dep_path,
+                    name: name.to_string(),
+                    version: version.to_string(),
+                    decompiled_location: Arc::new(Mutex::new(HashSet::new())),
+                };
+                deps.push(dep);
+            }
+
+            if let Some(ref_name) = parts.get(1) {
+                let n = ref_name.to_string();
+                if let Some(framework) = n.split_whitespace().last() {
+                    let framework_string = framework.to_string();
+                    if framework_string < smallest_framework {
+                        smallest_framework = framework_string;
+                    }
+                }
+            }
+        }
+        drop(lines);
+
+        // Now we we have the framework, we need to get the reference_assmblies
+        let base_name = format!("{}.{}", REFERNCE_ASSEMBLIES_NAME, smallest_framework);
+        let paket_reference_output = Command::new("/Users/shurley/.dotnet/tools/paket")
+            .args(["add", base_name.as_str()])
+            .current_dir(&self.location)
+            .output()?;
+
+        debug!("paket_reference_output: {:?}", paket_reference_output);
+
+        let paket_install = match paket_deps_file.parent() {
+            Some(dir) => dir.to_path_buf().join("packages").join(base_name),
+            None => {
+                return Err(anyhow!(
+                    "unable to find the paket install of reference assembly"
+                ));
+            }
+        };
+        // Read the paket_install to find the directory of the DLL's
+        let file = File::open(paket_install.join("paket-installmodel.cache")).await;
+        if let Err(e) = file {
+            error!("unable to find error: {:?}", e);
+            return Err(anyhow!(e));
+        }
+        let reader = BufReader::new(file.ok().unwrap());
+        let mut lines = reader.lines();
+        while let Some(line) = lines.next_line().await? {
+            if line.contains("build/.NETFramework/")
+                && line.contains("D:")
+                && let Some(path_str) = line.strip_prefix("D: /")
+            {
+                debug!("path_str: {}", path_str);
+                let path = paket_install.join(path_str);
+                return Ok((paket_install.join(path), smallest_framework, deps));
+            }
+        }
+
+        Err(anyhow!("unable to get reference assembly"))
     }
 }

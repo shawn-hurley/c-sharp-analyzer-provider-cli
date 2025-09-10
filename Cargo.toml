@@ -36,6 +36,7 @@ async-stream = "0.3.6"
 clap-verbosity-flag = {version = "3.0.3", features=["tracing"]}
 tracing = "0.1"
 tracing-subscriber = {version="0.3", features=["env-filter"]}
+tree-sitter-graph = "0.12.0"
 
 
 [build-dependencies]

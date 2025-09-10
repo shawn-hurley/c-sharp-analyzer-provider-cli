@@ -42,7 +42,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // use that subscriber to process traces emitted after this point
     tracing::subscriber::set_global_default(subscriber)?;
 
-    info!("alskdfjalsdkfjasd;lfkjasdf");
     let provider = CSharpProvider::new(
         args.db_path
             .map_or(temp_dir().join("c_sharp_provider.db"), |x| x),

@@ -1,7 +1,7 @@
 use std::collections::BTreeMap;
 
 #[derive(Debug)]
-pub struct Result {
+pub struct ResultNode {
     pub file_uri: String,
     pub line_number: usize,
     pub variables: BTreeMap<std::string::String, prost_types::Value>,

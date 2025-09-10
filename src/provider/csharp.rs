@@ -1,4 +1,6 @@
-use crate::c_sharp_graph::{find_node::FindNode, loader::load_database};
+use crate::c_sharp_graph::find_node::FindNode;
+use crate::c_sharp_graph::results::ResultNode;
+use crate::provider::AnalysisMode;
 use crate::{
     analyzer_service::{
         provider_service_server::ProviderService, CapabilitiesResponse, Capability, Config,
@@ -32,16 +34,16 @@ struct CSharpCondition {
 
 pub struct CSharpProvider {
     pub db_path: PathBuf,
-    pub config: Mutex<Option<Arc<Config>>>,
-    pub project: Mutex<Option<Arc<Project>>>,
+    pub config: Arc<Mutex<Option<Config>>>,
+    pub project: Arc<Mutex<Option<Arc<Project>>>>,
 }
 
 impl CSharpProvider {
     pub fn new(db_path: PathBuf) -> CSharpProvider {
         CSharpProvider {
             db_path,
-            config: Mutex::new(None),
-            project: Mutex::new(None),
+            config: Arc::new(Mutex::new(None)),
+            project: Arc::new(Mutex::new(None)),
         }
     }
 }
@@ -71,25 +73,37 @@ impl ProviderService for CSharpProvider {
     }
 
     async fn init(&self, r: Request<Config>) -> Result<Response<InitResponse>, Status> {
-        let config = Arc::new(r.get_ref().clone());
-        if self.config.lock().await.is_some() {
-            return Err(Status::already_exists("already initialized"));
+        let mut config_guard = self.config.lock().await;
+        let saved_config = config_guard.insert(r.get_ref().clone());
+
+        let analysis_mode = AnalysisMode::from(saved_config.analysis_mode.clone());
+        let location = PathBuf::from(saved_config.location.clone());
+        let project = Arc::new(Project::new(location, self.db_path.clone(), analysis_mode));
+        let project_lock = self.project.clone();
+        let mut project_guard = project_lock.lock().await;
+        let _ = project_guard.replace(project.clone());
+        drop(project_guard);
+        drop(config_guard);
+
+        let project_guard = project_lock.lock().await;
+        let project = match project_guard.as_ref() {
+            Some(x) => x,
+            None => {
+                return Err(Status::internal(
+                    "unable to create language configuration for project",
+                ));
+            }
+        };
+
+        if let Err(e) = project.validate_language_configuration() {
+            error!("unable to create language configuration: {}", e);
+            return Err(Status::internal(
+                "unable to create language configuration for project",
+            ));
         }
-        // Get the location from the config before moving the reference to self.
-        let mut m = self.config.lock().await;
-        let saved_config = m.insert(config);
-        let _ = m;
-        let project = Project::new(saved_config.location.clone());
-
-        //This clone is a actually still pointing to the project IIUC.
-        let _ = self.project.lock().await.replace(project.clone());
-
-        let get_deps_handle = project.resolve();
-
-        debug!("db_path {:?}", self.db_path);
-        let path = PathBuf::from(saved_config.location.clone());
-        let stats = load_database(&path, self.db_path.to_path_buf());
+        let stats = project.get_project_graph();
         debug!("loaded files: {:?}", stats);
+        let get_deps_handle = project.resolve();
 
         let res = match get_deps_handle.await {
             Ok(res) => res,
@@ -99,7 +113,7 @@ impl ProviderService for CSharpProvider {
             }
         };
         debug!("got task result: {:?} -- project: {:?}", res, project);
-        let res = project.load_to_database(self.db_path.to_path_buf()).await;
+        let res = project.load_to_database().await;
         debug!(
             "loading project to database: {:?} -- project: {:?}",
             res, project
@@ -136,7 +150,7 @@ impl ProviderService for CSharpProvider {
             regex: condition.referenced.pattern,
         };
 
-        fn to_incident(r: &crate::c_sharp_graph::results::Result) -> IncidentContext {
+        fn to_incident(r: &ResultNode) -> IncidentContext {
             IncidentContext {
                 file_uri: r.file_uri.clone(),
                 effort: None,
@@ -159,7 +173,14 @@ impl ProviderService for CSharpProvider {
             }
         }
 
-        let results = search.run(&self.db_path).map_or_else(
+        let project_guard = self.project.lock().await;
+        let project = match project_guard.as_ref() {
+            Some(x) => x,
+            None => {
+                return Err(Status::internal("project may not be initialized"));
+            }
+        };
+        let results = search.run(project).map_or_else(
             |err| EvaluateResponse {
                 error: err.to_string(),
                 successful: false,

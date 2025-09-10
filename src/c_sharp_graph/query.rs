@@ -3,32 +3,36 @@ use std::{
     vec,
 };
 
-use crate::c_sharp_graph::results::{Location, Position, Result};
+use crate::c_sharp_graph::{
+    loader::SourceType,
+    results::{Location, Position, ResultNode},
+};
 use anyhow::{Error, Ok};
 use prost_types::Value;
 use regex::Regex;
 use stack_graphs::{
     arena::Handle,
-    graph::{File, Node, StackGraph},
+    graph::{Edge, File, Node, StackGraph},
 };
-use tracing::{debug, trace};
+use tracing::{debug, field::debug, trace};
 use url::Url;
 
 pub struct Querier<'a> {
     db: &'a mut StackGraph,
+    source_type: &'a SourceType,
 }
 
 pub trait Query {
-    fn query(&mut self, query: String) -> anyhow::Result<Vec<Result>, Error>;
+    fn query(&mut self, query: String) -> anyhow::Result<Vec<ResultNode>, Error>;
 }
 
-impl Query for Querier<'_> {
-    fn query(&mut self, query: String) -> anyhow::Result<Vec<Result>, Error> {
+impl<'a> Query for Querier<'a> {
+    fn query(&mut self, query: String) -> anyhow::Result<Vec<ResultNode>, Error> {
         let search: Search = self.get_search(query)?;
 
         debug!("search: {:?}", search);
 
-        let mut results: Vec<Result> = vec![];
+        let mut results: Vec<ResultNode> = vec![];
 
         // If we are search for all things from a ref
         // ex: System.Configuration.ConfigurationManager.* or System.Configuration.*
@@ -46,16 +50,22 @@ impl Query for Querier<'_> {
             let mut definition_root_nodes: Vec<Handle<Node>> = vec![];
             let mut referenced_files: HashSet<Handle<File>> = HashSet::new();
             let mut file_to_compunit_handle: HashMap<Handle<File>, Handle<Node>> = HashMap::new();
+            let mut file_to_source_type_node: HashMap<Handle<File>, Handle<Node>> = HashMap::new();
 
             for node_handle in self.db.iter_nodes() {
                 let node: &Node = &self.db[node_handle];
+                let file_handle = match node.file() {
+                    Some(h) => h,
+                    None => {
+                        continue;
+                    }
+                };
                 let symbol_option = node.symbol();
                 if symbol_option.is_none() {
                     // If the node doesn't have a symbol to look at, then we should continue and it
                     // only used to tie together other nodes.
                     continue;
                 }
-
                 let symbol = &self.db[node.symbol().unwrap()];
                 let source_info = self.db.source_info(node_handle);
                 if source_info.is_none() {
@@ -67,23 +77,11 @@ impl Query for Querier<'_> {
                         let syntax_type = &self.db[handle];
                         match syntax_type {
                             "comp-unit" => {
-                                let filepath = node.file();
-                                match filepath {
-                                    None => continue,
-                                    Some(file_handle) => {
-                                        file_to_compunit_handle.insert(file_handle, node_handle);
-                                    }
-                                }
+                                file_to_compunit_handle.insert(file_handle, node_handle);
                             }
                             "import" => {
                                 if search.partial_namespace(symbol) {
-                                    let filepath = node.file();
-                                    match filepath {
-                                        None => continue,
-                                        Some(file_handle) => {
-                                            referenced_files.insert(file_handle);
-                                        }
-                                    }
+                                    referenced_files.insert(file_handle);
                                 }
                             }
                             "namespace-declaration" => {
@@ -95,12 +93,7 @@ impl Query for Querier<'_> {
                                 );
                                 if search.match_namespace(symbol) {
                                     definition_root_nodes.push(node_handle);
-                                    match node.file() {
-                                        None => continue,
-                                        Some(file_handle) => {
-                                            referenced_files.insert(file_handle);
-                                        }
-                                    }
+                                    referenced_files.insert(file_handle);
                                 }
                                 //TODO: Handle nested namespace declarations
                             }
@@ -113,20 +106,42 @@ impl Query for Querier<'_> {
             let namespace_symbols = NamespaceSymbols::new(self.db, definition_root_nodes)?;
 
             for file in referenced_files.iter() {
-                let file_handle = file.to_owned();
-                let comp_unit_node = file_to_compunit_handle.get(&file_handle);
-                if comp_unit_node.is_none() {
-                    break;
+                let comp_unit_node_handle = match file_to_compunit_handle.get(file) {
+                    Some(x) => x,
+                    None => {
+                        debug!("unable to find compulation unit for file");
+                        break;
+                    }
+                };
+                if let SourceType::Source {
+                    symbol_handle: symobl_handle,
+                } = self.source_type
+                {
+                    if let None = self.db.nodes_for_file(*file).find(|node_handle| {
+                        let node = &self.db[*node_handle];
+                        if let Some(sh) = node.symbol()
+                            && sh.as_usize() == symobl_handle.as_usize()
+                        {
+                            let edges: Vec<Edge> = self.db.outgoing_edges(*node_handle).collect();
+                            for edge in edges {
+                                if edge.sink == *comp_unit_node_handle {
+                                    return true;
+                                }
+                            }
+                        }
+                        false
+                    }) {
+                        continue;
+                    }
                 }
-                let f = &self.db[file_handle];
+                let f = &self.db[*file];
                 let file_url = Url::from_file_path(f.name());
                 if file_url.is_err() {
                     break;
                 }
                 let file_uri = file_url.unwrap().as_str().to_string();
-                let _ = f;
                 self.traverse_node_search(
-                    *comp_unit_node.unwrap(),
+                    *comp_unit_node_handle,
                     &namespace_symbols,
                     &mut results,
                     file_uri,
@@ -137,9 +152,9 @@ impl Query for Querier<'_> {
     }
 }
 
-impl Querier<'_> {
-    pub fn get_query(db: &mut StackGraph) -> impl Query + use<'_> {
-        Querier { db }
+impl<'a> Querier<'a> {
+    pub fn get_query(db: &'a mut StackGraph, source_type: &'a SourceType) -> impl Query + use<'a> {
+        Querier { db, source_type }
     }
     fn get_search(&self, query: String) -> anyhow::Result<Search, Error> {
         Search::create_search(query)
@@ -148,7 +163,7 @@ impl Querier<'_> {
         &mut self,
         node: Handle<Node>,
         namespace_symbols: &NamespaceSymbols,
-        results: &mut Vec<Result>,
+        results: &mut Vec<ResultNode>,
         file_uri: String,
     ) {
         let mut traverse_nodes: Vec<Handle<Node>> = vec![];
@@ -221,7 +236,7 @@ impl Querier<'_> {
                             debug_node,
                             edge_debug
                         );
-                        results.push(Result {
+                        results.push(ResultNode {
                             file_uri: file_uri.clone(),
                             line_number,
                             code_location,
