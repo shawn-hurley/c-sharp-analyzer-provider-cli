@@ -15,6 +15,7 @@ use tokio::task::JoinSet;
 use tracing::{debug, error, info, trace};
 
 use crate::c_sharp_graph::loader::add_dir_to_graph;
+use crate::provider::project::Tools;
 use crate::provider::Project;
 
 const REFERNCE_ASSEMBLIES_NAME: &str = "Microsoft.NETFramework.ReferenceAssemblies";
@@ -33,6 +34,7 @@ impl Dependencies {
         &self,
         reference_assmblies: PathBuf,
         restriction: String,
+        tools: &Tools,
     ) -> Result<(), Error> {
         // TODO: make location of ilspycmd decompilation
         let dep_package_dir = self.location.to_owned();
@@ -64,7 +66,11 @@ impl Dependencies {
         let mut decompiled_files: HashSet<PathBuf> = HashSet::new();
         for file_to_decompile in to_decompile_locations {
             let decompiled_file = self
-                .decompile_file(&reference_assmblies, file_to_decompile)
+                .decompile_file(
+                    &reference_assmblies,
+                    file_to_decompile,
+                    tools.ilspy_cmd.clone(),
+                )
                 .await?;
             decompiled_files.insert(decompiled_file);
         }
@@ -131,6 +137,7 @@ impl Dependencies {
         &self,
         reference_assmblies: &PathBuf,
         file_to_decompile: PathBuf,
+        ilspycmd: PathBuf,
     ) -> Result<PathBuf, Error> {
         let decompile_name = match self.location.as_path().file_name() {
             Some(n) => {
@@ -146,7 +153,7 @@ impl Dependencies {
                 return Err(anyhow!("unable to get path"));
             }
         };
-        let decompile_output = Command::new("/Users/shurley/.dotnet/tools/ilspycmd")
+        let decompile_output = Command::new(ilspycmd)
             .arg("-o")
             .arg(&decompile_out_name)
             .arg("-r")
@@ -176,7 +183,7 @@ impl Project {
             // Fsourcoirst need to run packet.
             // Need to convert and download all DLL's
             //TODO: Add paket location as a provider specific config.
-            let paket_output = Command::new("/Users/shurley/.dotnet/tools/paket")
+            let paket_output = Command::new(&self.tools.paket_cmd)
                 .args(["convert-from-nuget", "-f"])
                 .current_dir(&self.location)
                 .output()?;
@@ -198,8 +205,9 @@ impl Project {
         for d in deps {
             let reference_assmblies = reference_assembly_path.clone();
             let restriction = highest_restriction.clone();
+            let tools = self.tools.clone();
             set.spawn(async move {
-                let decomp = d.decompile(reference_assmblies, restriction).await;
+                let decomp = d.decompile(reference_assmblies, restriction, &tools).await;
                 if let Err(e) = decomp {
                     error!("could not decompile - {:?}", e);
                 }
@@ -385,7 +393,7 @@ impl Project {
 
         // Now we we have the framework, we need to get the reference_assmblies
         let base_name = format!("{}.{}", REFERNCE_ASSEMBLIES_NAME, smallest_framework);
-        let paket_reference_output = Command::new("/Users/shurley/.dotnet/tools/paket")
+        let paket_reference_output = Command::new(&self.tools.paket_cmd)
             .args(["add", base_name.as_str()])
             .current_dir(&self.location)
             .output()?;
@@ -409,10 +417,13 @@ impl Project {
         let reader = BufReader::new(file.ok().unwrap());
         let mut lines = reader.lines();
         while let Some(line) = lines.next_line().await? {
-            if line.contains("build/.NETFramework/")
-                && line.contains("D:")
-                && let Some(path_str) = line.strip_prefix("D: /")
-            {
+            if line.contains("build/.NETFramework/") && line.contains("D: /") {
+                let path_str = match line.strip_prefix("D: /") {
+                    Some(x) => x,
+                    None => {
+                        return Err(anyhow!("unable to get reference assembly"));
+                    }
+                };
                 debug!("path_str: {}", path_str);
                 let path = paket_install.join(path_str);
                 return Ok((paket_install.join(path), smallest_framework, deps));

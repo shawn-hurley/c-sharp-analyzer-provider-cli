@@ -1,7 +1,11 @@
 [package]
 name = "c-sharp-analyzer-provider-cli"
 version = "0.1.0"
-edition = "2021"
+authors = [
+    "shawn@hurley.page",
+]
+license = "Apache-2.0"
+keywords = ["tree-sitter", "stack-graphs", "c-sharp", "konveyor", "analyzer"]
 
 [dependencies]
 clap = {version="4.5.40", features=["derive"]}
@@ -32,7 +36,7 @@ clap-verbosity-flag = {version = "3.0.3", features=["tracing"]}
 tracing = "0.1"
 tracing-subscriber = {version="0.3", features=["env-filter"]}
 tree-sitter-graph = "0.12.0"
-which = "8.0.0"
+
 
 [build-dependencies]
 tonic-build = "0.13.1"

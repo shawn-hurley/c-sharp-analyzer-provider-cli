@@ -1,4 +1,5 @@
 use anyhow::{anyhow, Error};
+use prost_types::Struct;
 use stack_graphs::graph::StackGraph;
 use stack_graphs::serde::StackGraph as serialize_stack_graph;
 use stack_graphs::stitching::ForwardCandidates;
@@ -6,11 +7,13 @@ use stack_graphs::storage::SQLiteReader;
 use stack_graphs::NoCancellation;
 use std::fmt::Debug;
 use std::path::PathBuf;
+use std::str::FromStr;
 use std::sync::Arc;
 use std::sync::Mutex;
 use tokio::sync::Mutex as TokioMutex;
 use tokio::sync::RwLock;
 use tracing::debug;
+use which::which;
 
 use crate::c_sharp_graph::language_config::SourceNodeLanguageConfiguration;
 use crate::c_sharp_graph::loader::{init_stack_graph, SourceType};
@@ -23,6 +26,7 @@ pub struct Project {
     pub graph: Arc<Mutex<Option<StackGraph>>>,
     pub source_language_config: Arc<RwLock<Option<SourceNodeLanguageConfiguration>>>,
     pub analysis_mode: AnalysisMode,
+    pub tools: Tools,
 }
 
 #[derive(Eq, PartialEq, Debug)]
@@ -70,8 +74,23 @@ impl Debug for Project {
     }
 }
 
+#[derive(Clone)]
+pub struct Tools {
+    pub ilspy_cmd: PathBuf,
+    pub paket_cmd: PathBuf,
+}
+
 impl Project {
-    pub fn new(location: PathBuf, db_path: PathBuf, analysis_mode: AnalysisMode) -> Project {
+    const ILSPY_CMD_LOC_KEY: &str = "ilspy_cmd";
+    const PAKET_CMD_LOC_KEY: &str = "paket_cmd";
+    const ILSPY_CMD: &str = "ilspy";
+    const PAKET_CMD: &str = "paket";
+    pub fn new(
+        location: PathBuf,
+        db_path: PathBuf,
+        analysis_mode: AnalysisMode,
+        tools: Tools,
+    ) -> Project {
         Project {
             location,
             db_path,
@@ -79,6 +98,74 @@ impl Project {
             graph: Arc::new(Mutex::new(None)),
             source_language_config: Arc::new(RwLock::new(None)),
             analysis_mode,
+            tools,
+        }
+    }
+
+    pub fn get_tools(specific_provider_config: &Option<Struct>) -> Result<Tools, Error> {
+        match specific_provider_config {
+            Some(specific_provider_config) => {
+                let ilspy_cmd = match specific_provider_config.fields.get(Self::ILSPY_CMD_LOC_KEY) {
+                    Some(v) => match &v.kind {
+                        Some(k) => match k {
+                            prost_types::value::Kind::NullValue(_) => {
+                                return Err(anyhow!("not valid ilspy_cmd"));
+                            }
+                            prost_types::value::Kind::NumberValue(_) => {
+                                return Err(anyhow!("not valid ilspy_cmd"));
+                            }
+                            prost_types::value::Kind::StringValue(s) => PathBuf::from_str(s)?,
+                            prost_types::value::Kind::BoolValue(_) => {
+                                return Err(anyhow!("not valid ilspy_cmd"));
+                            }
+                            prost_types::value::Kind::StructValue(_) => {
+                                return Err(anyhow!("not valid ilspy_cmd"));
+                            }
+                            prost_types::value::Kind::ListValue(_) => {
+                                return Err(anyhow!("not valid ilspy_cmd"));
+                            }
+                        },
+                        None => {
+                            return Err(anyhow!("not valid ilspy_cmd"));
+                        }
+                    },
+                    None => which(Self::ILSPY_CMD)?,
+                };
+                let paket_cmd = match specific_provider_config.fields.get(Self::PAKET_CMD_LOC_KEY) {
+                    Some(v) => match &v.kind {
+                        Some(k) => match k {
+                            prost_types::value::Kind::NullValue(_) => {
+                                return Err(anyhow!("not valid paket_cmd"));
+                            }
+                            prost_types::value::Kind::NumberValue(_) => {
+                                return Err(anyhow!("not valid paket_cmd"));
+                            }
+                            prost_types::value::Kind::StringValue(s) => PathBuf::from_str(s)?,
+                            prost_types::value::Kind::BoolValue(_) => {
+                                return Err(anyhow!("not valid paket_cmd"));
+                            }
+                            prost_types::value::Kind::StructValue(_) => {
+                                return Err(anyhow!("not valid paket_cmd"));
+                            }
+                            prost_types::value::Kind::ListValue(_) => {
+                                return Err(anyhow!("not valid paket_cmd"));
+                            }
+                        },
+                        None => {
+                            return Err(anyhow!("not valid ilspy_cmd"));
+                        }
+                    },
+                    None => which::which(Self::PAKET_CMD)?,
+                };
+                Ok(Tools {
+                    ilspy_cmd,
+                    paket_cmd,
+                })
+            }
+            None => Ok(Tools {
+                ilspy_cmd: which(Self::ILSPY_CMD)?,
+                paket_cmd: which(Self::PAKET_CMD)?,
+            }),
         }
     }
 

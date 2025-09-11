@@ -78,7 +78,14 @@ impl ProviderService for CSharpProvider {
 
         let analysis_mode = AnalysisMode::from(saved_config.analysis_mode.clone());
         let location = PathBuf::from(saved_config.location.clone());
-        let project = Arc::new(Project::new(location, self.db_path.clone(), analysis_mode));
+        let tools = Project::get_tools(&saved_config.provider_specific_config)
+            .map_err(|e| Status::invalid_argument(format!("unalble to find tools: {}", e)))?;
+        let project = Arc::new(Project::new(
+            location,
+            self.db_path.clone(),
+            analysis_mode,
+            tools,
+        ));
         let project_lock = self.project.clone();
         let mut project_guard = project_lock.lock().await;
         let _ = project_guard.replace(project.clone());

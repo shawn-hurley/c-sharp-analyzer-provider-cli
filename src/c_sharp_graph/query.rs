@@ -26,7 +26,7 @@ pub trait Query {
     fn query(&mut self, query: String) -> anyhow::Result<Vec<ResultNode>, Error>;
 }
 
-impl<'a> Query for Querier<'a> {
+impl Query for Querier<'_> {
     fn query(&mut self, query: String) -> anyhow::Result<Vec<ResultNode>, Error> {
         let search: Search = self.get_search(query)?;
 
@@ -112,18 +112,24 @@ impl<'a> Query for Querier<'a> {
                         break;
                     }
                 };
-                if let SourceType::Source {
-                    symbol_handle: symobl_handle,
-                } = self.source_type
-                    && let None = self.db.nodes_for_file(*file).find(|node_handle| {
-                        let node = &self.db[*node_handle];
-                        if let Some(sh) = node.symbol()
-                            && sh.as_usize() == symobl_handle.as_usize()
-                        {
-                            let edges: Vec<Edge> = self.db.outgoing_edges(*node_handle).collect();
-                            for edge in edges {
-                                if edge.sink == *comp_unit_node_handle {
-                                    return true;
+                let (is_source, symbol_handle) = match self.source_type {
+                    SourceType::Source { symbol_handle } => (true, Some(symbol_handle)),
+                    _ => (false, None),
+                };
+
+                if is_source
+                    && self.db.nodes_for_file(*file).any(|node_handle| {
+                        let node = &self.db[node_handle];
+
+                        let symobl_handle = symbol_handle.unwrap();
+                        if let Some(sh) = node.symbol() {
+                            if sh.as_usize() == symobl_handle.as_usize() {
+                                let edges: Vec<Edge> =
+                                    self.db.outgoing_edges(node_handle).collect();
+                                for edge in edges {
+                                    if edge.sink == *comp_unit_node_handle {
+                                        return true;
+                                    }
                                 }
                             }
                         }
