@@ -58,7 +58,6 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   node @comp_unit.def
   attr (@comp_unit.def) type = "pop_symbol", symbol = FILE_PATH, source_node = @comp_unit, is_definition, syntax_type = "comp-unit"
   edge  SOURCE_TYPE_NODE -> @comp_unit.def
-  print "source_type_node: ", SOURCE_TYPE_NODE, " comp_unit: ", @comp_unit.def
 }
 
 (compilation_unit

@@ -15,6 +15,7 @@ use tokio::task::JoinSet;
 use tracing::{debug, error, info, trace};
 
 use crate::c_sharp_graph::loader::add_dir_to_graph;
+use crate::c_sharp_graph::loader::SourceType;
 use crate::provider::project::Tools;
 use crate::provider::Project;
 
@@ -248,7 +249,12 @@ impl Project {
                     let file = decompiled_file.clone();
                     let lc = self.source_language_config.clone();
                     set.spawn(async move {
-                        let graph = StackGraph::new();
+                        let mut graph = StackGraph::new();
+                        // We need to make sure that the symols for source type are the first
+                        // symbols, so that they match what is in the builtins.
+                        let (_, _) = SourceType::load_symbols_into_graph(&mut graph);
+                        // remove mutability
+                        let graph = graph;
                         let lc_guard = lc.read().await;
                         let lc = match lc_guard.as_ref() {
                             Some(x) => x,

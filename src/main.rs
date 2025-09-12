@@ -10,7 +10,8 @@ use crate::analyzer_service::provider_service_server::ProviderServiceServer;
 use crate::provider::CSharpProvider;
 use clap::{command, Parser};
 use tonic::transport::Server;
-use tracing::info;
+use tracing::{debug, info};
+use tracing_subscriber::EnvFilter;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]
@@ -35,9 +36,10 @@ struct Args {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = Args::parse();
 
+    let filter = EnvFilter::from_default_env();
     // construct a subscriber that prints formatted traces to stdout
     let subscriber = tracing_subscriber::FmtSubscriber::builder()
-        .with_max_level(tracing::Level::DEBUG)
+        .with_env_filter(filter)
         .finish();
     // use that subscriber to process traces emitted after this point
     tracing::subscriber::set_global_default(subscriber)?;
@@ -54,6 +56,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     if args.port.is_some() {
         let s = format!("[::1]:{}", args.port.unwrap());
         info!("Using gRPC over HTTP/2 on port {}", s);
+        debug!("testing filter");
 
         let addr = s.parse()?;
 

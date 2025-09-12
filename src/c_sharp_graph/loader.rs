@@ -7,6 +7,7 @@ use stack_graphs::{
     partial::{PartialPath, PartialPaths},
     storage::SQLiteWriter,
 };
+use std::fmt::Debug;
 use std::{
     collections::HashMap,
     path::{Path, PathBuf},
@@ -20,26 +21,65 @@ use walkdir::WalkDir;
 
 pub const SOURCE_TYPE_NODE: &str = "SOURCE_TYPE_NODE";
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(PartialEq, Eq, Hash)]
 pub enum SourceType {
     Source { symbol_handle: Handle<Symbol> },
     Dependency { symbol_handle: Handle<Symbol> },
 }
 
+impl Debug for SourceType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Source { symbol_handle } => f
+                .debug_struct("Source")
+                .field("symbol_handle", symbol_handle)
+                .finish(),
+            Self::Dependency { symbol_handle } => f
+                .debug_struct("Dependency")
+                .field("symbol_handle", symbol_handle)
+                .finish(),
+        }
+    }
+}
+
 impl SourceType {
+    const SOURCE_STRING: &str = "konveyor.io/source_type=source";
+    const DEPENDENCY_STRING: &str = "konveyor.io/source_type=dependency";
+
     pub fn get_source_string() -> String {
-        "konveyor.io/source_type=source".to_string()
+        Self::SOURCE_STRING.to_string()
     }
 
     pub fn get_dependency_string() -> String {
-        "konveyor.io/source_type=dependency".to_string()
+        Self::DEPENDENCY_STRING.to_string()
+    }
+
+    pub fn load_symbols_into_graph(graph: &mut StackGraph) -> (Self, Self) {
+        let source_type_symbol_handle = graph.add_symbol(&Self::get_source_string());
+        let dependency_type_symbol_handle = graph.add_symbol(&Self::get_dependency_string());
+        (
+            Self::Source {
+                symbol_handle: source_type_symbol_handle,
+            },
+            Self::Dependency {
+                symbol_handle: dependency_type_symbol_handle,
+            },
+        )
     }
 
     pub fn get_symbol_handle(&self) -> Handle<Symbol> {
         match self {
             SourceType::Source { symbol_handle } | SourceType::Dependency { symbol_handle } => {
+                debug!("HERE!!!- {:?} -- {:?}", symbol_handle, self);
                 *symbol_handle
             }
+        }
+    }
+
+    pub fn get_string(&self) -> String {
+        match self {
+            SourceType::Source { symbol_handle: _ } => Self::get_source_string(),
+            SourceType::Dependency { symbol_handle: _ } => Self::get_dependency_string(),
         }
     }
 
@@ -49,6 +89,13 @@ impl SourceType {
         file: Handle<File>,
     ) -> Result<NodeID, Error> {
         let symbol_handle = self.get_symbol_handle();
+        //Verify symbol handle is in graph.
+        if graph
+            .iter_symbols()
+            .any(|s| s == symbol_handle && graph[s] == self.get_string())
+        {
+            debug!("found symbol in graph");
+        }
         let node_id = graph.new_node_id(file);
         match graph.add_pop_symbol_node(node_id, symbol_handle, false) {
             Some(_) => {
@@ -205,6 +252,7 @@ pub fn init_stack_graph(
     let mut files_loaded = 0;
 
     let mut stack_graph = StackGraph::new();
+    let _ = stack_graph.add_from_graph(&language_config.builtins);
     for path in WalkDir::new(source_location).into_iter() {
         debug!(
             "stack_graph files: {}, nodes: {}, symbols: {}",

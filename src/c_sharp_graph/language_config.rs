@@ -53,6 +53,12 @@ impl SourceNodeLanguageConfiguration {
             tsg: Cow::from(STACK_GRAPHS_TSG_SOURCE),
         })?;
         let mut builtins = StackGraph::new();
+        let (source_type_node_info, dependnecy_type_node_info) =
+            SourceType::load_symbols_into_graph(&mut builtins);
+        debug!(
+            "HERE: SOURCE_TYPE_SOURCE: {:?} --- SOURCE_TYPE_DEP: {:?}",
+            source_type_node_info, dependnecy_type_node_info
+        );
         let mut builtins_globals = Variables::new();
 
         Loader::load_globals_from_config_str(STACK_GRAPHS_BUILTINS_CONFIG, &mut builtins_globals)?;
@@ -62,21 +68,12 @@ impl SourceNodeLanguageConfiguration {
             .unwrap_or_default();
 
         let file = builtins.add_file(BUILTINS_FILENAME).unwrap();
-        let source_type_symbol_handle = builtins.add_symbol(&SourceType::get_source_string());
-        let dependency_type_symbol_handle =
-            builtins.add_symbol(&SourceType::get_dependency_string());
-        let dependnecy_type_node_info = SourceType::Dependency {
-            symbol_handle: dependency_type_symbol_handle,
-        };
-        let source_type_node_info = SourceType::Source {
-            symbol_handle: source_type_symbol_handle,
-        };
         let source_type_node_id = source_type_node_info.load_node_to_graph(&mut builtins, file)?;
         let dependency_type_node_id =
             dependnecy_type_node_info.load_node_to_graph(&mut builtins, file)?;
         let _ = match builtins.add_pop_symbol_node(
             source_type_node_id,
-            source_type_symbol_handle,
+            source_type_node_info.get_symbol_handle(),
             false,
         ) {
             Some(x) => x,
@@ -86,7 +83,7 @@ impl SourceNodeLanguageConfiguration {
         };
         let _ = match builtins.add_pop_symbol_node(
             dependency_type_node_id,
-            dependency_type_symbol_handle,
+            dependnecy_type_node_info.get_symbol_handle(),
             false,
         ) {
             Some(x) => x,

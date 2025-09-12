@@ -12,9 +12,9 @@ use prost_types::Value;
 use regex::Regex;
 use stack_graphs::{
     arena::Handle,
-    graph::{Edge, File, Node, StackGraph},
+    graph::{self, Edge, File, Node, StackGraph},
 };
-use tracing::{debug, trace};
+use tracing::{debug, error, trace};
 use url::Url;
 
 pub struct Querier<'a> {
@@ -84,12 +84,6 @@ impl Query for Querier<'_> {
                                 }
                             }
                             "namespace-declaration" => {
-                                debug!(
-                                    "handling: node: {} symbol: {} with syntax_type: {:?}",
-                                    node.display(self.db),
-                                    &symbol,
-                                    &syntax_type
-                                );
                                 if search.match_namespace(symbol) {
                                     definition_root_nodes.push(node_handle);
                                     referenced_files.insert(file_handle);
@@ -105,6 +99,11 @@ impl Query for Querier<'_> {
             let namespace_symbols = NamespaceSymbols::new(self.db, definition_root_nodes)?;
 
             for file in referenced_files.iter() {
+                debug!(
+                    "searching for {:?} file: {}",
+                    self.source_type,
+                    file.display(self.db)
+                );
                 let comp_unit_node_handle = match file_to_compunit_handle.get(file) {
                     Some(x) => x,
                     None => {
@@ -118,12 +117,15 @@ impl Query for Querier<'_> {
                 };
 
                 if is_source
-                    && self.db.nodes_for_file(*file).any(|node_handle| {
+                    && !self.db.nodes_for_file(*file).any(|node_handle| {
                         let node = &self.db[node_handle];
 
                         let symobl_handle = symbol_handle.unwrap();
                         if let Some(sh) = node.symbol() {
                             if sh.as_usize() == symobl_handle.as_usize() {
+                                if self.source_type.get_string() != self.db[sh] {
+                                    error!("SOMETHING IS VERY WRONG!!!!");
+                                }
                                 let edges: Vec<Edge> =
                                     self.db.outgoing_edges(node_handle).collect();
                                 for edge in edges {
@@ -221,7 +223,6 @@ impl<'a> Querier<'a> {
                                         character: source_info.span.end.column.utf8_offset,
                                     },
                                 };
-                                debug!("containing_line: {:?}", source_info.syntax_type);
                                 match source_info.containing_line.into_option() {
                                     None => (),
                                     Some(string_handle) => {
