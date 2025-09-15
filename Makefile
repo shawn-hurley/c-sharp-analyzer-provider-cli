@@ -46,7 +46,10 @@ run-demo: reset-demo-apps build_grpc
 run-demo-github: reset-demo-apps build_grpc
 	target/debug/c-sharp-analyzer-provider-cli --port 9000 --name c-sharp &
 	$(MAKE) wait-for-server;
-	$(MAKE) run-grpc-init-http; \
-	$(MAKE) run-grpc-ref-http; \
-	$(MAKE) reset-demo-apps
+	$(MAKE) run-grpc-init-http;
+	$(MAKE) run-grpc-ref-http;
+	cat demo.log
+	cat out.yaml
+	diff demo-output.yaml output.yaml
+	$(MAKE) reset-demo-apps;
 
