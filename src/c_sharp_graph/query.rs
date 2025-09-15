@@ -12,7 +12,7 @@ use prost_types::Value;
 use regex::Regex;
 use stack_graphs::{
     arena::Handle,
-    graph::{self, Edge, File, Node, StackGraph},
+    graph::{Edge, File, Node, StackGraph},
 };
 use tracing::{debug, error, trace};
 use url::Url;

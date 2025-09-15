@@ -30,4 +30,4 @@ jobs:
           ls -la $HOME/.dotnet/tools/
       - name: run demo test
         run : |
-          make run-demo
+          make run-demo-github

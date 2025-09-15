@@ -197,13 +197,14 @@ impl ProviderService for CSharpProvider {
                 response: None,
             },
             |res| {
-                // TODO convert Vec<Result> to ProviderEvaluateResponse
+                let mut i: Vec<IncidentContext> = res.iter().map(to_incident).collect();
+                i.sort_by_key(|i| format!("{}-{:?}", i.file_uri, i.line_number()));
                 EvaluateResponse {
                     error: String::new(),
                     successful: true,
                     response: Some(ProviderEvaluateResponse {
                         matched: !res.is_empty(),
-                        incident_contexts: res.iter().map(to_incident).collect(),
+                        incident_contexts: i,
                         template_context: None,
                     }),
                 }

@@ -300,7 +300,7 @@ impl Project {
                     }
                 };
                 let mut partials = PartialPaths::new();
-                let paths: Vec<PartialPath> = Vec::new();
+                let paths: Vec<PartialPath> = vec![];
                 match db.store_result_for_file(
                     &init_graph.stack_graph,
                     file,
