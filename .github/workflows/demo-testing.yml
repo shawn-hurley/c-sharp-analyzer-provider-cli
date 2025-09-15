@@ -18,7 +18,6 @@ jobs:
       - name: install grpcurl
         run: |
           go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
-          export PATH=${PATH}:`go env GOPATH`/bin
       - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
@@ -31,4 +30,5 @@ jobs:
           ls -la $HOME/.dotnet/tools/
       - name: run demo test
         run : |
+          export PATH=${PATH}:`go env GOPATH`/bin
           make run-demo-github
