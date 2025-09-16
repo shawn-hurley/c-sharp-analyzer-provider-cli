@@ -2,8 +2,13 @@ use anyhow::{anyhow, Error};
 use stack_graphs::graph::StackGraph;
 use stack_graphs::partial::PartialPath;
 use stack_graphs::partial::PartialPaths;
+use stack_graphs::stitching::ForwardPartialPathStitcher;
+use stack_graphs::stitching::StitcherConfig;
+use stack_graphs::storage::SQLiteReader;
 use stack_graphs::storage::SQLiteWriter;
+use stack_graphs::NoCancellation;
 use std::collections::HashSet;
+use std::fmt::Debug;
 use std::path::Path;
 use std::path::PathBuf;
 use std::process::Command;
@@ -20,7 +25,6 @@ use crate::provider::project::Tools;
 use crate::provider::Project;
 
 const REFERNCE_ASSEMBLIES_NAME: &str = "Microsoft.NETFramework.ReferenceAssemblies";
-#[derive(Debug)]
 pub struct Dependencies {
     pub location: PathBuf,
     #[allow(dead_code)]
@@ -28,6 +32,16 @@ pub struct Dependencies {
     #[allow(dead_code)]
     pub version: String,
     pub decompiled_location: Arc<Mutex<HashSet<PathBuf>>>,
+}
+
+impl Debug for Dependencies {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("\nDependencies")
+            .field("name", &self.name)
+            .field("version", &self.version)
+            .field("location", &self.location)
+            .finish()
+    }
 }
 
 impl Dependencies {
@@ -248,6 +262,8 @@ impl Project {
                 for decompiled_file in decompiled_files {
                     let file = decompiled_file.clone();
                     let lc = self.source_language_config.clone();
+                    let db_path = self.db_path.clone();
+                    let dep_name = d.name.clone();
                     set.spawn(async move {
                         let mut graph = StackGraph::new();
                         // We need to make sure that the symols for source type are the first
@@ -263,17 +279,49 @@ impl Project {
                             }
                         };
 
-                        add_dir_to_graph(
+                        let graph = add_dir_to_graph(
                             &file,
                             &lc.dependnecy_type_node_info,
                             &lc.language_config,
                             graph,
-                        )
+                        )?;
+                        drop(lc_guard);
+                        let mut db: SQLiteWriter = SQLiteWriter::open(db_path)?;
+                        for (file_path, tag) in graph.file_to_tag.clone() {
+                            let file_str = file_path.to_string_lossy();
+                            let file_handle = graph
+                                .stack_graph
+                                .get_file(&file_str)
+                                .ok_or(anyhow!("unable to get file"))?;
+                            let mut partials = PartialPaths::new();
+                            let mut paths: Vec<PartialPath> = vec![];
+                            let stats =
+                                ForwardPartialPathStitcher::find_minimal_partial_path_set_in_file(
+                                    &graph.stack_graph,
+                                    &mut partials,
+                                    file_handle,
+                                    StitcherConfig::default().with_collect_stats(true),
+                                    &NoCancellation,
+                                    |_, _, p| paths.push(p.clone()),
+                                )?;
+                            db.store_result_for_file(
+                                &graph.stack_graph,
+                                file_handle,
+                                &tag,
+                                &mut partials,
+                                &paths,
+                            )?;
+                            trace!("stats for stitiching: {:?} - paths: {}", stats, paths.len(),);
+                        }
+                        debug!(
+                            "stats for dependency: {:?}, files indexed {:?}",
+                            dep_name, graph.files_loaded,
+                        );
+                        Ok(graph)
                     });
                 }
             }
         }
-        let mut db: SQLiteWriter = SQLiteWriter::open(&self.db_path)?;
         for res in set.join_all().await {
             let init_graph = match res {
                 Ok(i) => i,
@@ -284,54 +332,28 @@ impl Project {
                     ));
                 }
             };
-
-            //conside a new thread to handle writing to the database.
-            for (k, tag) in init_graph.file_to_tag {
-                let entry_path_str = match k.to_str() {
-                    Some(path) => path,
-                    None => {
-                        return Err(anyhow!("unable to get path string"));
-                    }
-                };
-                let file = match init_graph.stack_graph.get_file(&entry_path_str) {
-                    Some(f) => f,
-                    None => {
-                        return Err(anyhow!("unable to get captured file name from graph"));
-                    }
-                };
-                let mut partials = PartialPaths::new();
-                let paths: Vec<PartialPath> = vec![];
-                match db.store_result_for_file(
-                    &init_graph.stack_graph,
-                    file,
-                    &tag,
-                    &mut partials,
-                    &paths,
-                ) {
-                    Ok(_) => (),
-                    Err(e) => {
-                        error!("unable to store graph: {}", e);
-                    }
-                }
-            }
-            let mut graph_guard = self
-                .graph
-                .lock()
-                .expect("project may not have been initialized");
-            let mut graph = match graph_guard.take() {
-                Some(x) => x,
-                None => {
-                    return Err(anyhow!(
-                        "unable to get graph, project may not have been initialized"
-                    ));
-                }
-            };
-
-            debug!("adding {} files from other graph", init_graph.files_loaded);
-
-            let _ = graph.add_from_graph(&init_graph.stack_graph);
-            let _ = graph_guard.insert(graph);
+            debug!(
+                "loaded {} files for dep: {:?}",
+                init_graph.files_loaded, init_graph.file_to_tag
+            );
         }
+
+        let mut graph_guard = self
+            .graph
+            .lock()
+            .expect("project may not have been initialized");
+        let mut db_reader = SQLiteReader::open(&self.db_path)?;
+        db_reader.load_graphs_for_file_or_directory(&self.location, &NoCancellation)?;
+        let (read_graph, partials, databse) = db_reader.get();
+        let read_graph = read_graph.to_serializable();
+        let mut new_graph = StackGraph::new();
+        read_graph.load_into(&mut new_graph)?;
+        debug!(
+            "adding {:?} files from other graph",
+            databse.to_serializable(&new_graph, partials)
+        );
+        let _ = graph_guard.insert(new_graph);
+
         Ok(())
     }
 

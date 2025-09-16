@@ -4,7 +4,7 @@
     "matched": true,
     "incidentContexts": [
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/FilterConfig.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/FilterConfig.cs",
         "codeLocation": {
           "startPosition": {
             "line": 9,
@@ -17,12 +17,12 @@
         },
         "LineNumber": "9",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/FilterConfig.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/FilterConfig.cs",
           "line": "filters.Add(new HandleErrorAttribute());"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
         "codeLocation": {
           "startPosition": {
             "line": 25,
@@ -35,12 +35,12 @@
         },
         "LineNumber": "25",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
           "line": "defaults: new { controller = \"Home\", action = \"Index\", id = UrlParameter.Optional }"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
         "codeLocation": {
           "startPosition": {
             "line": 25,
@@ -53,12 +53,12 @@
         },
         "LineNumber": "25",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
           "line": "defaults: new { controller = \"Home\", action = \"Index\", id = UrlParameter.Optional }"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 100,
@@ -71,12 +71,12 @@
         },
         "LineNumber": "100",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult Disassociate(string provider, string providerUserId)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 121,
@@ -89,12 +89,12 @@
         },
         "LineNumber": "121",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return RedirectToAction(\"Manage\", new { Message = message });"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 127,
@@ -107,12 +107,12 @@
         },
         "LineNumber": "127",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult Manage(ManageMessageId? message)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 136,
@@ -125,12 +125,12 @@
         },
         "LineNumber": "136",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 144,
@@ -143,12 +143,12 @@
         },
         "LineNumber": "144",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult Manage(LocalPasswordModel model)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 151,
@@ -161,12 +161,12 @@
         },
         "LineNumber": "151",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 151,
@@ -179,12 +179,12 @@
         },
         "LineNumber": "151",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 166,
@@ -197,12 +197,12 @@
         },
         "LineNumber": "166",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return RedirectToAction(\"Manage\", new { Message = ManageMessageId.ChangePasswordSuccess });"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 170,
@@ -215,12 +215,12 @@
         },
         "LineNumber": "170",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "ModelState.AddModelError(\"\", \"The current password is incorrect or the new password is invalid.\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 170,
@@ -233,12 +233,12 @@
         },
         "LineNumber": "170",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "ModelState.AddModelError(\"\", \"The current password is incorrect or the new password is invalid.\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 178,
@@ -251,12 +251,12 @@
         },
         "LineNumber": "178",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "ModelState state = ModelState[\"OldPassword\"];"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 178,
@@ -269,12 +269,12 @@
         },
         "LineNumber": "178",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "ModelState state = ModelState[\"OldPassword\"];"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 184,
@@ -287,12 +287,12 @@
         },
         "LineNumber": "184",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 184,
@@ -305,12 +305,12 @@
         },
         "LineNumber": "184",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 189,
@@ -323,12 +323,12 @@
         },
         "LineNumber": "189",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return RedirectToAction(\"Manage\", new { Message = ManageMessageId.SetPasswordSuccess });"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 199,
@@ -341,12 +341,12 @@
         },
         "LineNumber": "199",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View(model);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 208,
@@ -359,12 +359,12 @@
         },
         "LineNumber": "208",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult ExternalLogin(string provider, string returnUrl)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 217,
@@ -377,12 +377,12 @@
         },
         "LineNumber": "217",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult ExternalLoginCallback(string returnUrl)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 222,
@@ -395,12 +395,12 @@
         },
         "LineNumber": "222",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return RedirectToAction(\"ExternalLoginFailure\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 23,
@@ -413,12 +413,12 @@
         },
         "LineNumber": "23",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult Login(string returnUrl)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 242,
@@ -431,12 +431,12 @@
         },
         "LineNumber": "242",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View(\"ExternalLoginConfirmation\", new RegisterExternalLoginModel { UserName = result.UserName, ExternalLoginData = loginData });"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 252,
@@ -449,12 +449,12 @@
         },
         "LineNumber": "252",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult ExternalLoginConfirmation(RegisterExternalLoginModel model, string returnUrl)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 259,
@@ -467,12 +467,12 @@
         },
         "LineNumber": "259",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return RedirectToAction(\"Manage\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 26,
@@ -485,12 +485,12 @@
         },
         "LineNumber": "26",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 262,
@@ -503,12 +503,12 @@
         },
         "LineNumber": "262",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 262,
@@ -521,12 +521,12 @@
         },
         "LineNumber": "262",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 282,
@@ -539,12 +539,12 @@
         },
         "LineNumber": "282",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "ModelState.AddModelError(\"UserName\", \"User name already exists. Please enter a different user name.\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 282,
@@ -557,12 +557,12 @@
         },
         "LineNumber": "282",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "ModelState.AddModelError(\"UserName\", \"User name already exists. Please enter a different user name.\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 289,
@@ -575,12 +575,12 @@
         },
         "LineNumber": "289",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View(model);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 296,
@@ -593,12 +593,12 @@
         },
         "LineNumber": "296",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult ExternalLoginFailure()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 298,
@@ -611,12 +611,12 @@
         },
         "LineNumber": "298",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 303,
@@ -629,12 +629,12 @@
         },
         "LineNumber": "303",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult ExternalLoginsList(string returnUrl)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 306,
@@ -647,12 +647,12 @@
         },
         "LineNumber": "306",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return PartialView(\"_ExternalLoginsListPartial\", OAuthWebSecurity.RegisteredClientData);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 310,
@@ -665,12 +665,12 @@
         },
         "LineNumber": "310",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult RemoveExternalLogins()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 327,
@@ -683,12 +683,12 @@
         },
         "LineNumber": "327",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return PartialView(\"_RemoveExternalLoginsPartial\", externalLogins);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 331,
@@ -701,12 +701,12 @@
         },
         "LineNumber": "331",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "private ActionResult RedirectToLocal(string returnUrl)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 335,
@@ -719,12 +719,12 @@
         },
         "LineNumber": "335",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return Redirect(returnUrl);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 339,
@@ -737,12 +737,12 @@
         },
         "LineNumber": "339",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return RedirectToAction(\"Index\", \"Home\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 35,
@@ -755,12 +755,12 @@
         },
         "LineNumber": "35",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult Login(LoginModel model, string returnUrl)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 361,
@@ -773,12 +773,12 @@
         },
         "LineNumber": "361",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public override void ExecuteResult(ControllerContext context)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 37,
@@ -791,12 +791,12 @@
         },
         "LineNumber": "37",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid \u0026\u0026 WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 37,
@@ -809,12 +809,12 @@
         },
         "LineNumber": "37",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid \u0026\u0026 WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 43,
@@ -827,12 +827,12 @@
         },
         "LineNumber": "43",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "ModelState.AddModelError(\"\", \"The user name or password provided is incorrect.\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 43,
@@ -845,12 +845,12 @@
         },
         "LineNumber": "43",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "ModelState.AddModelError(\"\", \"The user name or password provided is incorrect.\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 44,
@@ -863,12 +863,12 @@
         },
         "LineNumber": "44",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View(model);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 52,
@@ -881,12 +881,12 @@
         },
         "LineNumber": "52",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult LogOff()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 56,
@@ -899,12 +899,12 @@
         },
         "LineNumber": "56",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return RedirectToAction(\"Index\", \"Home\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 63,
@@ -917,12 +917,12 @@
         },
         "LineNumber": "63",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult Register()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 65,
@@ -935,12 +935,12 @@
         },
         "LineNumber": "65",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 74,
@@ -953,12 +953,12 @@
         },
         "LineNumber": "74",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "public ActionResult Register(RegisterModel model)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 76,
@@ -971,12 +971,12 @@
         },
         "LineNumber": "76",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 76,
@@ -989,12 +989,12 @@
         },
         "LineNumber": "76",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 83,
@@ -1007,12 +1007,12 @@
         },
         "LineNumber": "83",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return RedirectToAction(\"Index\", \"Home\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 92,
@@ -1025,12 +1025,12 @@
         },
         "LineNumber": "92",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
           "line": "return View(model);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 101,
@@ -1043,12 +1043,12 @@
         },
         "LineNumber": "101",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult Edit(Dinner dinner)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 105,
@@ -1061,12 +1061,12 @@
         },
         "LineNumber": "105",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(\"InvalidOwner\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 108,
@@ -1079,12 +1079,12 @@
         },
         "LineNumber": "108",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 108,
@@ -1097,12 +1097,12 @@
         },
         "LineNumber": "108",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 112,
@@ -1115,12 +1115,12 @@
         },
         "LineNumber": "112",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return RedirectToAction(\"Index\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 114,
@@ -1133,12 +1133,12 @@
         },
         "LineNumber": "114",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(dinner);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 121,
@@ -1151,12 +1151,12 @@
         },
         "LineNumber": "121",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult Delete(int id = 0)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 126,
@@ -1169,12 +1169,12 @@
         },
         "LineNumber": "126",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return HttpNotFound();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 130,
@@ -1187,12 +1187,12 @@
         },
         "LineNumber": "130",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(\"InvalidOwner\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 132,
@@ -1205,12 +1205,12 @@
         },
         "LineNumber": "132",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(dinner);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 139,
@@ -1223,12 +1223,12 @@
         },
         "LineNumber": "139",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult DeleteConfirmed(int id)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 145,
@@ -1241,12 +1241,12 @@
         },
         "LineNumber": "145",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(\"InvalidOwner\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 150,
@@ -1259,12 +1259,12 @@
         },
         "LineNumber": "150",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return RedirectToAction(\"Index\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 153,
@@ -1277,12 +1277,12 @@
         },
         "LineNumber": "153",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "protected override void Dispose(bool disposing)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 159,
@@ -1295,12 +1295,12 @@
         },
         "LineNumber": "159",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult WebSlicePopular()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 166,
@@ -1313,12 +1313,12 @@
         },
         "LineNumber": "166",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(\"WebSlice\", model.Take(5));"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 169,
@@ -1331,12 +1331,12 @@
         },
         "LineNumber": "169",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult WebSliceUpcoming()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 177,
@@ -1349,12 +1349,12 @@
         },
         "LineNumber": "177",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(\"WebSlice\", model.Take(5));"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 19,
@@ -1367,12 +1367,12 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult Index(int? page)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 24,
@@ -1385,12 +1385,12 @@
         },
         "LineNumber": "24",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(dinners.ToPagedList(pageIndex, PageSize));"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 30,
@@ -1403,12 +1403,12 @@
         },
         "LineNumber": "30",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult Details(int id = 0)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 35,
@@ -1421,12 +1421,12 @@
         },
         "LineNumber": "35",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return HttpNotFound();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 37,
@@ -1439,12 +1439,12 @@
         },
         "LineNumber": "37",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(dinner);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 43,
@@ -1457,12 +1457,12 @@
         },
         "LineNumber": "43",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "[Authorize]"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 44,
@@ -1475,12 +1475,12 @@
         },
         "LineNumber": "44",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult Create()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 52,
@@ -1493,12 +1493,12 @@
         },
         "LineNumber": "52",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(dinner);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 58,
@@ -1511,12 +1511,12 @@
         },
         "LineNumber": "58",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "[HttpPost, Authorize, ValidateAntiForgeryToken]"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 59,
@@ -1529,12 +1529,12 @@
         },
         "LineNumber": "59",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult Create(Dinner dinner)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 61,
@@ -1547,12 +1547,12 @@
         },
         "LineNumber": "61",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 61,
@@ -1565,12 +1565,12 @@
         },
         "LineNumber": "61",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "if (ModelState.IsValid)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 73,
@@ -1583,12 +1583,12 @@
         },
         "LineNumber": "73",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return RedirectToAction(\"Index\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 76,
@@ -1601,12 +1601,12 @@
         },
         "LineNumber": "76",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(dinner);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 83,
@@ -1619,12 +1619,12 @@
         },
         "LineNumber": "83",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "public ActionResult Edit(int id = 0)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 88,
@@ -1637,12 +1637,12 @@
         },
         "LineNumber": "88",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return HttpNotFound();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 92,
@@ -1655,12 +1655,12 @@
         },
         "LineNumber": "92",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(\"InvalidOwner\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 94,
@@ -1673,12 +1673,12 @@
         },
         "LineNumber": "94",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
           "line": "return View(dinner);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 10,
@@ -1691,12 +1691,12 @@
         },
         "LineNumber": "10",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
           "line": "public ActionResult Index()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 14,
@@ -1709,12 +1709,12 @@
         },
         "LineNumber": "14",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
           "line": "return View();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 17,
@@ -1727,12 +1727,12 @@
         },
         "LineNumber": "17",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
           "line": "public ActionResult About()"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 19,
@@ -1745,12 +1745,12 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
           "line": "return View();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 16,
@@ -1763,12 +1763,12 @@
         },
         "LineNumber": "16",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
           "line": "public ActionResult Register(int id)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 19,
@@ -1781,12 +1781,12 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
           "line": "return RedirectToAction(\"Details\", \"Dinners\", new { id = id });"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 25,
@@ -1799,12 +1799,12 @@
         },
         "LineNumber": "25",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
           "line": "public ActionResult RegisterAjax(int id)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 28,
@@ -1817,12 +1817,12 @@
         },
         "LineNumber": "28",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
           "line": "return Content(\"Thanks - we'll see you there!\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 49,
@@ -1835,12 +1835,12 @@
         },
         "LineNumber": "49",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
           "line": "public ActionResult CancelAjax(int id)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 60,
@@ -1853,12 +1853,12 @@
         },
         "LineNumber": "60",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
           "line": "return Content(\"Sorry you can't make it!\");"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/SearchController.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/SearchController.cs",
         "codeLocation": {
           "startPosition": {
             "line": 105,
@@ -1871,12 +1871,12 @@
         },
         "LineNumber": "105",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/SearchController.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/SearchController.cs",
           "line": "protected override void Dispose(bool disposing)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Filters/InitializeSimpleMembershipAttribute.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Filters/InitializeSimpleMembershipAttribute.cs",
         "codeLocation": {
           "startPosition": {
             "line": 17,
@@ -1889,12 +1889,12 @@
         },
         "LineNumber": "17",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Filters/InitializeSimpleMembershipAttribute.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Filters/InitializeSimpleMembershipAttribute.cs",
           "line": "public override void OnActionExecuting(ActionExecutingContext filterContext)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
         "codeLocation": {
           "startPosition": {
             "line": 19,
@@ -1907,12 +1907,12 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
           "line": "AreaRegistration.RegisterAllAreas();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
         "codeLocation": {
           "startPosition": {
             "line": 19,
@@ -1925,12 +1925,12 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
           "line": "AreaRegistration.RegisterAllAreas();"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
         "codeLocation": {
           "startPosition": {
             "line": 22,
@@ -1943,12 +1943,12 @@
         },
         "LineNumber": "22",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
           "line": "FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
         "codeLocation": {
           "startPosition": {
             "line": 22,
@@ -1961,12 +1961,12 @@
         },
         "LineNumber": "22",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
           "line": "FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
         "codeLocation": {
           "startPosition": {
             "line": 27,
@@ -1979,12 +1979,12 @@
         },
         "LineNumber": "27",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
           "line": "ModelBinderProviders.BinderProviders.Add(new EFModelBinderProvider());"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
         "codeLocation": {
           "startPosition": {
             "line": 27,
@@ -1997,12 +1997,12 @@
         },
         "LineNumber": "27",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
           "line": "ModelBinderProviders.BinderProviders.Add(new EFModelBinderProvider());"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
         "codeLocation": {
           "startPosition": {
             "line": 11,
@@ -2015,12 +2015,12 @@
         },
         "LineNumber": "11",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
           "line": "public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)"
         }
       },
       {
-        "fileURI": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
         "codeLocation": {
           "startPosition": {
             "line": 28,
@@ -2033,7 +2033,7 @@
         },
         "LineNumber": "28",
         "variables": {
-          "file": "file:///Users/shurley/repos/tree-sitter-testing/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
           "line": "public IModelBinder GetBinder(Type modelType)"
         }
       }

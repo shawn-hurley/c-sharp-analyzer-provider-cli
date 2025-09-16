@@ -1,5 +1,6 @@
 use anyhow::{anyhow, Error};
 use prost_types::Struct;
+use prost_types::Value;
 use stack_graphs::graph::StackGraph;
 use stack_graphs::serde::StackGraph as serialize_stack_graph;
 use stack_graphs::stitching::ForwardCandidates;
@@ -68,8 +69,8 @@ impl Debug for Project {
         f.debug_struct("Project")
             .field("location", &self.location)
             .field("db_path", &self.db_path)
-            .field("dependencies", &self.dependencies)
             .field("analysis_mode", &self.analysis_mode)
+            .field("dependencies", &self.dependencies)
             .finish()
     }
 }
@@ -106,56 +107,36 @@ impl Project {
         match specific_provider_config {
             Some(specific_provider_config) => {
                 let ilspy_cmd = match specific_provider_config.fields.get(Self::ILSPY_CMD_LOC_KEY) {
-                    Some(v) => match &v.kind {
-                        Some(k) => match k {
-                            prost_types::value::Kind::NullValue(_) => {
-                                return Err(anyhow!("not valid ilspy_cmd"));
-                            }
-                            prost_types::value::Kind::NumberValue(_) => {
-                                return Err(anyhow!("not valid ilspy_cmd"));
-                            }
-                            prost_types::value::Kind::StringValue(s) => PathBuf::from_str(s)?,
-                            prost_types::value::Kind::BoolValue(_) => {
-                                return Err(anyhow!("not valid ilspy_cmd"));
-                            }
-                            prost_types::value::Kind::StructValue(_) => {
-                                return Err(anyhow!("not valid ilspy_cmd"));
-                            }
-                            prost_types::value::Kind::ListValue(_) => {
-                                return Err(anyhow!("not valid ilspy_cmd"));
-                            }
-                        },
-                        None => {
-                            return Err(anyhow!("not valid ilspy_cmd"));
+                    Some(Value {
+                        kind: Some(prost_types::value::Kind::StringValue(s)),
+                    }) => {
+                        let p = PathBuf::from_str(s)?;
+                        if p.exists() {
+                            p
+                        } else {
+                            return Err(anyhow!("not valid ilspycmd"));
                         }
-                    },
+                    }
                     None => which(Self::ILSPY_CMD)?,
+                    _ => {
+                        return Err(anyhow!("not valid ilspycmd"));
+                    }
                 };
                 let paket_cmd = match specific_provider_config.fields.get(Self::PAKET_CMD_LOC_KEY) {
-                    Some(v) => match &v.kind {
-                        Some(k) => match k {
-                            prost_types::value::Kind::NullValue(_) => {
-                                return Err(anyhow!("not valid paket_cmd"));
-                            }
-                            prost_types::value::Kind::NumberValue(_) => {
-                                return Err(anyhow!("not valid paket_cmd"));
-                            }
-                            prost_types::value::Kind::StringValue(s) => PathBuf::from_str(s)?,
-                            prost_types::value::Kind::BoolValue(_) => {
-                                return Err(anyhow!("not valid paket_cmd"));
-                            }
-                            prost_types::value::Kind::StructValue(_) => {
-                                return Err(anyhow!("not valid paket_cmd"));
-                            }
-                            prost_types::value::Kind::ListValue(_) => {
-                                return Err(anyhow!("not valid paket_cmd"));
-                            }
-                        },
-                        None => {
-                            return Err(anyhow!("not valid ilspy_cmd"));
+                    Some(Value {
+                        kind: Some(prost_types::value::Kind::StringValue(s)),
+                    }) => {
+                        let p = PathBuf::from_str(s)?;
+                        if p.exists() {
+                            p
+                        } else {
+                            return Err(anyhow!("not valid ilspycmd"));
                         }
-                    },
+                    }
                     None => which::which(Self::PAKET_CMD)?,
+                    _ => {
+                        return Err(anyhow!("not valid paket_cmd"));
+                    }
                 };
                 Ok(Tools {
                     ilspy_cmd,

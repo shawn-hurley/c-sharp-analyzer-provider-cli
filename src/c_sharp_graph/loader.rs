@@ -70,7 +70,6 @@ impl SourceType {
     pub fn get_symbol_handle(&self) -> Handle<Symbol> {
         match self {
             SourceType::Source { symbol_handle } | SourceType::Dependency { symbol_handle } => {
-                debug!("HERE!!!- {:?} -- {:?}", symbol_handle, self);
                 *symbol_handle
             }
         }
@@ -90,11 +89,11 @@ impl SourceType {
     ) -> Result<NodeID, Error> {
         let symbol_handle = self.get_symbol_handle();
         //Verify symbol handle is in graph.
-        if graph
+        if !graph
             .iter_symbols()
             .any(|s| s == symbol_handle && graph[s] == self.get_string())
         {
-            debug!("found symbol in graph");
+            return Err(anyhow!("unable to load graph"));
         }
         let node_id = graph.new_node_id(file);
         match graph.add_pop_symbol_node(node_id, symbol_handle, false) {
@@ -163,10 +162,10 @@ pub fn add_dir_to_graph(
                 Some((f, tag)) => {
                     files_loaded += 1;
                     file_to_tag.insert(entry_path.clone(), tag);
-                    debug!("loaded file handle: {:?} - file: {:?}", f, &entry_path)
+                    trace!("loaded file handle: {:?} - file: {:?}", f, &entry_path)
                 }
                 None => {
-                    debug!("skipped file: {:?}", entry_path);
+                    trace!("skipped file: {:?}", entry_path);
                 }
             },
             Err(e) => {
@@ -188,7 +187,7 @@ fn load_graph_for_file(
     source_type: &SourceType,
 ) -> Result<Option<(Handle<File>, String)>, Error> {
     let mut file_reader = FileReader::new();
-    debug!("loading file: {:?}", entry);
+    trace!("loading file: {:?}", entry);
     let entry_parent = entry.parent().expect("parent path should be available");
 
     if !language_config.matches_file(&entry, &mut file_reader)? {
@@ -254,7 +253,7 @@ pub fn init_stack_graph(
     let mut stack_graph = StackGraph::new();
     let _ = stack_graph.add_from_graph(&language_config.builtins);
     for path in WalkDir::new(source_location).into_iter() {
-        debug!(
+        trace!(
             "stack_graph files: {}, nodes: {}, symbols: {}",
             stack_graph.iter_files().count(),
             stack_graph.iter_nodes().count(),

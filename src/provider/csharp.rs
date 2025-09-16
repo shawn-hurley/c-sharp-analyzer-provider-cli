@@ -1,16 +1,14 @@
 use crate::c_sharp_graph::find_node::FindNode;
-use crate::c_sharp_graph::results::ResultNode;
 use crate::provider::AnalysisMode;
 use crate::{
     analyzer_service::{
         provider_service_server::ProviderService, CapabilitiesResponse, Capability, Config,
         DependencyDagResponse, DependencyResponse, EvaluateRequest, EvaluateResponse,
-        IncidentContext, InitResponse, Location, NotifyFileChangesRequest,
-        NotifyFileChangesResponse, Position, ProviderEvaluateResponse, ServiceRequest,
+        IncidentContext, InitResponse, NotifyFileChangesRequest, NotifyFileChangesResponse,
+        ProviderEvaluateResponse, ServiceRequest,
     },
     provider::Project,
 };
-use prost_types::Struct;
 use serde::Deserialize;
 use std::path::PathBuf;
 use std::sync::Arc;
@@ -160,29 +158,6 @@ impl ProviderService for CSharpProvider {
             regex: condition.referenced.pattern,
         };
 
-        fn to_incident(r: &ResultNode) -> IncidentContext {
-            IncidentContext {
-                file_uri: r.file_uri.clone(),
-                effort: None,
-                code_location: Some(Location {
-                    start_position: Some(Position {
-                        line: r.code_location.start_position.line as f64,
-                        character: r.code_location.start_position.character as f64,
-                    }),
-                    end_position: Some(Position {
-                        line: r.code_location.end_position.line as f64,
-                        character: r.code_location.end_position.character as f64,
-                    }),
-                }),
-                line_number: Some(r.line_number as i64),
-                variables: Some(Struct {
-                    fields: r.variables.clone(),
-                }),
-                links: vec![],
-                is_dependency_incident: false,
-            }
-        }
-
         let project_guard = self.project.lock().await;
         let project = match project_guard.as_ref() {
             Some(x) => x,
@@ -197,13 +172,13 @@ impl ProviderService for CSharpProvider {
                 response: None,
             },
             |res| {
-                let mut i: Vec<IncidentContext> = res.iter().map(to_incident).collect();
+                let mut i: Vec<IncidentContext> = res.into_iter().map(Into::into).collect();
                 i.sort_by_key(|i| format!("{}-{:?}", i.file_uri, i.line_number()));
                 EvaluateResponse {
                     error: String::new(),
                     successful: true,
                     response: Some(ProviderEvaluateResponse {
-                        matched: !res.is_empty(),
+                        matched: !i.is_empty(),
                         incident_contexts: i,
                         template_context: None,
                     }),
