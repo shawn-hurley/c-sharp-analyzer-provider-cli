@@ -344,6 +344,7 @@ dependencies = [
  "tonic-build",
  "tonic-reflection",
  "tracing",
+ "tracing-log",
  "tracing-subscriber",
  "tree-sitter-c-sharp",
  "tree-sitter-graph",

@@ -51,7 +51,7 @@ impl Dependencies {
         restriction: String,
         tools: &Tools,
     ) -> Result<(), Error> {
-        // TODO: make location of ilspycmd decompilation
+        info!("decompiling dependency: {:?}", self);
         let dep_package_dir = self.location.to_owned();
         if !dep_package_dir.is_dir() || !dep_package_dir.exists() {
             return Err(anyhow!("invalid package path: {:?}", dep_package_dir));
@@ -74,10 +74,13 @@ impl Dependencies {
                 self.read_packet_cache_file(cache_file, restriction).await?
             }
             None => {
-                debug!("did not find a dll for dep: {:?}", self);
-                return Err(anyhow!("unable to find dll's"));
+                debug!("did not find a cache file for dep: {:?}", self);
+                return Err(anyhow!("did not find a cache file for dep: {:?}", self));
             }
         };
+        if to_decompile_locations.is_empty() {
+            trace!("no dll's found for dependnecy: {:?}", self);
+        }
         let mut decompiled_files: HashSet<PathBuf> = HashSet::new();
         for file_to_decompile in to_decompile_locations {
             let decompiled_file = self
@@ -90,6 +93,11 @@ impl Dependencies {
             decompiled_files.insert(decompiled_file);
         }
 
+        info!(
+            "deompiled {} files for dependnecy: {:?}",
+            decompiled_files.len(),
+            self
+        );
         let mut guard = self.decompiled_location.lock().unwrap();
         *guard = decompiled_files;
         drop(guard);
@@ -102,7 +110,6 @@ impl Dependencies {
         file: PathBuf,
         restriction: String,
     ) -> Result<Vec<PathBuf>, Error> {
-        info!("Reading packet cache file: {:?}", file);
         let file = File::open(file).await;
         if let Err(e) = file {
             error!("unable to find error: {:?}", e);
@@ -142,9 +149,6 @@ impl Dependencies {
             })
             .collect();
 
-        if dlls.is_empty() {
-            error!("Unable to get dlls from file");
-        }
         Ok(dll_paths)
     }
 
@@ -189,6 +193,7 @@ impl Dependencies {
 }
 
 impl Project {
+    #[tracing::instrument]
     pub async fn resolve(&self) -> Result<(), Error> {
         // determine if the paket.dependencies already exists, if it does then we don't need to
         // convert.
@@ -317,14 +322,14 @@ impl Project {
                             "stats for dependency: {:?}, files indexed {:?}",
                             dep_name, graph.files_loaded,
                         );
-                        Ok(graph)
+                        Ok((graph, dep_name))
                     });
                 }
             }
         }
         for res in set.join_all().await {
-            let init_graph = match res {
-                Ok(i) => i,
+            let (init_graph, dep_name) = match res {
+                Ok((i, dep_name)) => (i, dep_name),
                 Err(e) => {
                     return Err(anyhow!(
                         "unable to get graph, project may not have been initialized: {}",
@@ -332,9 +337,9 @@ impl Project {
                     ));
                 }
             };
-            debug!(
-                "loaded {} files for dep: {:?}",
-                init_graph.files_loaded, init_graph.file_to_tag
+            info!(
+                "loaded {} files for dep: {:?} into database",
+                init_graph.files_loaded, dep_name
             );
         }
 
@@ -342,14 +347,18 @@ impl Project {
             .graph
             .lock()
             .expect("project may not have been initialized");
+        info!("adding all dependency and source to graph");
         let mut db_reader = SQLiteReader::open(&self.db_path)?;
         db_reader.load_graphs_for_file_or_directory(&self.location, &NoCancellation)?;
+        // Once you read the data back from the DB, you will not get the source information
+        // This is not currently stored in the database
+        // There may be a way to re-attach this but for now we will relay code-snipper.
         let (read_graph, partials, databse) = db_reader.get();
         let read_graph = read_graph.to_serializable();
         let mut new_graph = StackGraph::new();
         read_graph.load_into(&mut new_graph)?;
         debug!(
-            "adding {:?} files from other graph",
+            "new graph: {:?}",
             databse.to_serializable(&new_graph, partials)
         );
         let _ = graph_guard.insert(new_graph);

@@ -159,7 +159,6 @@ impl Project {
     }
 
     pub async fn get_project_graph(self: &Arc<Self>) -> Result<usize, Error> {
-        // TODO: Handle database already exists
         if self.db_path.exists() {
             debug!("trying to load from existing db: {:?}", &self.db_path);
             // Load the stack_graph.
@@ -169,14 +168,12 @@ impl Project {
                     return Err(anyhow!(e));
                 }
             };
-            debug!("got db reader");
 
             if let Err(e) =
                 db_reader.load_graphs_for_file_or_directory(&self.location, &NoCancellation)
             {
                 return Err(anyhow!(e));
             }
-            debug!("loaded_files");
 
             let (stack_graph, _, _) = db_reader.get_graph_partials_and_db();
             debug!(

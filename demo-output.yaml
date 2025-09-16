@@ -17,8 +17,7 @@
         },
         "LineNumber": "9",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/FilterConfig.cs",
-          "line": "filters.Add(new HandleErrorAttribute());"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/FilterConfig.cs"
         }
       },
       {
@@ -35,8 +34,7 @@
         },
         "LineNumber": "25",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
-          "line": "defaults: new { controller = \"Home\", action = \"Index\", id = UrlParameter.Optional }"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs"
         }
       },
       {
@@ -53,8 +51,7 @@
         },
         "LineNumber": "25",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
-          "line": "defaults: new { controller = \"Home\", action = \"Index\", id = UrlParameter.Optional }"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs"
         }
       },
       {
@@ -71,8 +68,7 @@
         },
         "LineNumber": "100",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult Disassociate(string provider, string providerUserId)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -89,8 +85,7 @@
         },
         "LineNumber": "121",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return RedirectToAction(\"Manage\", new { Message = message });"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -107,8 +102,7 @@
         },
         "LineNumber": "127",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult Manage(ManageMessageId? message)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -125,8 +119,7 @@
         },
         "LineNumber": "136",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -143,8 +136,7 @@
         },
         "LineNumber": "144",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult Manage(LocalPasswordModel model)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -161,8 +153,7 @@
         },
         "LineNumber": "151",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -179,8 +170,7 @@
         },
         "LineNumber": "151",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -197,8 +187,7 @@
         },
         "LineNumber": "166",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return RedirectToAction(\"Manage\", new { Message = ManageMessageId.ChangePasswordSuccess });"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -215,8 +204,7 @@
         },
         "LineNumber": "170",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "ModelState.AddModelError(\"\", \"The current password is incorrect or the new password is invalid.\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -233,8 +221,7 @@
         },
         "LineNumber": "170",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "ModelState.AddModelError(\"\", \"The current password is incorrect or the new password is invalid.\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -251,8 +238,7 @@
         },
         "LineNumber": "178",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "ModelState state = ModelState[\"OldPassword\"];"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -269,8 +255,7 @@
         },
         "LineNumber": "178",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "ModelState state = ModelState[\"OldPassword\"];"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -287,8 +272,7 @@
         },
         "LineNumber": "184",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -305,8 +289,7 @@
         },
         "LineNumber": "184",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -323,8 +306,7 @@
         },
         "LineNumber": "189",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return RedirectToAction(\"Manage\", new { Message = ManageMessageId.SetPasswordSuccess });"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -341,8 +323,7 @@
         },
         "LineNumber": "199",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View(model);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -359,8 +340,7 @@
         },
         "LineNumber": "208",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult ExternalLogin(string provider, string returnUrl)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -377,8 +357,7 @@
         },
         "LineNumber": "217",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult ExternalLoginCallback(string returnUrl)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -395,8 +374,7 @@
         },
         "LineNumber": "222",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return RedirectToAction(\"ExternalLoginFailure\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -413,8 +391,7 @@
         },
         "LineNumber": "23",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult Login(string returnUrl)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -431,8 +408,7 @@
         },
         "LineNumber": "242",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View(\"ExternalLoginConfirmation\", new RegisterExternalLoginModel { UserName = result.UserName, ExternalLoginData = loginData });"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -449,8 +425,7 @@
         },
         "LineNumber": "252",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult ExternalLoginConfirmation(RegisterExternalLoginModel model, string returnUrl)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -467,8 +442,7 @@
         },
         "LineNumber": "259",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return RedirectToAction(\"Manage\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -485,8 +459,7 @@
         },
         "LineNumber": "26",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -503,8 +476,7 @@
         },
         "LineNumber": "262",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -521,8 +493,7 @@
         },
         "LineNumber": "262",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -539,8 +510,7 @@
         },
         "LineNumber": "282",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "ModelState.AddModelError(\"UserName\", \"User name already exists. Please enter a different user name.\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -557,8 +527,7 @@
         },
         "LineNumber": "282",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "ModelState.AddModelError(\"UserName\", \"User name already exists. Please enter a different user name.\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -575,8 +544,7 @@
         },
         "LineNumber": "289",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View(model);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -593,8 +561,7 @@
         },
         "LineNumber": "296",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult ExternalLoginFailure()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -611,8 +578,7 @@
         },
         "LineNumber": "298",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -629,8 +595,7 @@
         },
         "LineNumber": "303",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult ExternalLoginsList(string returnUrl)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -647,8 +612,7 @@
         },
         "LineNumber": "306",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return PartialView(\"_ExternalLoginsListPartial\", OAuthWebSecurity.RegisteredClientData);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -665,8 +629,7 @@
         },
         "LineNumber": "310",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult RemoveExternalLogins()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -683,8 +646,7 @@
         },
         "LineNumber": "327",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return PartialView(\"_RemoveExternalLoginsPartial\", externalLogins);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -701,8 +663,7 @@
         },
         "LineNumber": "331",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "private ActionResult RedirectToLocal(string returnUrl)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -719,8 +680,7 @@
         },
         "LineNumber": "335",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return Redirect(returnUrl);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -737,8 +697,7 @@
         },
         "LineNumber": "339",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return RedirectToAction(\"Index\", \"Home\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -755,8 +714,7 @@
         },
         "LineNumber": "35",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult Login(LoginModel model, string returnUrl)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -773,8 +731,7 @@
         },
         "LineNumber": "361",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public override void ExecuteResult(ControllerContext context)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -791,8 +748,7 @@
         },
         "LineNumber": "37",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid \u0026\u0026 WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -809,8 +765,7 @@
         },
         "LineNumber": "37",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid \u0026\u0026 WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -827,8 +782,7 @@
         },
         "LineNumber": "43",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "ModelState.AddModelError(\"\", \"The user name or password provided is incorrect.\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -845,8 +799,7 @@
         },
         "LineNumber": "43",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "ModelState.AddModelError(\"\", \"The user name or password provided is incorrect.\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -863,8 +816,7 @@
         },
         "LineNumber": "44",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View(model);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -881,8 +833,7 @@
         },
         "LineNumber": "52",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult LogOff()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -899,8 +850,7 @@
         },
         "LineNumber": "56",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return RedirectToAction(\"Index\", \"Home\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -917,8 +867,7 @@
         },
         "LineNumber": "63",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult Register()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -935,8 +884,7 @@
         },
         "LineNumber": "65",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -953,8 +901,7 @@
         },
         "LineNumber": "74",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "public ActionResult Register(RegisterModel model)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -971,8 +918,7 @@
         },
         "LineNumber": "76",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -989,8 +935,7 @@
         },
         "LineNumber": "76",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -1007,8 +952,7 @@
         },
         "LineNumber": "83",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return RedirectToAction(\"Index\", \"Home\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -1025,8 +969,7 @@
         },
         "LineNumber": "92",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-          "line": "return View(model);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
       },
       {
@@ -1043,8 +986,7 @@
         },
         "LineNumber": "101",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult Edit(Dinner dinner)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1061,8 +1003,7 @@
         },
         "LineNumber": "105",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(\"InvalidOwner\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1079,8 +1020,7 @@
         },
         "LineNumber": "108",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1097,8 +1037,7 @@
         },
         "LineNumber": "108",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1115,8 +1054,7 @@
         },
         "LineNumber": "112",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return RedirectToAction(\"Index\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1133,8 +1071,7 @@
         },
         "LineNumber": "114",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(dinner);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1151,8 +1088,7 @@
         },
         "LineNumber": "121",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult Delete(int id = 0)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1169,8 +1105,7 @@
         },
         "LineNumber": "126",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return HttpNotFound();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1187,8 +1122,7 @@
         },
         "LineNumber": "130",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(\"InvalidOwner\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1205,8 +1139,7 @@
         },
         "LineNumber": "132",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(dinner);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1223,8 +1156,7 @@
         },
         "LineNumber": "139",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult DeleteConfirmed(int id)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1241,8 +1173,7 @@
         },
         "LineNumber": "145",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(\"InvalidOwner\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1259,8 +1190,7 @@
         },
         "LineNumber": "150",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return RedirectToAction(\"Index\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1277,8 +1207,7 @@
         },
         "LineNumber": "153",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "protected override void Dispose(bool disposing)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1295,8 +1224,7 @@
         },
         "LineNumber": "159",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult WebSlicePopular()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1313,8 +1241,7 @@
         },
         "LineNumber": "166",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(\"WebSlice\", model.Take(5));"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1331,8 +1258,7 @@
         },
         "LineNumber": "169",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult WebSliceUpcoming()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1349,8 +1275,7 @@
         },
         "LineNumber": "177",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(\"WebSlice\", model.Take(5));"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1367,8 +1292,7 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult Index(int? page)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1385,8 +1309,7 @@
         },
         "LineNumber": "24",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(dinners.ToPagedList(pageIndex, PageSize));"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1403,8 +1326,7 @@
         },
         "LineNumber": "30",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult Details(int id = 0)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1421,8 +1343,7 @@
         },
         "LineNumber": "35",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return HttpNotFound();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1439,8 +1360,7 @@
         },
         "LineNumber": "37",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(dinner);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1457,8 +1377,7 @@
         },
         "LineNumber": "43",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "[Authorize]"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1475,8 +1394,7 @@
         },
         "LineNumber": "44",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult Create()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1493,8 +1411,7 @@
         },
         "LineNumber": "52",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(dinner);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1511,8 +1428,7 @@
         },
         "LineNumber": "58",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "[HttpPost, Authorize, ValidateAntiForgeryToken]"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1529,8 +1445,7 @@
         },
         "LineNumber": "59",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult Create(Dinner dinner)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1547,8 +1462,7 @@
         },
         "LineNumber": "61",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1565,8 +1479,7 @@
         },
         "LineNumber": "61",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "if (ModelState.IsValid)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1583,8 +1496,7 @@
         },
         "LineNumber": "73",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return RedirectToAction(\"Index\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1601,8 +1513,7 @@
         },
         "LineNumber": "76",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(dinner);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1619,8 +1530,7 @@
         },
         "LineNumber": "83",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "public ActionResult Edit(int id = 0)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1637,8 +1547,7 @@
         },
         "LineNumber": "88",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return HttpNotFound();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1655,8 +1564,7 @@
         },
         "LineNumber": "92",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(\"InvalidOwner\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1673,8 +1581,7 @@
         },
         "LineNumber": "94",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-          "line": "return View(dinner);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
       },
       {
@@ -1691,8 +1598,7 @@
         },
         "LineNumber": "10",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
-          "line": "public ActionResult Index()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs"
         }
       },
       {
@@ -1709,8 +1615,7 @@
         },
         "LineNumber": "14",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
-          "line": "return View();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs"
         }
       },
       {
@@ -1727,8 +1632,7 @@
         },
         "LineNumber": "17",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
-          "line": "public ActionResult About()"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs"
         }
       },
       {
@@ -1745,8 +1649,7 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs",
-          "line": "return View();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/HomeController.cs"
         }
       },
       {
@@ -1763,8 +1666,7 @@
         },
         "LineNumber": "16",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
-          "line": "public ActionResult Register(int id)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs"
         }
       },
       {
@@ -1781,8 +1683,7 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
-          "line": "return RedirectToAction(\"Details\", \"Dinners\", new { id = id });"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs"
         }
       },
       {
@@ -1799,8 +1700,7 @@
         },
         "LineNumber": "25",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
-          "line": "public ActionResult RegisterAjax(int id)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs"
         }
       },
       {
@@ -1817,8 +1717,7 @@
         },
         "LineNumber": "28",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
-          "line": "return Content(\"Thanks - we'll see you there!\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs"
         }
       },
       {
@@ -1835,8 +1734,7 @@
         },
         "LineNumber": "49",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
-          "line": "public ActionResult CancelAjax(int id)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs"
         }
       },
       {
@@ -1853,8 +1751,7 @@
         },
         "LineNumber": "60",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs",
-          "line": "return Content(\"Sorry you can't make it!\");"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/RSVPController.cs"
         }
       },
       {
@@ -1871,8 +1768,7 @@
         },
         "LineNumber": "105",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/SearchController.cs",
-          "line": "protected override void Dispose(bool disposing)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/SearchController.cs"
         }
       },
       {
@@ -1889,8 +1785,7 @@
         },
         "LineNumber": "17",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Filters/InitializeSimpleMembershipAttribute.cs",
-          "line": "public override void OnActionExecuting(ActionExecutingContext filterContext)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Filters/InitializeSimpleMembershipAttribute.cs"
         }
       },
       {
@@ -1907,8 +1802,7 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-          "line": "AreaRegistration.RegisterAllAreas();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
         }
       },
       {
@@ -1925,8 +1819,7 @@
         },
         "LineNumber": "19",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-          "line": "AreaRegistration.RegisterAllAreas();"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
         }
       },
       {
@@ -1943,8 +1836,7 @@
         },
         "LineNumber": "22",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-          "line": "FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
         }
       },
       {
@@ -1961,8 +1853,7 @@
         },
         "LineNumber": "22",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-          "line": "FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
         }
       },
       {
@@ -1979,8 +1870,7 @@
         },
         "LineNumber": "27",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-          "line": "ModelBinderProviders.BinderProviders.Add(new EFModelBinderProvider());"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
         }
       },
       {
@@ -1997,8 +1887,7 @@
         },
         "LineNumber": "27",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-          "line": "ModelBinderProviders.BinderProviders.Add(new EFModelBinderProvider());"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
         }
       },
       {
@@ -2015,8 +1904,7 @@
         },
         "LineNumber": "11",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
-          "line": "public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs"
         }
       },
       {
@@ -2033,8 +1921,7 @@
         },
         "LineNumber": "28",
         "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs",
-          "line": "public IModelBinder GetBinder(Type modelType)"
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs"
         }
       }
     ]

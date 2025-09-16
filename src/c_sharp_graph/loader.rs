@@ -290,7 +290,7 @@ pub fn init_stack_graph(
                     }
                     debug!("loaded file handle: {:?} - file: {:?}", f, entry_path)
                 }
-                None => debug!("skipped file: {:?}", entry_path),
+                None => trace!("skipped file: {:?}", entry_path),
             },
             Err(e) => {
                 return Err(anyhow!("unable to load file: {:?} - {}", entry_path, e));

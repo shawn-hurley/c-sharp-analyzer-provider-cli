@@ -14,7 +14,8 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use tokio::sync::Mutex;
 use tonic::{Request, Response, Status};
-use tracing::{debug, error};
+use tracing::field::debug;
+use tracing::{debug, error, info};
 use utoipa::{OpenApi, ToSchema};
 
 #[derive(ToSchema, Deserialize, Debug)]
@@ -100,6 +101,10 @@ impl ProviderService for CSharpProvider {
             }
         };
 
+        info!(
+            "starting to load project for location: {:?}",
+            project.location
+        );
         if let Err(e) = project.validate_language_configuration().await {
             error!("unable to create language configuration: {}", e);
             return Err(Status::internal(
@@ -121,6 +126,7 @@ impl ProviderService for CSharpProvider {
             }
         };
         debug!("got task result: {:?} -- project: {:?}", res, project);
+        info!("adding depdencies to stack graph database");
         let res = project.load_to_database().await;
         debug!(
             "loading project to database: {:?} -- project: {:?}",
@@ -154,8 +160,8 @@ impl ProviderService for CSharpProvider {
 
         debug!("condition: {:?}", condition);
         let search = FindNode {
-            node_type: condition.referenced.location,
-            regex: condition.referenced.pattern,
+            node_type: condition.referenced.location.clone(),
+            regex: condition.referenced.pattern.clone(),
         };
 
         let project_guard = self.project.lock().await;
@@ -172,6 +178,7 @@ impl ProviderService for CSharpProvider {
                 response: None,
             },
             |res| {
+                info!("found {} results for search: {:?}", res.len(), &condition);
                 let mut i: Vec<IncidentContext> = res.into_iter().map(Into::into).collect();
                 i.sort_by_key(|i| format!("{}-{:?}", i.file_uri, i.line_number()));
                 EvaluateResponse {
