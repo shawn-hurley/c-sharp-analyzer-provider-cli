@@ -3,10 +3,6 @@ use std::{
     vec,
 };
 
-use crate::c_sharp_graph::{
-    loader::SourceType,
-    results::{Location, Position, ResultNode},
-};
 use anyhow::{Error, Ok};
 use prost_types::Value;
 use regex::Regex;
@@ -16,6 +12,11 @@ use stack_graphs::{
 };
 use tracing::{debug, error, trace};
 use url::Url;
+
+use crate::c_sharp_graph::{
+    loader::SourceType,
+    results::{Location, Position, ResultNode},
+};
 
 pub struct Querier<'a> {
     db: &'a mut StackGraph,
@@ -206,7 +207,6 @@ impl<'a> Querier<'a> {
                                 continue;
                             }
                             Some(source_info) => {
-                                debug!("defins span: {:?}", source_info.definiens_span);
                                 line_number = source_info.span.start.line;
                                 code_location = Location {
                                     start_position: Position {
@@ -218,9 +218,6 @@ impl<'a> Querier<'a> {
                                         character: source_info.span.end.column.utf8_offset,
                                     },
                                 };
-                                debug!("containing_line: {:?}", source_info.containing_line);
-                                debug!("containing_line: {:?}", source_info.syntax_type);
-                                debug!("containing_line: {:?}", source_info.fully_qualified_name);
                                 match source_info.containing_line.into_option() {
                                     None => (),
                                     Some(string_handle) => {
@@ -235,13 +232,6 @@ impl<'a> Querier<'a> {
                             var.insert("line".to_string(), Value::from(line.trim()));
                         }
 
-                        let source_source_info = self.db.source_info(node);
-                        if let Some(s) = source_source_info {
-                            debug!(
-                                "source source info: {:?} -- {:?} -- {:?}",
-                                s.containing_line, s.syntax_type, s.fully_qualified_name
-                            );
-                        }
                         trace!(
                             "found result for node: {:?} and edge: {:?}",
                             debug_node,

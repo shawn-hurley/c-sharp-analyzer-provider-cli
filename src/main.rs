@@ -9,15 +9,16 @@ use std::{
     sync::atomic::{AtomicUsize, Ordering},
 };
 
-use crate::analyzer_service::proto;
-use crate::analyzer_service::provider_service_server::ProviderServiceServer;
-use crate::provider::CSharpProvider;
 use clap::{command, Parser};
 use tokio::runtime;
 use tonic::transport::Server;
 use tracing::{debug, info, instrument::WithSubscriber};
 use tracing_log::LogTracer;
 use tracing_subscriber::EnvFilter;
+
+use crate::analyzer_service::proto;
+use crate::analyzer_service::provider_service_server::ProviderServiceServer;
+use crate::provider::CSharpProvider;
 
 #[derive(Parser)]
 #[command(version, about, long_about = None)]

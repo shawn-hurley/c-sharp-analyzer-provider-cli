@@ -1,3 +1,9 @@
+use std::fmt::Debug;
+use std::{
+    collections::HashMap,
+    path::{Path, PathBuf},
+};
+
 use anyhow::{anyhow, Error, Result};
 use base64::Engine;
 use sha1::{Digest, Sha1};
@@ -6,11 +12,6 @@ use stack_graphs::{
     graph::{File, NodeID, StackGraph, Symbol},
     partial::{PartialPath, PartialPaths},
     storage::SQLiteWriter,
-};
-use std::fmt::Debug;
-use std::{
-    collections::HashMap,
-    path::{Path, PathBuf},
 };
 use tracing::{debug, error, trace};
 use tree_sitter_stack_graphs::{

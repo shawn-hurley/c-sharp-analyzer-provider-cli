@@ -1,7 +1,8 @@
-use anyhow::anyhow;
-use anyhow::Error;
 use std::ops::DerefMut;
 use std::sync::Arc;
+
+use anyhow::anyhow;
+use anyhow::Error;
 use tracing::debug;
 
 use crate::c_sharp_graph::query::Querier;

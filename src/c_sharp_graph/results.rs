@@ -1,9 +1,10 @@
 use std::collections::BTreeMap;
 
+use prost_types::Struct;
+
 use crate::analyzer_service::{
     IncidentContext, Location as ProtoLocation, Position as ProtoPosition,
 };
-use prost_types::Struct;
 
 #[derive(Debug)]
 pub struct ResultNode {

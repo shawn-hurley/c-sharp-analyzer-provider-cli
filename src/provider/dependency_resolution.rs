@@ -1,3 +1,11 @@
+use std::collections::HashSet;
+use std::fmt::Debug;
+use std::path::Path;
+use std::path::PathBuf;
+use std::process::Command;
+use std::sync::Arc;
+use std::sync::Mutex;
+
 use anyhow::{anyhow, Error};
 use stack_graphs::graph::StackGraph;
 use stack_graphs::partial::PartialPath;
@@ -7,13 +15,6 @@ use stack_graphs::stitching::StitcherConfig;
 use stack_graphs::storage::SQLiteReader;
 use stack_graphs::storage::SQLiteWriter;
 use stack_graphs::NoCancellation;
-use std::collections::HashSet;
-use std::fmt::Debug;
-use std::path::Path;
-use std::path::PathBuf;
-use std::process::Command;
-use std::sync::Arc;
-use std::sync::Mutex;
 use tokio::fs::{self, File};
 use tokio::io::{AsyncBufReadExt, BufReader};
 use tokio::task::JoinSet;

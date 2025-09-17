@@ -1,18 +1,17 @@
+use std::{
+    fmt::Debug,
+    path::PathBuf,
+    str::FromStr,
+    sync::{Arc, Mutex},
+};
+
 use anyhow::{anyhow, Error};
-use prost_types::Struct;
-use prost_types::Value;
-use stack_graphs::graph::StackGraph;
-use stack_graphs::serde::StackGraph as serialize_stack_graph;
-use stack_graphs::stitching::ForwardCandidates;
-use stack_graphs::storage::SQLiteReader;
-use stack_graphs::NoCancellation;
-use std::fmt::Debug;
-use std::path::PathBuf;
-use std::str::FromStr;
-use std::sync::Arc;
-use std::sync::Mutex;
-use tokio::sync::Mutex as TokioMutex;
-use tokio::sync::RwLock;
+use prost_types::{Struct, Value};
+use stack_graphs::{
+    graph::StackGraph, serde::StackGraph as serialize_stack_graph, stitching::ForwardCandidates,
+    storage::SQLiteReader, NoCancellation,
+};
+use tokio::sync::{Mutex as TokioMutex, RwLock};
 use tracing::debug;
 use which::which;
 
