@@ -1,8 +1,9 @@
 // Using example code from
 // https://github.com/catalinsh/tonic-named-pipe-example
+use std::{io, pin::Pin};
+
 use async_stream::stream;
 use futures_core::Stream;
-use std::{io, pin::Pin};
 use tokio::{
     io::{AsyncRead, AsyncWrite},
     net::windows::named_pipe::{NamedPipeServer, PipeMode, ServerOptions},

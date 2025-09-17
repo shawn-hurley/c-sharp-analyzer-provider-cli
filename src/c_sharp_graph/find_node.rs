@@ -1,13 +1,14 @@
+use std::ops::DerefMut;
+use std::sync::Arc;
+
+use anyhow::anyhow;
 use anyhow::Error;
-use anyhow::Ok;
-use stack_graphs::storage::SQLiteReader;
-use std::path::PathBuf;
-use std::vec;
 use tracing::debug;
 
 use crate::c_sharp_graph::query::Querier;
 use crate::c_sharp_graph::query::Query;
-use crate::c_sharp_graph::results;
+use crate::c_sharp_graph::results::ResultNode;
+use crate::provider::Project;
 
 pub struct FindNode {
     #[allow(dead_code)]
@@ -16,31 +17,28 @@ pub struct FindNode {
 }
 
 impl FindNode {
-    pub fn run(self, db_path: &PathBuf) -> anyhow::Result<Vec<results::Result>, anyhow::Error> {
+    pub async fn run(self, project: &Arc<Project>) -> Result<Vec<ResultNode>, Error> {
         debug!("running search");
-        let mut db = SQLiteReader::open(db_path)?;
 
-        let paths = Self::get_file_strings(&mut db)?;
-        debug!("paths in DB: {:?}", paths);
+        let project = Arc::clone(project);
+        let source_node_type_info = match project.get_source_type().await {
+            Some(x) => x,
 
-        for path in paths {
-            let _ = db.load_graph_for_file(path.as_str())?;
-        }
-        let (graph, _, _) = db.get();
-
-        let mut q = Querier::get_query(graph);
+            None => {
+                return Err(anyhow!(
+                    "unable to get source node type, may not be initialized"
+                ));
+            }
+        };
+        let mut graph_guard = project.graph.lock().expect("unable to get project graph");
+        let graph = match graph_guard.deref_mut() {
+            Some(x) => x,
+            None => {
+                return Err(anyhow!("project graph not found, may not be initialized"));
+            }
+        };
+        let mut q = Querier::get_query(graph, Arc::as_ref(&source_node_type_info));
 
         q.query(self.regex)
-    }
-
-    fn get_file_strings(db: &mut SQLiteReader) -> anyhow::Result<Vec<String>, Error> {
-        let mut file_strings: Vec<String> = vec![];
-        let mut files = db.list_all()?;
-        for file in files.try_iter()? {
-            let entry = file?;
-            let file_path = entry.path.into_os_string().into_string().unwrap();
-            file_strings.push(file_path);
-        }
-        Ok(file_strings)
     }
 }

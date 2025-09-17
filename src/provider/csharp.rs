@@ -1,21 +1,23 @@
-use crate::c_sharp_graph::{find_node::FindNode, loader::load_database};
+use std::path::PathBuf;
+use std::sync::Arc;
+
+use serde::Deserialize;
+use tokio::sync::Mutex;
+use tonic::{Request, Response, Status};
+use tracing::{debug, error, info};
+use utoipa::{OpenApi, ToSchema};
+
+use crate::c_sharp_graph::find_node::FindNode;
+use crate::provider::AnalysisMode;
 use crate::{
     analyzer_service::{
         provider_service_server::ProviderService, CapabilitiesResponse, Capability, Config,
         DependencyDagResponse, DependencyResponse, EvaluateRequest, EvaluateResponse,
-        IncidentContext, InitResponse, Location, NotifyFileChangesRequest,
-        NotifyFileChangesResponse, Position, ProviderEvaluateResponse, ServiceRequest,
+        IncidentContext, InitResponse, NotifyFileChangesRequest, NotifyFileChangesResponse,
+        ProviderEvaluateResponse, ServiceRequest,
     },
     provider::Project,
 };
-use prost_types::Struct;
-use serde::Deserialize;
-use std::path::PathBuf;
-use std::sync::Arc;
-use tokio::sync::Mutex;
-use tonic::{Request, Response, Status};
-use tracing::{debug, error};
-use utoipa::{OpenApi, ToSchema};
 
 #[derive(ToSchema, Deserialize, Debug)]
 struct ReferenceCondition {
@@ -32,16 +34,16 @@ struct CSharpCondition {
 
 pub struct CSharpProvider {
     pub db_path: PathBuf,
-    pub config: Mutex<Option<Arc<Config>>>,
-    pub project: Mutex<Option<Arc<Project>>>,
+    pub config: Arc<Mutex<Option<Config>>>,
+    pub project: Arc<Mutex<Option<Arc<Project>>>>,
 }
 
 impl CSharpProvider {
     pub fn new(db_path: PathBuf) -> CSharpProvider {
         CSharpProvider {
             db_path,
-            config: Mutex::new(None),
-            project: Mutex::new(None),
+            config: Arc::new(Mutex::new(None)),
+            project: Arc::new(Mutex::new(None)),
         }
     }
 }
@@ -71,25 +73,51 @@ impl ProviderService for CSharpProvider {
     }
 
     async fn init(&self, r: Request<Config>) -> Result<Response<InitResponse>, Status> {
-        let config = Arc::new(r.get_ref().clone());
-        if self.config.lock().await.is_some() {
-            return Err(Status::already_exists("already initialized"));
+        let mut config_guard = self.config.lock().await;
+        let saved_config = config_guard.insert(r.get_ref().clone());
+
+        let analysis_mode = AnalysisMode::from(saved_config.analysis_mode.clone());
+        let location = PathBuf::from(saved_config.location.clone());
+        let tools = Project::get_tools(&saved_config.provider_specific_config)
+            .map_err(|e| Status::invalid_argument(format!("unalble to find tools: {}", e)))?;
+        let project = Arc::new(Project::new(
+            location,
+            self.db_path.clone(),
+            analysis_mode,
+            tools,
+        ));
+        let project_lock = self.project.clone();
+        let mut project_guard = project_lock.lock().await;
+        let _ = project_guard.replace(project.clone());
+        drop(project_guard);
+        drop(config_guard);
+
+        let project_guard = project_lock.lock().await;
+        let project = match project_guard.as_ref() {
+            Some(x) => x,
+            None => {
+                return Err(Status::internal(
+                    "unable to create language configuration for project",
+                ));
+            }
+        };
+
+        info!(
+            "starting to load project for location: {:?}",
+            project.location
+        );
+        if let Err(e) = project.validate_language_configuration().await {
+            error!("unable to create language configuration: {}", e);
+            return Err(Status::internal(
+                "unable to create language configuration for project",
+            ));
         }
-        // Get the location from the config before moving the reference to self.
-        let mut m = self.config.lock().await;
-        let saved_config = m.insert(config);
-        let _ = m;
-        let project = Project::new(saved_config.location.clone());
-
-        //This clone is a actually still pointing to the project IIUC.
-        let _ = self.project.lock().await.replace(project.clone());
-
-        let get_deps_handle = project.resolve();
-
-        debug!("db_path {:?}", self.db_path);
-        let path = PathBuf::from(saved_config.location.clone());
-        let stats = load_database(&path, self.db_path.to_path_buf());
+        let stats = project.get_project_graph().await.map_err(|err| {
+            error!("{:?}", err);
+            Status::new(tonic::Code::Internal, "failed")
+        })?;
         debug!("loaded files: {:?}", stats);
+        let get_deps_handle = project.resolve();
 
         let res = match get_deps_handle.await {
             Ok(res) => res,
@@ -99,7 +127,8 @@ impl ProviderService for CSharpProvider {
             }
         };
         debug!("got task result: {:?} -- project: {:?}", res, project);
-        let res = project.load_to_database(self.db_path.to_path_buf()).await;
+        info!("adding depdencies to stack graph database");
+        let res = project.load_to_database().await;
         debug!(
             "loading project to database: {:?} -- project: {:?}",
             res, project
@@ -132,47 +161,33 @@ impl ProviderService for CSharpProvider {
 
         debug!("condition: {:?}", condition);
         let search = FindNode {
-            node_type: condition.referenced.location,
-            regex: condition.referenced.pattern,
+            node_type: condition.referenced.location.clone(),
+            regex: condition.referenced.pattern.clone(),
         };
 
-        fn to_incident(r: &crate::c_sharp_graph::results::Result) -> IncidentContext {
-            IncidentContext {
-                file_uri: r.file_uri.clone(),
-                effort: None,
-                code_location: Some(Location {
-                    start_position: Some(Position {
-                        line: r.code_location.start_position.line as f64,
-                        character: r.code_location.start_position.character as f64,
-                    }),
-                    end_position: Some(Position {
-                        line: r.code_location.end_position.line as f64,
-                        character: r.code_location.end_position.character as f64,
-                    }),
-                }),
-                line_number: Some(r.line_number as i64),
-                variables: Some(Struct {
-                    fields: r.variables.clone(),
-                }),
-                links: vec![],
-                is_dependency_incident: false,
+        let project_guard = self.project.lock().await;
+        let project = match project_guard.as_ref() {
+            Some(x) => x,
+            None => {
+                return Err(Status::internal("project may not be initialized"));
             }
-        }
-
-        let results = search.run(&self.db_path).map_or_else(
+        };
+        let results = search.run(project).await.map_or_else(
             |err| EvaluateResponse {
                 error: err.to_string(),
                 successful: false,
                 response: None,
             },
             |res| {
-                // TODO convert Vec<Result> to ProviderEvaluateResponse
+                info!("found {} results for search: {:?}", res.len(), &condition);
+                let mut i: Vec<IncidentContext> = res.into_iter().map(Into::into).collect();
+                i.sort_by_key(|i| format!("{}-{:?}", i.file_uri, i.line_number()));
                 EvaluateResponse {
                     error: String::new(),
                     successful: true,
                     response: Some(ProviderEvaluateResponse {
-                        matched: !res.is_empty(),
-                        incident_contexts: res.iter().map(to_incident).collect(),
+                        matched: !i.is_empty(),
+                        incident_contexts: i,
                         template_context: None,
                     }),
                 }

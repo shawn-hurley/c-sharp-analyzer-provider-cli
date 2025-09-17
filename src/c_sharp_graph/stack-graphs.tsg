@@ -15,8 +15,9 @@ global FILE_PATH           ; project relative path of this file
 global PROJECT_NAME = ""   ; project name, used to isolate different projects in the same stack graph
 global ROOT_PATH = ""      ; path to the project root directory
 
-;global JUMP_TO_SCOPE_NODE
-;global ROOT_NODE
+global SOURCE_TYPE_NODE
+global JUMP_TO_SCOPE_NODE
+global ROOT_NODE
 
 ;; Attribute Shorthands
 ;; ^^^^^^^^^^^^^^^^^^^^
@@ -56,6 +57,7 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
 (compilation_unit) @comp_unit {
   node @comp_unit.def
   attr (@comp_unit.def) type = "pop_symbol", symbol = FILE_PATH, source_node = @comp_unit, is_definition, syntax_type = "comp-unit"
+  edge  SOURCE_TYPE_NODE -> @comp_unit.def
 }
 
 (compilation_unit

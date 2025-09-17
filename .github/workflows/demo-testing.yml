@@ -1,0 +1,34 @@
+name: Demo Testing
+
+on:
+  pull_request:
+  push:
+    branches:
+    - "main"
+    - "release-*"
+    - "v*"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Protoc
+        uses: arduino/setup-protoc@v3
+      - name: install grpcurl
+        run: |
+          go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+      - uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '9.0.x'
+      - name: install ilspycmd
+        run: |
+          dotnet tool install --global ilspycmd
+      - name: install paket
+        run: |
+          dotnet tool install --global paket
+          ls -la $HOME/.dotnet/tools/
+      - name: run demo test
+        run : |
+          export PATH=${PATH}:`go env GOPATH`/bin
+          make run-demo-github

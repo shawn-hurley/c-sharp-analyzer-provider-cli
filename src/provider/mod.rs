@@ -1,5 +1,7 @@
 mod csharp;
 mod dependency_resolution;
+mod project;
 
 pub use csharp::CSharpProvider;
-pub use dependency_resolution::Project;
+pub use project::AnalysisMode;
+pub use project::Project;
