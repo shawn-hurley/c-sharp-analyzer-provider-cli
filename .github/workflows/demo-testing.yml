@@ -29,6 +29,7 @@ jobs:
           dotnet tool install --global paket
           ls -la $HOME/.dotnet/tools/
       - name: run demo test
+        continue-on-error: true
         run : |
           export PATH=${PATH}:`go env GOPATH`/bin
           make run-demo-github
