@@ -1,12 +1,8 @@
-{
-  "successful": true,
-  "response": {
-    "matched": true,
-    "incidentContexts": [
+[
       {
         "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/FilterConfig.cs",
         "codeLocation": {
-          "startPosition": {
+           "startPosition": {
             "line": 9,
             "character": 28
           },
@@ -18,6 +14,23 @@
         "LineNumber": "9",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/FilterConfig.cs"
+        }
+      },
+      {
+        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
+        "codeLocation": {
+          "startPosition": {
+            "line": 19,
+            "character": 30
+          },
+          "endPosition": {
+            "line": 19,
+            "character": 32
+          }
+        },
+        "LineNumber": "19",
+        "variables": {
+          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs"
         }
       },
       {
@@ -1924,6 +1937,5 @@
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/ModelBinders/DbGeographyModelBinder.cs"
         }
       }
+      
     ]
-  }
-}

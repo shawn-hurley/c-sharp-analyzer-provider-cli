@@ -1,7 +1,7 @@
 fn main() {
     tonic_build::configure()
         .out_dir("src/analyzer_service/")
-        .build_client(false)
+        .build_client(true)
         .compile_protos(&["src/build/proto/provider.proto"], &["src/build/proto/"])
         .unwrap();
 

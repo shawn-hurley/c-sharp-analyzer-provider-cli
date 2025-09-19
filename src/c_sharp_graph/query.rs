@@ -4,8 +4,8 @@ use std::{
 };
 
 use anyhow::{Error, Ok};
-use prost_types::Value;
 use regex::Regex;
+use serde_json::Value;
 use stack_graphs::{
     arena::Handle,
     graph::{Edge, File, Node, StackGraph},
@@ -201,7 +201,6 @@ impl<'a> Querier<'a> {
 
                         let code_location: Location;
                         let line_number: usize;
-                        let mut line: Option<String> = None;
                         match self.db.source_info(edge.sink) {
                             None => {
                                 continue;
@@ -218,20 +217,21 @@ impl<'a> Querier<'a> {
                                         character: source_info.span.end.column.utf8_offset,
                                     },
                                 };
-                                match source_info.containing_line.into_option() {
-                                    None => (),
-                                    Some(string_handle) => {
-                                        line = Some(self.db[string_handle].to_string());
-                                    }
-                                }
+                                // source info is containing line is never saved or restored to the
+                                // database.
+                                //match source_info.containing_line.into_option() {
+                                //   None => (),
+                                //  Some(string_handle) => {
+                                //     line = Some(self.db[string_handle].to_string());
+                                //}
+                                //}
                             }
                         }
-                        let mut var: BTreeMap<String, Value> =
+                        let var: BTreeMap<String, Value> =
                             BTreeMap::from([("file".to_string(), Value::from(file_uri.clone()))]);
-                        if let Some(line) = line {
-                            var.insert("line".to_string(), Value::from(line.trim()));
-                        }
-
+                        //if let Some(line) = line {
+                        //   var.insert("line".to_string(), Value::from(line.trim()));
+                        //}
                         trace!(
                             "found result for node: {:?} and edge: {:?}",
                             debug_node,
@@ -327,10 +327,7 @@ impl NamespaceSymbols {
         let method_match = self.class_methods.get(&symbol);
         let field_match = self.class_fields.get(&symbol);
 
-        if class_match.is_some() || method_match.is_some() || field_match.is_some() {
-            return true;
-        }
-        false
+        class_match.is_some() || method_match.is_some() || field_match.is_some()
     }
 }
 
@@ -389,6 +386,9 @@ impl Search {
         // We will need to break apart the symbol based on "." then looping through, look at the
         // same index, and if it matches continue if it doesn't then return false.
         for (i, symbol_part) in symbol.split(".").enumerate() {
+            if self.parts.len() <= i {
+                break;
+            }
             if !self.parts[i].matches(symbol_part.to_string()) {
                 return false;
             }
@@ -397,11 +397,12 @@ impl Search {
     }
 
     fn match_namespace(&self, symbol: &str) -> bool {
-        let symbol_parts: Vec<&str> = symbol.split(".").collect();
-        if symbol_parts.len() != self.parts.len() - 1 {
-            return false;
-        }
-        for (i, symbol_part) in symbol_parts.iter().enumerate() {
+        for (i, symbol_part) in symbol.split(".").enumerate() {
+            // Because we can assume that the last part here is a '*' right now,
+            // we anything past that should match
+            if self.parts.len() <= i {
+                break;
+            }
             if !self.parts[i].matches(symbol_part.to_string()) {
                 return false;
             }
