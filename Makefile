@@ -39,25 +39,24 @@ reset-demo-output:
 		mv demo-output.yaml.bak demo-output.yaml; \
 	fi
 
-make-demo-output-local:
-	sed -i.bak "s#<REPLACE_ME>#$(PWD)#g" demo-output.yaml
-
-run-demo: reset-demo-apps build_grpc make-demo-output-local
+run-demo: reset-demo-apps build_grpc
 	export SERVER_PID=$$(./scripts/run-demo.sh); \
 	echo $${SERVER_PID}; \
 	$(MAKE) wait-for-server; \
 	$(MAKE) run-grpc-init-http; \
-	$(MAKE) run-grpc-ref-http; \
+	$(MAKE) run-integration-tests; \
 	kill $${SERVER_PID}; \
-	diff output.yaml demo-output.yaml
 	$(MAKE) reset-demo-apps
 
-run-demo-github: reset-demo-apps build_grpc make-demo-output-local
+run-demo-github: reset-demo-apps build_grpc
 	RUST_LOG=c_sharp_analyzer_provider_cli=DEBUG,INFO target/debug/c-sharp-analyzer-provider-cli --port 9000 --name c-sharp &> demo.log
 	$(MAKE) wait-for-server;
 	$(MAKE) run-grpc-init-http;
-	$(MAKE) run-grpc-ref-http;
-	cat output.yaml
-	diff demo-output.yaml output.yaml
+	$(MAKE) run-integration-tests;
 	$(MAKE) reset-demo-apps;
+
+
+run-integration-tests:
+	cargo test -- --nocapture
+
 

@@ -7,6 +7,7 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 use anyhow::{anyhow, Error};
+use fs_extra::dir::get_size;
 use stack_graphs::graph::StackGraph;
 use stack_graphs::partial::PartialPath;
 use stack_graphs::partial::PartialPaths;
@@ -32,6 +33,7 @@ pub struct Dependencies {
     pub name: String,
     #[allow(dead_code)]
     pub version: String,
+    pub decompiled_size: Mutex<Option<u64>>,
     pub decompiled_location: Arc<Mutex<HashSet<PathBuf>>>,
 }
 
@@ -99,6 +101,14 @@ impl Dependencies {
             decompiled_files.len(),
             self
         );
+        let mut dir_size: u64 = 0;
+        for dir_path in decompiled_files.iter() {
+            dir_size += get_size(dir_path).unwrap_or_default();
+        }
+        let mut size_guard = self.decompiled_size.lock().unwrap();
+        let _ = size_guard.insert(dir_size);
+        drop(size_guard);
+
         let mut guard = self.decompiled_location.lock().unwrap();
         *guard = decompiled_files;
         drop(guard);
@@ -247,6 +257,12 @@ impl Project {
                 }
             }
         }
+        deps.sort_by(|x, y| {
+            y.decompiled_size
+                .lock()
+                .unwrap()
+                .cmp(&x.decompiled_size.lock().unwrap())
+        });
         let mut d = self.dependencies.lock().await;
         *d = Some(deps);
 
@@ -261,6 +277,7 @@ impl Project {
             // For each dependnecy in the list we will try and load the decompiled files
             // Into the stack graph database.
             for d in vec {
+                let size = d.decompiled_size.lock().unwrap().unwrap_or_default();
                 let decompiled_locations: Arc<Mutex<HashSet<PathBuf>>> =
                     Arc::clone(&d.decompiled_location);
                 let decompiled_locations = decompiled_locations.lock().unwrap();
@@ -271,6 +288,10 @@ impl Project {
                     let db_path = self.db_path.clone();
                     let dep_name = d.name.clone();
                     set.spawn(async move {
+                        info!(
+                            "indexing dep: {} with size: {} into a graph",
+                            dep_name, &size
+                        );
                         let mut graph = StackGraph::new();
                         // We need to make sure that the symols for source type are the first
                         // symbols, so that they match what is in the builtins.
@@ -413,6 +434,7 @@ impl Project {
                     name: name.to_string(),
                     version: version.to_string(),
                     decompiled_location: Arc::new(Mutex::new(HashSet::new())),
+                    decompiled_size: Mutex::new(None),
                 };
                 deps.push(dep);
             }
