@@ -57,15 +57,14 @@ async fn integration_tests() {
             continue;
         }
 
+        println!("Testing: {:?}", entry.path());
         let requst_file = File::open(&request_file).unwrap();
 
         let request: TestEvaluateRequest = serde_yml::from_reader(requst_file).unwrap();
         let request: EvaluateRequest = request.into();
 
-        println!("here: {:?}", request);
-
         let result = client.evaluate(request).await.unwrap().into_inner();
-        println!("result -- {:?}", result);
+        println!("{:?}", result);
         assert!(result.successful);
         let expected_file = File::open(&demo_ouput).unwrap();
         let expected_output: Vec<ResultNode> = serde_json::from_reader(expected_file).unwrap();
@@ -95,6 +94,7 @@ async fn integration_tests() {
         match result.response {
             None => panic!(),
             Some(x) => {
+                assert_eq!(x.incident_contexts.len(), expected_output.len());
                 for (i, ic) in x.incident_contexts.iter().enumerate() {
                     assert_eq!(
                         ic,

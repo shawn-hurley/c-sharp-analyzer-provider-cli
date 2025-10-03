@@ -1,0 +1,36 @@
+    [
+      {
+        "fileURI": "file:///Users/shurley/repos/personal/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "codeLocation": {
+          "startPosition": {
+            "line": 37,
+            "character": 38
+          },
+          "endPosition": {
+            "line": 37,
+            "character": 55
+          }
+        },
+        "LineNumber": "37",
+        "variables": {
+          "file": "file:///Users/shurley/repos/personal/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
+        }
+      },
+      {
+        "fileURI": "file:///Users/shurley/repos/personal/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
+        "codeLocation": {
+          "startPosition": {
+            "line": 82,
+            "character": 20
+          },
+          "endPosition": {
+            "line": 82,
+            "character": 37
+          }
+        },
+        "LineNumber": "82",
+        "variables": {
+          "file": "file:///Users/shurley/repos/personal/c-sharp-analyzer-provider-cli/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
+        }
+      }
+    ]

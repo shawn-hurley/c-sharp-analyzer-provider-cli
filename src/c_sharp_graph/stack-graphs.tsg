@@ -107,6 +107,8 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   )
 ) @namespace {
     edge @namespace.def -> @class_declaration.def
+    edge @class_declaration.def -> @namespace.def
+    attr (@class_declaration.def -> @namespace.def) precedence = 10
     edge @class_declaration.lexical_scope -> @namespace.lexical_scope
 }
 
@@ -120,19 +122,23 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
 ) @class_declaration {
   if some @method_declaration {
     edge @class_declaration.def -> @method_declaration.def
-    edge @method_declaration.lexical_scope -> @class_declaration.lexical_scope
+    edge @method_declaration.def -> @class_declaration.def
+    attr (@method_declaration.def -> @class_declaration.def) precedence = 10
   }
   if some @field_declaration {
     edge @class_declaration.def -> @field_declaration.def
-    edge @field_declaration.lexical_scope -> @class_declaration.lexical_scope
+    edge @field_declaration.def -> @class_declaration.def
+    attr (@field_declaration.def -> @class_declaration.def) precedence = 10
   }
   if some @nested_class_declaration {
     edge @class_declaration.def -> @nested_class_declaration.def
-    edge @nested_class_declaration.lexical_scope -> @class_declaration.lexical_scope
+    edge @nested_class_declaration.def -> @class_declaration.def
+    attr (@nested_class_declaration.def -> @class_declaration.def) precedence = 10
   }
   if some @constructor_declaration {
     edge @class_declaration.def -> @constructor_declaration.def
-    edge @constructor_declaration.lexical_scope -> @class_declaration.lexical_scope
+    edge @constructor_declaration.def -> @class_declaration.def
+    attr (@constructor_declaration.def -> @class_declaration.def) precedence = 10
   }
 }
 
@@ -785,8 +791,9 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
     (identifier)
     (predefined_type)
   ]) @expr
+  name: (_) @name
 ) @mem_expr {
-  attr (@mem_expr.def) type = "push_symbol", symbol = (source-text @expr), source_node = @mem_expr, is_reference
+  attr (@mem_expr.def) type = "push_symbol", symbol = (format "{}.{}" (source-text @expr) (source-text @name)), source_node = @mem_expr, is_reference
 }
 
 (unary_expression
