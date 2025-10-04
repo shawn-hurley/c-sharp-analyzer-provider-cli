@@ -13,6 +13,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: "Clippy format"
+        run: cargo clippy
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
       - name: install grpcurl
