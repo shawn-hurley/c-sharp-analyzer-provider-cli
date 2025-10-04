@@ -15,6 +15,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
+      - name: "Clippy format"
+        run: cargo clippy
       - name: install grpcurl
         run: |
           go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
