@@ -42,44 +42,10 @@
           },
           "endPosition": {
             "line": 21,
-            "character": 56
-          }
-        },
-        "LineNumber": "21",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 21,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 21,
             "character": 32
           }
         },
         "LineNumber": "21",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 30,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 30,
-            "character": 54
-          }
-        },
-        "LineNumber": "30",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs"
         }
@@ -110,44 +76,10 @@
           },
           "endPosition": {
             "line": 39,
-            "character": 55
-          }
-        },
-        "LineNumber": "39",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 39,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 39,
             "character": 32
           }
         },
         "LineNumber": "39",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 44,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 44,
-            "character": 49
-          }
-        },
-        "LineNumber": "44",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/AuthConfig.cs"
         }
@@ -467,23 +399,6 @@
           },
           "endPosition": {
             "line": 25,
-            "character": 97
-          }
-        },
-        "LineNumber": "25",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 25,
-            "character": 76
-          },
-          "endPosition": {
-            "line": 25,
             "character": 88
           }
         },
@@ -507,23 +422,6 @@
         "LineNumber": "9",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/RouteConfig.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/WebApiConfig.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 14,
-            "character": 37
-          },
-          "endPosition": {
-            "line": 14,
-            "character": 60
-          }
-        },
-        "LineNumber": "14",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/App_Start/WebApiConfig.cs"
         }
       },
       {
@@ -603,23 +501,6 @@
           },
           "endPosition": {
             "line": 102,
-            "character": 62
-          }
-        },
-        "LineNumber": "102",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 102,
-            "character": 34
-          },
-          "endPosition": {
-            "line": 102,
             "character": 50
           }
         },
@@ -637,23 +518,6 @@
           },
           "endPosition": {
             "line": 111,
-            "character": 75
-          }
-        },
-        "LineNumber": "111",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 111,
-            "character": 43
-          },
-          "endPosition": {
-            "line": 111,
             "character": 59
           }
         },
@@ -671,44 +535,10 @@
           },
           "endPosition": {
             "line": 112,
-            "character": 83
-          }
-        },
-        "LineNumber": "112",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 112,
-            "character": 43
-          },
-          "endPosition": {
-            "line": 112,
             "character": 59
           }
         },
         "LineNumber": "112",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 114,
-            "character": 24
-          },
-          "endPosition": {
-            "line": 114,
-            "character": 54
-          }
-        },
-        "LineNumber": "114",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -773,44 +603,10 @@
           },
           "endPosition": {
             "line": 134,
-            "character": 71
-          }
-        },
-        "LineNumber": "134",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 134,
-            "character": 39
-          },
-          "endPosition": {
-            "line": 134,
             "character": 55
           }
         },
         "LineNumber": "134",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 135,
-            "character": 32
-          },
-          "endPosition": {
-            "line": 135,
-            "character": 42
-          }
-        },
-        "LineNumber": "135",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -875,23 +671,6 @@
           },
           "endPosition": {
             "line": 146,
-            "character": 67
-          }
-        },
-        "LineNumber": "146",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 146,
-            "character": 35
-          },
-          "endPosition": {
-            "line": 146,
             "character": 51
           }
         },
@@ -909,44 +688,10 @@
           },
           "endPosition": {
             "line": 148,
-            "character": 42
-          }
-        },
-        "LineNumber": "148",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 148,
-            "character": 32
-          },
-          "endPosition": {
-            "line": 148,
             "character": 35
           }
         },
         "LineNumber": "148",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 151,
-            "character": 20
-          },
-          "endPosition": {
-            "line": 151,
-            "character": 38
-          }
-        },
-        "LineNumber": "151",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -981,23 +726,6 @@
           }
         },
         "LineNumber": "166",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 170,
-            "character": 24
-          },
-          "endPosition": {
-            "line": 170,
-            "character": 48
-          }
-        },
-        "LineNumber": "170",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -1049,23 +777,6 @@
           }
         },
         "LineNumber": "178",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 184,
-            "character": 20
-          },
-          "endPosition": {
-            "line": 184,
-            "character": 38
-          }
-        },
-        "LineNumber": "184",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -1147,23 +858,6 @@
           },
           "endPosition": {
             "line": 210,
-            "character": 63
-          }
-        },
-        "LineNumber": "210",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 210,
-            "character": 53
-          },
-          "endPosition": {
-            "line": 210,
             "character": 56
           }
         },
@@ -1198,41 +892,7 @@
           },
           "endPosition": {
             "line": 219,
-            "character": 79
-          }
-        },
-        "LineNumber": "219",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 219,
-            "character": 42
-          },
-          "endPosition": {
-            "line": 219,
             "character": 58
-          }
-        },
-        "LineNumber": "219",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 219,
-            "character": 80
-          },
-          "endPosition": {
-            "line": 219,
-            "character": 90
           }
         },
         "LineNumber": "219",
@@ -1300,23 +960,6 @@
           },
           "endPosition": {
             "line": 225,
-            "character": 38
-          }
-        },
-        "LineNumber": "225",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 225,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 225,
             "character": 32
           }
         },
@@ -1351,23 +994,6 @@
           },
           "endPosition": {
             "line": 233,
-            "character": 54
-          }
-        },
-        "LineNumber": "233",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 233,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 233,
             "character": 32
           }
         },
@@ -1385,44 +1011,10 @@
           },
           "endPosition": {
             "line": 239,
-            "character": 75
-          }
-        },
-        "LineNumber": "239",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 239,
-            "character": 35
-          },
-          "endPosition": {
-            "line": 239,
             "character": 51
           }
         },
         "LineNumber": "239",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 240,
-            "character": 46
-          },
-          "endPosition": {
-            "line": 240,
-            "character": 81
-          }
-        },
-        "LineNumber": "240",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -1487,23 +1079,6 @@
           },
           "endPosition": {
             "line": 257,
-            "character": 95
-          }
-        },
-        "LineNumber": "257",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 257,
-            "character": 50
-          },
-          "endPosition": {
-            "line": 257,
             "character": 66
           }
         },
@@ -1555,23 +1130,6 @@
           },
           "endPosition": {
             "line": 262,
-            "character": 34
-          }
-        },
-        "LineNumber": "262",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 262,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 262,
             "character": 26
           }
         },
@@ -1589,23 +1147,6 @@
           },
           "endPosition": {
             "line": 275,
-            "character": 62
-          }
-        },
-        "LineNumber": "275",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 275,
-            "character": 24
-          },
-          "endPosition": {
-            "line": 275,
             "character": 40
           }
         },
@@ -1623,44 +1164,10 @@
           },
           "endPosition": {
             "line": 276,
-            "character": 46
-          }
-        },
-        "LineNumber": "276",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 276,
-            "character": 24
-          },
-          "endPosition": {
-            "line": 276,
             "character": 40
           }
         },
         "LineNumber": "276",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 282,
-            "character": 24
-          },
-          "endPosition": {
-            "line": 282,
-            "character": 48
-          }
-        },
-        "LineNumber": "282",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -1678,23 +1185,6 @@
           }
         },
         "LineNumber": "282",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 287,
-            "character": 42
-          },
-          "endPosition": {
-            "line": 287,
-            "character": 77
-          }
-        },
-        "LineNumber": "287",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -1810,23 +1300,6 @@
           },
           "endPosition": {
             "line": 306,
-            "character": 98
-          }
-        },
-        "LineNumber": "306",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 306,
-            "character": 61
-          },
-          "endPosition": {
-            "line": 306,
             "character": 77
           }
         },
@@ -1862,23 +1335,6 @@
           "endPosition": {
             "line": 312,
             "character": 36
-          }
-        },
-        "LineNumber": "312",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 312,
-            "character": 49
-          },
-          "endPosition": {
-            "line": 312,
-            "character": 89
           }
         },
         "LineNumber": "312",
@@ -1946,23 +1402,6 @@
           },
           "endPosition": {
             "line": 316,
-            "character": 89
-          }
-        },
-        "LineNumber": "316",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 316,
-            "character": 54
-          },
-          "endPosition": {
-            "line": 316,
             "character": 70
           }
         },
@@ -1984,23 +1423,6 @@
           }
         },
         "LineNumber": "32",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 326,
-            "character": 67
-          },
-          "endPosition": {
-            "line": 326,
-            "character": 99
-          }
-        },
-        "LineNumber": "326",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -2052,23 +1474,6 @@
           }
         },
         "LineNumber": "331",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 333,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 333,
-            "character": 30
-          }
-        },
-        "LineNumber": "333",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -2167,23 +1572,6 @@
           },
           "endPosition": {
             "line": 363,
-            "character": 54
-          }
-        },
-        "LineNumber": "363",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 363,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 363,
             "character": 32
           }
         },
@@ -2201,44 +1589,10 @@
           },
           "endPosition": {
             "line": 37,
-            "character": 34
-          }
-        },
-        "LineNumber": "37",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 37,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 37,
             "character": 26
           }
         },
         "LineNumber": "37",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 43,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 43,
-            "character": 36
-          }
-        },
-        "LineNumber": "43",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
         }
@@ -2405,23 +1759,6 @@
           },
           "endPosition": {
             "line": 76,
-            "character": 34
-          }
-        },
-        "LineNumber": "76",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/AccountController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 76,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 76,
             "character": 26
           }
         },
@@ -2494,23 +1831,6 @@
           }
         },
         "LineNumber": "105",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 108,
-             "character": 16
-          },
-          "endPosition": {
-            "line": 108,
-            "character": 34
-          }
-        },
-        "LineNumber": "108",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
         }
@@ -2728,23 +2048,6 @@
           },
           "endPosition": {
             "line": 163,
-            "character": 62
-          }
-        },
-        "LineNumber": "163",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 163,
-            "character": 50
-          },
-          "endPosition": {
-            "line": 163,
             "character": 58
           }
         },
@@ -2797,23 +2100,6 @@
           "endPosition": {
             "line": 172,
             "character": 20
-          }
-        },
-        "LineNumber": "172",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 172,
-            "character": 25
-          },
-          "endPosition": {
-            "line": 172,
-            "character": 37
           }
         },
         "LineNumber": "172",
@@ -2983,23 +2269,6 @@
           },
           "endPosition": {
             "line": 48,
-            "character": 40
-          }
-        },
-        "LineNumber": "48",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 48,
-            "character": 28
-          },
-          "endPosition": {
-            "line": 48,
             "character": 36
           }
         },
@@ -3068,23 +2337,6 @@
           },
           "endPosition": {
             "line": 61,
-            "character": 34
-          }
-        },
-        "LineNumber": "61",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/DinnersController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 61,
-            "character": 16
-          },
-          "endPosition": {
-            "line": 61,
             "character": 26
           }
         },
@@ -3136,7 +2388,6 @@
           "endPosition": {
             "line": 8,
             "character": 16
-
           }
         },
         "LineNumber": "8",
@@ -3442,23 +2693,6 @@
           },
           "endPosition": {
             "line": 56,
-            "character": 75
-          }
-        },
-        "LineNumber": "56",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/SearchController.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Controllers/SearchController.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 56,
-            "character": 63
-          },
-          "endPosition": {
-            "line": 56,
             "character": 71
           }
         },
@@ -3527,23 +2761,6 @@
           },
           "endPosition": {
             "line": 19,
-            "character": 45
-          }
-        },
-        "LineNumber": "19",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 19,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 19,
             "character": 28
           }
         },
@@ -3561,41 +2778,7 @@
           },
           "endPosition": {
             "line": 21,
-            "character": 33
-          }
-        },
-        "LineNumber": "21",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 21,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 21,
             "character": 24
-          }
-        },
-        "LineNumber": "21",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 21,
-            "character": 34
-          },
-          "endPosition": {
-            "line": 21,
-            "character": 67
           }
         },
         "LineNumber": "21",
@@ -3629,41 +2812,7 @@
           },
           "endPosition": {
             "line": 22,
-            "character": 46
-          }
-        },
-        "LineNumber": "22",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 22,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 22,
             "character": 24
-          }
-        },
-        "LineNumber": "22",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 22,
-            "character": 47
-          },
-          "endPosition": {
-            "line": 22,
-            "character": 68
           }
         },
         "LineNumber": "22",
@@ -3684,23 +2833,6 @@
           }
         },
         "LineNumber": "22",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 23,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 23,
-            "character": 38
-          }
-        },
-        "LineNumber": "23",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
         }
@@ -3731,41 +2863,7 @@
           },
           "endPosition": {
             "line": 24,
-            "character": 40
-          }
-        },
-        "LineNumber": "24",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 24,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 24,
             "character": 24
-          }
-        },
-        "LineNumber": "24",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 24,
-            "character": 41
-          },
-          "endPosition": {
-            "line": 24,
-            "character": 60
           }
         },
         "LineNumber": "24",
@@ -3799,44 +2897,10 @@
           },
           "endPosition": {
             "line": 25,
-            "character": 35
-          }
-        },
-        "LineNumber": "25",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 25,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 25,
             "character": 22
           }
         },
         "LineNumber": "25",
-        "variables": {
-          "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
-        }
-      },
-      {
-        "fileURI": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs",
-        "codeLocation": {
-          "startPosition": {
-            "line": 27,
-            "character": 12
-          },
-          "endPosition": {
-            "line": 27,
-            "character": 48
-          }
-        },
-        "LineNumber": "27",
         "variables": {
           "file": "file://<REPLACE_ME>/testdata/nerd-dinner/mvc4/NerdDinner/Global.asax.cs"
         }

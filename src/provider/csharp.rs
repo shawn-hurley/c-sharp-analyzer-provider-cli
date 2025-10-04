@@ -7,7 +7,8 @@ use tonic::{Request, Response, Status};
 use tracing::{debug, error, info};
 use utoipa::{OpenApi, ToSchema};
 
-use crate::c_sharp_graph::find_node::FindNode;
+use crate::c_sharp_graph::query::{Query, QueryType};
+//use crate::c_sharp_graph::find_node::FindNode;
 use crate::provider::AnalysisMode;
 use crate::{
     analyzer_service::{
@@ -19,10 +20,19 @@ use crate::{
     provider::Project,
 };
 
+#[derive(Clone, ToSchema, Deserialize, Default, Debug)]
+#[serde(rename_all = "lowercase")]
+enum Locations {
+    #[default]
+    All,
+    Method,
+}
+
 #[derive(ToSchema, Deserialize, Debug)]
 struct ReferenceCondition {
     pattern: String,
-    location: Option<String>,
+    #[serde(default)]
+    location: Locations,
     #[allow(dead_code)]
     file_paths: Option<Vec<String>>,
 }
@@ -160,11 +170,6 @@ impl ProviderService for CSharpProvider {
             })?;
 
         debug!("condition: {:?}", condition);
-        let search = FindNode {
-            node_type: condition.referenced.location.clone(),
-            regex: condition.referenced.pattern.clone(),
-        };
-
         let project_guard = self.project.lock().await;
         let project = match project_guard.as_ref() {
             Some(x) => x,
@@ -172,28 +177,56 @@ impl ProviderService for CSharpProvider {
                 return Err(Status::internal("project may not be initialized"));
             }
         };
-        let results = search.run(project).await.map_or_else(
-            |err| EvaluateResponse {
-                error: err.to_string(),
-                successful: false,
-                response: None,
-            },
-            |res| {
-                info!("found {} results for search: {:?}", res.len(), &condition);
-                let mut i: Vec<IncidentContext> = res.into_iter().map(Into::into).collect();
-                i.sort_by_key(|i| format!("{}-{:?}", i.file_uri, i.line_number()));
-                EvaluateResponse {
-                    error: String::new(),
-                    successful: true,
-                    response: Some(ProviderEvaluateResponse {
-                        matched: !i.is_empty(),
-                        incident_contexts: i,
-                        template_context: None,
-                    }),
-                }
-            },
-        );
+        let graph_guard = project.graph.clone();
 
+        let source_type = match project.get_source_type().await {
+            Some(s) => s,
+            None => {
+                return Err(Status::internal("project may not be initialized"));
+            }
+        };
+        // Release the project lock, so other evaluate calls can continue
+        drop(project_guard);
+        let graph = graph_guard
+            .lock()
+            .expect("unable to get graph guard for project");
+
+        let graph = graph.as_ref().expect("unable to get graph for project");
+        // As we are passing an unmutable reference, we can drop the guard here.
+
+        let query = match condition.referenced.location {
+            Locations::All => QueryType::All {
+                graph,
+                source_type: &source_type,
+            },
+            Locations::Method => QueryType::Method {
+                graph,
+                source_type: &source_type,
+            },
+        };
+        let results = query
+            .query(condition.referenced.pattern.clone())
+            .map_or_else(
+                |err| EvaluateResponse {
+                    error: err.to_string(),
+                    successful: false,
+                    response: None,
+                },
+                |res| {
+                    info!("found {} results for search: {:?}", res.len(), &condition);
+                    let mut i: Vec<IncidentContext> = res.into_iter().map(Into::into).collect();
+                    i.sort_by_key(|i| format!("{}-{:?}", i.file_uri, i.line_number()));
+                    EvaluateResponse {
+                        error: String::new(),
+                        successful: true,
+                        response: Some(ProviderEvaluateResponse {
+                            matched: !i.is_empty(),
+                            incident_contexts: i,
+                            template_context: None,
+                        }),
+                    }
+                },
+            );
         return Ok(Response::new(results));
     }
 
