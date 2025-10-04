@@ -1,6 +1,5 @@
 use std::{
     collections::{BTreeMap, HashMap, HashSet},
-    fmt::format,
     vec,
 };
 
@@ -9,7 +8,7 @@ use regex::Regex;
 use serde_json::Value;
 use stack_graphs::{
     arena::Handle,
-    graph::{Edge, File, Node, StackGraph, Symbol},
+    graph::{Edge, File, Node, StackGraph},
 };
 use tracing::{debug, error, info, trace};
 use url::Url;
@@ -27,24 +26,53 @@ pub trait Query {
 
 pub enum QueryType<'graph> {
     All {
-        db: &'graph StackGraph,
+        graph: &'graph StackGraph,
         source_type: &'graph SourceType,
     },
     Method {
-        db: &'graph StackGraph,
+        graph: &'graph StackGraph,
         source_type: &'graph SourceType,
     },
 }
 
+#[derive(Debug)]
+pub enum SyntaxType {
+    Import,
+    CompUnit,
+    NamespaceDeclaration,
+    ClassDef,
+    MethodName,
+    LocalVar,
+    Argument,
+    Name,
+}
+
+impl SyntaxType {
+    pub(crate) fn get(syntax_type_string: &str) -> Self {
+        match syntax_type_string {
+            "import" => Self::Import,
+            "comp_unit" => Self::CompUnit,
+            "namespace_declaration" => Self::NamespaceDeclaration,
+            "class_def" => Self::ClassDef,
+            "method_name" => Self::MethodName,
+            "local_var" => Self::LocalVar,
+            "argument" => Self::Argument,
+            "name" => Self::Name,
+            // Name is the least used thing, and I want to have a default for this.
+            &_ => Self::Name,
+        }
+    }
+}
+
 #[derive(Eq, Hash, PartialEq, Debug)]
-pub(crate) struct FQDN {
+pub(crate) struct Fqdn {
     pub(crate) namespace: Option<String>,
     pub(crate) class: Option<String>,
     pub(crate) method: Option<String>,
 }
 
-pub(crate) fn get_fqdn(node: Handle<Node>, graph: &StackGraph) -> Option<FQDN> {
-    let mut fqdn = FQDN {
+pub(crate) fn get_fqdn(node: Handle<Node>, graph: &StackGraph) -> Option<Fqdn> {
+    let mut fqdn = Fqdn {
         namespace: None,
         class: None,
         method: None,
@@ -59,6 +87,7 @@ pub(crate) fn get_fqdn(node: Handle<Node>, graph: &StackGraph) -> Option<FQDN> {
         .syntax_type
         .into_option()
         .expect("FQDN nodes must have a syntax type")];
+    let syntax_type = SyntaxType::get(syntax_type);
     // if this node that is from a FQDN does not have a symobl something is
     // very wrong in the TSG.
     let symbol_handle = n.symbol().unwrap();
@@ -66,15 +95,15 @@ pub(crate) fn get_fqdn(node: Handle<Node>, graph: &StackGraph) -> Option<FQDN> {
     let fqdn_edge = graph.outgoing_edges(node).find(|e| e.precedence == 10);
     match fqdn_edge {
         None => match syntax_type {
-            "namespace-declaration" => {
+            SyntaxType::NamespaceDeclaration => {
                 fqdn.namespace = Some(symbol);
                 Some(fqdn)
             }
-            "method_name" => {
+            SyntaxType::MethodName => {
                 fqdn.method = Some(symbol);
                 Some(fqdn)
             }
-            "class-def" => {
+            SyntaxType::ClassDef => {
                 fqdn.class = Some(symbol);
                 Some(fqdn)
             }
@@ -83,21 +112,21 @@ pub(crate) fn get_fqdn(node: Handle<Node>, graph: &StackGraph) -> Option<FQDN> {
         Some(e) => match get_fqdn(e.sink, graph) {
             None => Some(fqdn),
             Some(mut f) => match syntax_type {
-                "namespace-declaration" => {
+                SyntaxType::NamespaceDeclaration => {
                     f.namespace = f.namespace.map_or_else(
                         || Some(symbol.clone()),
                         |n| Some(format!("{}.{}", n, symbol.clone())),
                     );
                     Some(f)
                 }
-                "method_name" => {
+                SyntaxType::MethodName => {
                     f.method = f.method.map_or_else(
                         || Some(symbol.clone()),
                         |m| Some(format!("{}.{}", m, symbol.clone())),
                     );
                     Some(f)
                 }
-                "class-def" => {
+                SyntaxType::ClassDef => {
                     f.class = f.class.map_or_else(
                         || Some(symbol.clone()),
                         |c| Some(format!("{}.{}", c, symbol.clone())),
@@ -113,18 +142,18 @@ pub(crate) fn get_fqdn(node: Handle<Node>, graph: &StackGraph) -> Option<FQDN> {
 impl Query for QueryType<'_> {
     fn query(self, query: String) -> anyhow::Result<Vec<ResultNode>, Error> {
         match self {
-            QueryType::All { db, source_type } => {
+            QueryType::All { graph, source_type } => {
                 let q = Querier {
-                    db,
+                    graph,
                     source_type,
                     _matcher_getter: NamespaceSymbolsGetter {},
                 };
                 q.query(query)
             }
-            QueryType::Method { db, source_type } => {
+            QueryType::Method { graph, source_type } => {
                 info!("running method search");
                 let q = Querier {
-                    db,
+                    graph,
                     source_type,
                     _matcher_getter: MethodSymbolsGetter {},
                 };
@@ -135,11 +164,12 @@ impl Query for QueryType<'_> {
 }
 
 pub(crate) struct Querier<'graph, T: GetMatcher> {
-    pub(crate) db: &'graph StackGraph,
+    pub(crate) graph: &'graph StackGraph,
     pub(crate) source_type: &'graph SourceType,
     _matcher_getter: T,
 }
 
+#[derive(Debug)]
 pub(crate) struct StartingNodes {
     definition_root_nodes: Vec<Handle<Node>>,
     referenced_files: HashSet<Handle<File>>,
@@ -164,8 +194,8 @@ impl<'a, T: GetMatcher> Querier<'a, T> {
         let mut referenced_files: HashSet<Handle<File>> = HashSet::new();
         let mut file_to_compunit_handle: HashMap<Handle<File>, Handle<Node>> = HashMap::new();
 
-        for node_handle in self.db.iter_nodes() {
-            let node: &Node = &self.db[node_handle];
+        for node_handle in self.graph.iter_nodes() {
+            let node: &Node = &self.graph[node_handle];
             let file_handle = match node.file() {
                 Some(h) => h,
                 None => {
@@ -178,31 +208,31 @@ impl<'a, T: GetMatcher> Querier<'a, T> {
                 // only used to tie together other nodes.
                 continue;
             }
-            let symbol = &self.db[node.symbol().unwrap()];
-            let source_info = self.db.source_info(node_handle);
+            let symbol = &self.graph[node.symbol().unwrap()];
+            let source_info = self.graph.source_info(node_handle);
             if source_info.is_none() {
                 continue;
             }
             match source_info.unwrap().syntax_type.into_option() {
                 None => continue,
                 Some(handle) => {
-                    let syntax_type = &self.db[handle];
+                    let syntax_type = SyntaxType::get(&self.graph[handle]);
                     match syntax_type {
-                        "comp-unit" => {
+                        SyntaxType::CompUnit => {
                             file_to_compunit_handle.insert(file_handle, node_handle);
                         }
-                        "import" => {
+                        SyntaxType::Import => {
                             if search.partial_namespace(symbol) {
                                 referenced_files.insert(file_handle);
                             }
                         }
-                        "namespace-declaration" => {
+                        SyntaxType::NamespaceDeclaration => {
                             if search.match_namespace(symbol) {
                                 definition_root_nodes.push(node_handle);
                                 referenced_files.insert(file_handle);
                             }
                         }
-                        &_ => continue,
+                        _ => continue,
                     }
                 }
             }
@@ -223,44 +253,44 @@ impl<'a, T: GetMatcher> Querier<'a, T> {
         file_uri: String,
     ) {
         let mut traverse_nodes: Vec<Handle<Node>> = vec![];
-        for edge in self.db.outgoing_edges(node) {
+        for edge in self.graph.outgoing_edges(node) {
             if edge.precedence == 10 {
-                debug!("edge precedence: {}", edge.precedence);
                 continue;
             }
             traverse_nodes.push(edge.sink);
-            let child_node = &self.db[edge.sink];
+            let child_node = &self.graph[edge.sink];
             match child_node.symbol() {
                 None => continue,
                 Some(symbol_handle) => {
-                    let symbol = &self.db[symbol_handle];
+                    let symbol = &self.graph[symbol_handle];
                     if symbol_matcher.match_symbol(symbol.to_string()) {
-                        let debug_node = self.db.node_debug_info(edge.sink).map_or(vec![], |d| {
-                            d.iter()
-                                .map(|e| {
-                                    let k = self.db[e.key].to_string();
-                                    let v = self.db[e.value].to_string();
-                                    (k, v)
-                                })
-                                .collect()
-                        });
+                        let debug_node =
+                            self.graph.node_debug_info(edge.sink).map_or(vec![], |d| {
+                                d.iter()
+                                    .map(|e| {
+                                        let k = self.graph[e.key].to_string();
+                                        let v = self.graph[e.value].to_string();
+                                        (k, v)
+                                    })
+                                    .collect()
+                            });
 
-                        let edge_debug =
-                            self.db
-                                .edge_debug_info(edge.source, edge.sink)
-                                .map_or(vec![], |d| {
-                                    d.iter()
-                                        .map(|e| {
-                                            let k = self.db[e.key].to_string();
-                                            let v = self.db[e.value].to_string();
-                                            (k, v)
-                                        })
-                                        .collect()
-                                });
+                        let edge_debug = self.graph.edge_debug_info(edge.source, edge.sink).map_or(
+                            vec![],
+                            |d| {
+                                d.iter()
+                                    .map(|e| {
+                                        let k = self.graph[e.key].to_string();
+                                        let v = self.graph[e.value].to_string();
+                                        (k, v)
+                                    })
+                                    .collect()
+                            },
+                        );
 
                         let code_location: Location;
                         let line_number: usize;
-                        match self.db.source_info(edge.sink) {
+                        match self.graph.source_info(edge.sink) {
                             None => {
                                 continue;
                             }
@@ -324,7 +354,7 @@ impl<'graph, T: GetMatcher> Query for Querier<'graph, T> {
 
         // Now that we have the all the nodes we need to build the reference symbols to match the *
         let symbol_matcher =
-            T::get_matcher(self.db, starting_nodes.definition_root_nodes, &search)?;
+            T::get_matcher(self.graph, starting_nodes.definition_root_nodes, &search)?;
 
         let (is_source, symbol_handle) = match self.source_type {
             SourceType::Source { symbol_handle } => (true, Some(symbol_handle)),
@@ -338,17 +368,24 @@ impl<'graph, T: GetMatcher> Query for Querier<'graph, T> {
                     break;
                 }
             };
+            // This determines if the file is source code or not, but using the source_type symbol
+            // graph node.
             if is_source
-                && !self.db.nodes_for_file(*file).any(|node_handle| {
-                    let node = &self.db[node_handle];
+                && !self.graph.nodes_for_file(*file).any(|node_handle| {
+                    let node = &self.graph[node_handle];
 
                     let symobl_handle = symbol_handle.unwrap();
                     if let Some(sh) = node.symbol() {
+                        // This compares the source_type symbol handle to the nodes symbol
+                        // as symbols are de-duplicated, this will check that the symbol for the
+                        // given node is the one that we set for the source_type in the graph.
                         if sh.as_usize() == symobl_handle.as_usize() {
-                            if self.source_type.get_string() != self.db[sh] {
+                            if self.source_type.get_string() != self.graph[sh] {
                                 error!("SOMETHING IS VERY WRONG!!!!");
                             }
-                            let edges: Vec<Edge> = self.db.outgoing_edges(node_handle).collect();
+                            // We need to make sure that the compulation unit for the file is
+                            // actually has an edge from teh source_type node.
+                            let edges: Vec<Edge> = self.graph.outgoing_edges(node_handle).collect();
                             for edge in edges {
                                 if edge.sink == *comp_unit_node_handle {
                                     return true;
@@ -361,7 +398,7 @@ impl<'graph, T: GetMatcher> Query for Querier<'graph, T> {
             {
                 continue;
             }
-            let f = &self.db[*file];
+            let f = &self.graph[*file];
             let file_url = Url::from_file_path(f.name());
             if file_url.is_err() {
                 break;
@@ -410,8 +447,6 @@ impl Search {
         let mut parts: Vec<SearchPart> = vec![];
         let star_regex = Regex::new(".*")?;
         for part in query.split(".") {
-            // TODO: Consider how to make this handle any type of regex.
-            //
             if part.contains("*") {
                 let regex: Regex = if part == "*" {
                     star_regex.clone()

@@ -196,11 +196,11 @@ impl ProviderService for CSharpProvider {
 
         let query = match condition.referenced.location {
             Locations::All => QueryType::All {
-                db: graph,
+                graph,
                 source_type: &source_type,
             },
             Locations::Method => QueryType::Method {
-                db: graph,
+                graph,
                 source_type: &source_type,
             },
         };

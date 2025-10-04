@@ -3,11 +3,11 @@ use std::{collections::HashMap, vec};
 use anyhow::{Error, Ok};
 use stack_graphs::{
     arena::Handle,
-    graph::{self, Edge, Node, StackGraph},
+    graph::{Node, StackGraph},
 };
-use tracing::{debug, field::debug, trace};
+use tracing::{debug, trace};
 
-use crate::c_sharp_graph::query::{get_fqdn, GetMatcher, Search, SymbolMatcher, FQDN};
+use crate::c_sharp_graph::query::{get_fqdn, Fqdn, GetMatcher, Search, SymbolMatcher, SyntaxType};
 
 pub(crate) struct MethodSymbolsGetter {}
 
@@ -28,21 +28,21 @@ impl GetMatcher for MethodSymbolsGetter {
 }
 
 pub(crate) struct MethodSymbols {
-    methods: HashMap<FQDN, Handle<Node>>,
+    methods: HashMap<Fqdn, Handle<Node>>,
 }
 
 // Create exposed methods for NamesapceSymbols
 impl MethodSymbols {
     pub(crate) fn new(
-        db: &StackGraph,
+        graph: &StackGraph,
         nodes: Vec<Handle<Node>>,
         search: &Search,
     ) -> anyhow::Result<MethodSymbols, Error> {
-        let mut methods: HashMap<FQDN, Handle<Node>> = HashMap::new();
+        let mut methods: HashMap<Fqdn, Handle<Node>> = HashMap::new();
 
         for node_handle in nodes {
             //Get all the edges
-            Self::traverse_node(db, node_handle, search, &mut methods)
+            Self::traverse_node(graph, node_handle, search, &mut methods)
         }
 
         debug!("method nodes found: {:?}", methods);
@@ -60,33 +60,33 @@ impl SymbolMatcher for MethodSymbols {
 // Private methods for NamespaceSymbols
 impl MethodSymbols {
     fn traverse_node(
-        db: &StackGraph,
+        graph: &StackGraph,
         node: Handle<Node>,
         search: &Search,
-        methods: &mut HashMap<FQDN, Handle<Node>>,
+        methods: &mut HashMap<Fqdn, Handle<Node>>,
     ) {
         let mut child_edges: Vec<Handle<Node>> = vec![];
-        for edge in db.outgoing_edges(node) {
+        for edge in graph.outgoing_edges(node) {
             debug!("edge precedence during search: {}", edge.precedence);
             if edge.precedence == 10 {
                 continue;
             }
             child_edges.push(edge.sink);
-            let child_node = &db[edge.sink];
+            let child_node = &graph[edge.sink];
             let symbol = match child_node.symbol() {
                 None => continue,
-                Some(symbol) => &db[symbol],
+                Some(symbol) => &graph[symbol],
             };
             if !search.match_symbol(symbol) {
                 continue;
             }
-            match db.source_info(edge.sink) {
+            match graph.source_info(edge.sink) {
                 None => continue,
                 Some(source_info) => match source_info.syntax_type.into_option() {
                     None => continue,
                     Some(syntax_type) => {
-                        if &db[syntax_type] == "method_name" {
-                            let fqdn_name = get_fqdn(edge.sink, db)
+                        if let SyntaxType::MethodName = SyntaxType::get(&graph[syntax_type]) {
+                            let fqdn_name = get_fqdn(edge.sink, graph)
                                 .expect("We should always get a FQDN for methods");
                             methods.insert(fqdn_name, node);
                         }
@@ -95,7 +95,7 @@ impl MethodSymbols {
             }
         }
         for child_edge in child_edges {
-            Self::traverse_node(db, child_edge, search, methods);
+            Self::traverse_node(graph, child_edge, search, methods);
         }
     }
 

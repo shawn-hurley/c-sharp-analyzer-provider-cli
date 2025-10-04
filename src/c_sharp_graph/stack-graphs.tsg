@@ -38,6 +38,8 @@ attribute symbol_definition = symbol    => type = "pop_symbol", symbol = symbol,
 attribute symbol_reference = symbol     => type = "push_symbol", symbol = symbol, is_reference
 
 attribute node_symbol = node            => symbol = (source-text node), source_node = node
+; This edge attribute is for connecting nodes for retrieving the FQDN.
+attribute fqdn_edge = edge => precedence = 10
 
 ;; Root Program
 ;; ^^^^^^^^^^^
@@ -56,7 +58,7 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
 
 (compilation_unit) @comp_unit {
   node @comp_unit.def
-  attr (@comp_unit.def) type = "pop_symbol", symbol = FILE_PATH, source_node = @comp_unit, is_definition, syntax_type = "comp-unit"
+  attr (@comp_unit.def) type = "pop_symbol", symbol = FILE_PATH, source_node = @comp_unit, is_definition, syntax_type = "comp_unit"
   edge  SOURCE_TYPE_NODE -> @comp_unit.def
 }
 
@@ -83,7 +85,7 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   node @decl.def
   node @decl.lexical_scope
 
-  attr (@decl.def) type = "pop_symbol", symbol = (source-text @namespace), source_node = @decl, is_definition, syntax_type = "namespace-declaration"
+  attr (@decl.def) type = "pop_symbol", symbol = (source-text @namespace), source_node = @decl, is_definition, syntax_type = "namespace_declaration"
   attr (namespace_def) pop_symbol = "."
   edge @decl.def -> namespace_def
 }
@@ -95,7 +97,7 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   node @class_declaration.lexical_scope
   node class_def
 
-  attr (@class_declaration.def) type = "pop_symbol", symbol = (source-text @classname), source_node = @class_declaration, is_definition, syntax_type = "class-def"
+  attr (@class_declaration.def) type = "pop_symbol", symbol = (source-text @classname), source_node = @class_declaration, is_definition, syntax_type = "class_def"
   attr (class_def) pop_symbol = "."
   edge @class_declaration.def -> class_def
 }
@@ -108,7 +110,7 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
 ) @namespace {
     edge @namespace.def -> @class_declaration.def
     edge @class_declaration.def -> @namespace.def
-    attr (@class_declaration.def -> @namespace.def) precedence = 10
+    attr (@class_declaration.def -> @namespace.def) fqdn_edge
     edge @class_declaration.lexical_scope -> @namespace.lexical_scope
 }
 
@@ -123,22 +125,22 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   if some @method_declaration {
     edge @class_declaration.def -> @method_declaration.def
     edge @method_declaration.def -> @class_declaration.def
-    attr (@method_declaration.def -> @class_declaration.def) precedence = 10
+    attr (@method_declaration.def -> @class_declaration.def) fqdn_edge
   }
   if some @field_declaration {
     edge @class_declaration.def -> @field_declaration.def
     edge @field_declaration.def -> @class_declaration.def
-    attr (@field_declaration.def -> @class_declaration.def) precedence = 10
+    attr (@field_declaration.def -> @class_declaration.def) fqdn_edge
   }
   if some @nested_class_declaration {
     edge @class_declaration.def -> @nested_class_declaration.def
     edge @nested_class_declaration.def -> @class_declaration.def
-    attr (@nested_class_declaration.def -> @class_declaration.def) precedence = 10
+    attr (@nested_class_declaration.def -> @class_declaration.def) fqdn_edge
   }
   if some @constructor_declaration {
     edge @class_declaration.def -> @constructor_declaration.def
     edge @constructor_declaration.def -> @class_declaration.def
-    attr (@constructor_declaration.def -> @class_declaration.def) precedence = 10
+    attr (@constructor_declaration.def -> @class_declaration.def) fqdn_edge
   }
 }
 
@@ -793,6 +795,8 @@ attribute node_symbol = node            => symbol = (source-text node), source_n
   ]) @expr
   name: (_) @name
 ) @mem_expr {
+  ; Note that the symbol becomes the symbol that is being used to access '.' the thing being accessed. 
+  ; This is to make matching on the node easier in teh symbol matches.
   attr (@mem_expr.def) type = "push_symbol", symbol = (format "{}.{}" (source-text @expr) (source-text @name)), source_node = @mem_expr, is_reference
 }
 

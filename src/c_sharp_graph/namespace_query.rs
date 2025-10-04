@@ -6,7 +6,7 @@ use stack_graphs::{
     graph::{Node, StackGraph},
 };
 
-use crate::c_sharp_graph::query::{GetMatcher, Search, SymbolMatcher};
+use crate::c_sharp_graph::query::{GetMatcher, Search, SymbolMatcher, SyntaxType};
 
 pub(crate) struct NamespaceSymbolsGetter {}
 
@@ -34,7 +34,7 @@ pub(crate) struct NamespaceSymbols {
 // Create exposed methods for NamesapceSymbols
 impl NamespaceSymbols {
     pub(crate) fn new(
-        db: &StackGraph,
+        graph: &StackGraph,
         nodes: Vec<Handle<Node>>,
         search: &Search,
     ) -> anyhow::Result<NamespaceSymbols, Error> {
@@ -45,7 +45,7 @@ impl NamespaceSymbols {
         for node_handle in nodes {
             //Get all the edges
             Self::traverse_node(
-                db,
+                graph,
                 node_handle,
                 search,
                 &mut classes,
@@ -96,14 +96,14 @@ impl NamespaceSymbols {
                 None => continue,
                 Some(source_info) => match source_info.syntax_type.into_option() {
                     None => continue,
-                    Some(syntax_type) => match &db[syntax_type] {
-                        "method_name" => {
+                    Some(syntax_type) => match SyntaxType::get(&db[syntax_type]) {
+                        SyntaxType::MethodName => {
                             class_methods.insert(symbol.to_string(), edge.sink);
                         }
-                        "class-def" => {
+                        SyntaxType::ClassDef => {
                             classes.insert(symbol.to_string(), edge.sink);
                         }
-                        &_ => {}
+                        _ => {}
                     },
                 },
             }

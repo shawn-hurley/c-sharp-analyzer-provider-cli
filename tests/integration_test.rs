@@ -36,7 +36,6 @@ async fn integration_tests() {
         .unwrap();
     let current_file = file!();
     let file_path = absolute(PathBuf::from_str(current_file).unwrap()).unwrap();
-    println!("{:?}", file_path);
 
     let parent = file_path.parent().unwrap();
     let base = parent.parent().unwrap();
@@ -56,16 +55,19 @@ async fn integration_tests() {
         if !demo_ouput.exists() {
             continue;
         }
+        println!("testing demo: {:?}", entry.path());
 
-        println!("Testing: {:?}", entry.path());
         let requst_file = File::open(&request_file).unwrap();
 
         let request: TestEvaluateRequest = serde_yml::from_reader(requst_file).unwrap();
         let request: EvaluateRequest = request.into();
 
         let result = client.evaluate(request).await.unwrap().into_inner();
-        println!("{:?}", result);
-        assert!(result.successful);
+        assert!(
+            result.successful,
+            "expected successful result got: {:?}",
+            result
+        );
         let expected_file = File::open(&demo_ouput).unwrap();
         let expected_output: Vec<ResultNode> = serde_json::from_reader(expected_file).unwrap();
         let expected_output: Vec<IncidentContext> = expected_output
