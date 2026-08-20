@@ -7,6 +7,12 @@ namespace CSharpProvider.Services;
 
 // Provider.ProviderService.ProviderServiceBase is the base class generated from
 // provider.proto.
+public static class AnalysisMode
+{
+    public const string SourceOnly = "source-only";
+    public const string Full = "full";
+}
+
 public class ProviderService : Provider.ProviderService.ProviderServiceBase
 {
     private readonly ProviderConfig _config;
@@ -40,6 +46,13 @@ public class ProviderService : Provider.ProviderService.ProviderServiceBase
         _logger.LogInformation("Init called with location={Location}, analysisMode={Mode}",
             request.Location, request.AnalysisMode);
 
+        if (request.AnalysisMode == AnalysisMode.Full)
+        {
+            _logger.LogWarning(
+                "Analysis mode '{Mode}' is not supported. Running source-only analysis",
+                request.AnalysisMode);
+        }
+
         try
         {
             var loader = new ProjectLoader(_logger, _packageResolver);
@@ -57,7 +70,7 @@ public class ProviderService : Provider.ProviderService.ProviderServiceBase
                 BuiltinConfig = new Config
                 {
                     Location = request.Location,
-                    AnalysisMode = "source-only"
+                    AnalysisMode = AnalysisMode.SourceOnly
                 }
             };
         }
