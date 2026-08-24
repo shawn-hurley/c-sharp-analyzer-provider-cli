@@ -45,7 +45,8 @@ jobs:
           uv run tests/test_runner.py setup
           uv run tests/test_runner.py run --provider csharp --verbose \
             --cmd "dotnet run --project src -- --port 9876 --log-file provider.log" \
-            --project net8-sample
+            --project net8-sample \
+            --project nerd-dinner
       - name: Named pipe test
         if: runner.os == 'Windows'
         shell: pwsh

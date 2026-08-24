@@ -307,6 +307,40 @@ def compare_results(actual: dict[str, Any], expected: dict[str, Any]) -> tuple[b
     return True, "ok"
 
 
+def normalize_init_response(response: dict[str, Any] | None) -> dict[str, Any]:
+    """Reduce an Init response to the stable fields worth asserting.
+
+    Drops machine-specific fields (builtinConfig.location, id) so goldens are
+    portable across machines.
+    """
+    if not response or "_error" in response:
+        return response or {}
+    return {
+        "successful": response.get("successful", False),
+        "analysisMode": response.get("builtinConfig", {}).get("analysisMode"),
+    }
+
+
+def compare_init(actual: dict[str, Any], expected: dict[str, Any]) -> tuple[bool, str]:
+    if "_error" in actual:
+        return False, f"actual has error: {actual['_error']}"
+
+    a = normalize_init_response(actual)
+    e = normalize_init_response(expected)
+
+    if a.get("successful") != e.get("successful"):
+        return False, (
+            f"successful mismatch: got {a.get('successful')}, "
+            f"expected {e.get('successful')}"
+        )
+    if a.get("analysisMode") != e.get("analysisMode"):
+        return False, (
+            f"analysisMode mismatch: got {a.get('analysisMode')}, "
+            f"expected {e.get('analysisMode')}"
+        )
+    return True, "ok"
+
+
 def validate_manifests(
     manifests: dict[str, Manifest], update: bool
 ) -> tuple[list[str], list[str]]:
@@ -480,7 +514,7 @@ def run_project(
         with open(step_path) as f:
             request_data: dict[str, Any] = json.load(f)
 
-        is_init = step_name == "init"
+        is_init = step_name == "init" or step_name.startswith("init-")
 
         if is_init:
             location = resolve_init_location(project, manifest, request_data, repo_root=repo_root)
@@ -495,14 +529,16 @@ def run_project(
             result_file = project_result_dir / f"{step_name}.result.json"
             result_file.write_text(json.dumps(response, indent=2))
 
+            expected_path = test_dir / f"{step_name}.expected.json"
+
             if update:
-                expected_path = test_dir / f"{step_name}.expected.json"
                 expected_path.write_text(json.dumps(response, indent=2))
 
             if response and "_error" not in response:
-                ok = response.get("successful", False)
-                err = response.get("error", "")
-                status = "PASS" if ok else f"FAIL ({err})"
+                with open(expected_path) as f:
+                    expected = json.load(f)
+                ok, msg = compare_init(response, expected)
+                status = "PASS" if ok else f"FAIL: {msg}"
             else:
                 err_msg = (response or {}).get("_error", "unknown error")
                 status = f"ERROR ({err_msg[:100]})"
