@@ -4,3 +4,5 @@ obj/
 target/
 testdata/repos/
 testdata/results/
+provider.log
+__pycache__/
