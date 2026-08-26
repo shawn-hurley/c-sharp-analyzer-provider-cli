@@ -532,9 +532,13 @@ def run_project(
             expected_path = test_dir / f"{step_name}.expected.json"
 
             if update:
-                expected_path.write_text(json.dumps(response, indent=2))
+                expected_path.write_text(
+                    json.dumps(normalize_init_response(response), indent=2)
+                )
 
-            if response and "_error" not in response:
+            if no_check:
+                status = "RAN"
+            elif response and "_error" not in response:
                 with open(expected_path) as f:
                     expected = json.load(f)
                 ok, msg = compare_init(response, expected)
