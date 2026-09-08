@@ -75,7 +75,12 @@ jobs:
           cd publish
           tar czf ../c-sharp-analyzer-provider-${{ matrix.os }}-${{ matrix.arch }}.tar.gz .
           cd ..
-          sha256sum c-sharp-analyzer-provider-${{ matrix.os }}-${{ matrix.arch }}.tar.gz > c-sharp-analyzer-provider-${{ matrix.os }}-${{ matrix.arch }}.tar.gz.sha256
+          # macOS runners ship shasum but not GNU sha256sum
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum c-sharp-analyzer-provider-${{ matrix.os }}-${{ matrix.arch }}.tar.gz > c-sharp-analyzer-provider-${{ matrix.os }}-${{ matrix.arch }}.tar.gz.sha256
+          else
+            shasum -a 256 c-sharp-analyzer-provider-${{ matrix.os }}-${{ matrix.arch }}.tar.gz > c-sharp-analyzer-provider-${{ matrix.os }}-${{ matrix.arch }}.tar.gz.sha256
+          fi
 
       - name: Create archive (Windows)
         if: matrix.ext == 'zip'
